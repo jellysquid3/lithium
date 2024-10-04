@@ -50,6 +50,9 @@ public class CompactSineLUT {
         }
     }
 
+    public static void init() {
+    }
+
     // [VanillaCopy] MathHelper#sin(float)
     public static float sin(float f) {
         return lookup((int) (f * 10430.378f) & 0xFFFF);
