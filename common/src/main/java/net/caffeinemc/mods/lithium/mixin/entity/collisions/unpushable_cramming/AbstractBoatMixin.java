@@ -4,7 +4,7 @@ import com.google.common.base.Predicates;
 import net.caffeinemc.mods.lithium.common.entity.pushable.EntityPushablePredicate;
 import net.caffeinemc.mods.lithium.common.world.WorldHelper;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.AbstractBoat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.minecraft.world.phys.AABB;
@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Mixin(Boat.class)
-public class BoatMixin {
+@Mixin(AbstractBoat.class)
+public class AbstractBoatMixin {
     @Redirect(
             method = "tick()V",
             at = @At(

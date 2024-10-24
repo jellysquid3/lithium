@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.function.Supplier;
-
 /**
  * Implement world height related methods directly instead of going through WorldView and Dimension
  */
@@ -28,7 +26,7 @@ public abstract class LevelMixin implements LevelHeightAccessor {
             method = "<init>",
             at = @At("RETURN")
     )
-    private void initHeightCache(WritableLevelData properties, ResourceKey<?> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, Supplier<?> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates, CallbackInfo ci) {
+    private void initHeightCache(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder<DimensionType> dimensionEntry, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
         this.height = dimensionEntry.value().height();
         this.bottomY = dimensionEntry.value().minY();
         this.topYInclusive = this.bottomY + this.height - 1;
@@ -40,7 +38,7 @@ public abstract class LevelMixin implements LevelHeightAccessor {
     }
 
     @Override
-    public int getMinBuildHeight() {
+    public int getMinY() {
         return this.bottomY;
     }
 
@@ -50,12 +48,12 @@ public abstract class LevelMixin implements LevelHeightAccessor {
     }
 
     @Override
-    public int getMinSection() {
+    public int getMinSectionY() {
         return this.bottomY >> 4;
     }
 
     @Override
-    public int getMaxSection() {
+    public int getMaxSectionY() {
         return (this.topYInclusive >> 4) + 1;
     }
 
@@ -87,7 +85,7 @@ public abstract class LevelMixin implements LevelHeightAccessor {
     }
 
     @Override
-    public int getMaxBuildHeight() {
-        return this.topYInclusive + 1;
+    public int getMaxY() {
+        return this.topYInclusive;
     }
 }

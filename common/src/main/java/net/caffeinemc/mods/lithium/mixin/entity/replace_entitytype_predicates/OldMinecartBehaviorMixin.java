@@ -2,6 +2,7 @@ package net.caffeinemc.mods.lithium.mixin.entity.replace_entitytype_predicates;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.OldMinecartBehavior;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
-@Mixin(AbstractMinecart.class)
-public class AbstractMinecartMixin {
+@Mixin(OldMinecartBehavior.class)
+public class OldMinecartBehaviorMixin {
 
     @Redirect(
-            method = "tick()V",
+            method = "pushAndPickupEntities",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;"

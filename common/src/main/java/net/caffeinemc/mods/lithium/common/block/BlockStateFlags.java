@@ -7,6 +7,7 @@ import net.caffeinemc.mods.lithium.common.entity.FluidCachingEntity;
 import net.caffeinemc.mods.lithium.common.reflection.ReflectionUtil;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -113,7 +114,7 @@ public class BlockStateFlags {
         ENTITY_TOUCHABLE = new TrackedBlockStatePredicate(countingFlags.size()) {
             @Override
             public boolean test(BlockState operand) {
-                return ReflectionUtil.isBlockStateEntityTouchable(operand);
+                return ReflectionUtil.isBlockStateEntityTouchable(operand) || operand.is(Blocks.LAVA) || operand.is(Blocks.FIRE); //Fire and Lava explicit as they need to be added to the set of touched blocks too
             }
         };
         flags.add(ENTITY_TOUCHABLE);

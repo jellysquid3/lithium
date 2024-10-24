@@ -42,6 +42,10 @@ public abstract class PathNavigationRegionMixin implements BlockGetter {
     @Shadow
     @Final
     protected Level level;
+
+    @Shadow
+    public abstract int getMinY();
+
     // A 1D view of the chunks available to this cache
     private ChunkAccess[] chunksFlat;
 
@@ -62,8 +66,8 @@ public abstract class PathNavigationRegionMixin implements BlockGetter {
             System.arraycopy(this.chunks[x], 0, this.chunksFlat, x * this.zLen, this.zLen);
         }
 
-        this.bottomY = this.getMinBuildHeight();
-        this.topY = this.getMaxBuildHeight();
+        this.bottomY = this.getMinY();
+        this.topY = this.getMaxY();
     }
 
     /**
@@ -74,7 +78,7 @@ public abstract class PathNavigationRegionMixin implements BlockGetter {
     public BlockState getBlockState(BlockPos pos) {
         int y = pos.getY();
 
-        if (!(y < this.bottomY || y >= this.topY)) {
+        if (y >= this.bottomY && y <= this.topY) {
             int x = pos.getX();
             int z = pos.getZ();
 

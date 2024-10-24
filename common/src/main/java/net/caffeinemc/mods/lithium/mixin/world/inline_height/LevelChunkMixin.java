@@ -16,23 +16,38 @@ public abstract class LevelChunkMixin implements LevelHeightAccessor {
     Level level;
 
     @Override
-    public int getMaxBuildHeight() {
-        return this.level.getMaxBuildHeight();
+    public int getMaxY() {
+        return this.level.getMaxY();
+    }
+
+    @Override
+    public int getMinSectionY() {
+        return this.level.getMinSectionY();
+    }
+
+    @Override
+    public int getMaxSectionY() {
+        return this.level.getMaxSectionY();
+    }
+
+    @Override
+    public boolean isInsideBuildHeight(int i) {
+        return this.level.isInsideBuildHeight(i);
+    }
+
+    @Override
+    public int getHeight() {
+        return this.level.getHeight();
+    }
+
+    @Override
+    public int getMinY() {
+        return this.level.getMinY();
     }
 
     @Override
     public int getSectionsCount() {
         return this.level.getSectionsCount();
-    }
-
-    @Override
-    public int getMinSection() {
-        return this.level.getMinSection();
-    }
-
-    @Override
-    public int getMaxSection() {
-        return this.level.getMaxSection();
     }
 
     @Override

@@ -3,7 +3,7 @@ package net.caffeinemc.mods.lithium.mixin.world.block_entity_ticking.sleeping.fu
 import net.caffeinemc.mods.lithium.common.block.entity.SleepingBlockEntity;
 import net.caffeinemc.mods.lithium.mixin.world.block_entity_ticking.sleeping.WrappedBlockEntityTickInvokerAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -53,9 +53,9 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity implem
         this.sleepingTicker = sleepingTicker;
     }
 
-    @Inject(method = "serverTick(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;)V", at = @At("RETURN"))
-    private static void checkSleep(Level world, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity blockEntity, CallbackInfo ci) {
-        ((AbstractFurnaceBlockEntityMixin) (Object) blockEntity).checkSleep(state);
+    @Inject(method = "serverTick", at = @At("RETURN"))
+    private static void checkSleep(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity abstractFurnaceBlockEntity, CallbackInfo ci) {
+        ((AbstractFurnaceBlockEntityMixin) (Object) abstractFurnaceBlockEntity).checkSleep(blockState);
     }
 
     private void checkSleep(BlockState state) {

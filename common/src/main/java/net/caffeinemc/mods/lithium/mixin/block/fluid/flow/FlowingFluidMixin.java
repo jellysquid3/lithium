@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.caffeinemc.mods.lithium.common.util.DirectionConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.BlockGetter;
@@ -49,24 +50,34 @@ public abstract class FlowingFluidMixin {
      */
 
     @Shadow
-    /*Checks if creating a water source or flowing, and the correct block state in case the block is going to be set*/
-    protected abstract FluidState getNewLiquid(Level world, BlockPos pos, BlockState state);
-
+    private static native boolean canPassThroughWall(Direction direction, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, BlockPos blockPos2, BlockState blockState2);
 
     @Shadow
-    protected abstract boolean canHoldFluid(BlockGetter world, BlockPos pos, BlockState state, Fluid fluid);
+    private static native boolean canHoldFluid(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid);
+
+    @Shadow
+    private static native boolean canHoldSpecificFluid(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid);
+
+    @Redirect(
+            method = "canHoldAnyFluid(Lnet/minecraft/world/level/block/state/BlockState;)Z",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z")
+    )
+    private static boolean isSign(BlockState blockState, TagKey<Block> tagKey, @Local Block block) {
+        if (tagKey == BlockTags.SIGNS) {
+            //The sign check is expensive when using the block tag lookup.
+            return block instanceof SignBlock;
+        }
+        return blockState.is(tagKey);
+    }
 
     @Shadow
     public abstract Fluid getSource();
 
     @Shadow
-    protected abstract boolean isSourceBlockOfThisType(FluidState state);
-
-    @Shadow
-    protected abstract boolean canPassThroughWall(Direction face, BlockGetter world, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState);
-
-    @Shadow
     protected abstract int getSlopeFindDistance(LevelReader world);
+
+    @Shadow
+    protected abstract FluidState getNewLiquid(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState);
 
     @Unique
     private static int getNumIndicesFromRadius(int radius) {
@@ -84,12 +95,15 @@ public abstract class FlowingFluidMixin {
         return (byte) (row * rowLength + column);
     }
 
+    @Shadow
+    protected abstract boolean canMaybePassThrough(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState);
+
     /**
      * @author 2No2Name
      * @reason Faster implementation
      */
-    @Inject(method = "getSpread(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/Map;", at = @At("HEAD"), cancellable = true)
-    public void getSpread(Level world, BlockPos pos, BlockState state, CallbackInfoReturnable<Map<Direction, FluidState>> cir) {
+    @Inject(method = "getSpread(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/Map;", at = @At("HEAD"), cancellable = true)
+    public void getSpread(ServerLevel world, BlockPos pos, BlockState state, CallbackInfoReturnable<Map<Direction, FluidState>> cir) {
         // check immediate walls if branching is possible (at most 2 walls)
         // if branching is possible, do the complex flow calculations
         // otherwise just handle the single possible direction
@@ -141,7 +155,7 @@ public abstract class FlowingFluidMixin {
      */
     @Overwrite
     private boolean canPassThrough(BlockGetter world, Fluid fluid, BlockPos pos, BlockState state, Direction face, BlockPos fromPos, BlockState fromState, FluidState fluidState) {
-        return this.canHoldFluid(world, fromPos, fromState, fluid) && !this.isSourceBlockOfThisType(fluidState) && this.canPassThroughWall(face, world, pos, state, fromPos, fromState);
+        return canHoldSpecificFluid(world, fromPos, fromState, fluid) && this.canMaybePassThrough(world, pos, state, face, fromPos, fromState, fluidState);
     }
 
     /**
@@ -149,12 +163,41 @@ public abstract class FlowingFluidMixin {
      * @reason Rearrange to have cheaper checks first
      */
     @Overwrite
-    private boolean isWaterHole(BlockGetter world, Fluid fluid, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState) {
-        return (fromState.getFluidState().getType().isSame((FlowingFluid) (Object) this) || this.canHoldFluid(world, fromPos, fromState, fluid)) && this.canPassThroughWall(Direction.DOWN, world, pos, state, fromPos, fromState);
+    public boolean isWaterHole(BlockGetter world, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState) {
+        return (fromState.getFluidState().getType().isSame((Fluid) (Object) this) || canHoldFluid(world, fromPos, fromState, this.getFlowing())) && canPassThroughWall(Direction.DOWN, world, pos, state, fromPos, fromState);
     }
 
     @Unique
-    private void calculateComplexFluidFlowDirections(Level world, BlockPos startPos, BlockState startState, BlockState[] blockStateCache, Map<Direction, FluidState> flowResultByDirection) {
+    private BlockState getBlock(Level world, BlockPos pos, BlockState[] blockStateCache, int key) {
+        BlockState blockState = blockStateCache[key];
+        if (blockState == null) {
+            blockState = world.getBlockState(pos);
+            blockStateCache[key] = blockState;
+        }
+        return blockState;
+    }
+
+    @Unique
+    private void removeDirectionsWithoutHoleAccess(byte holeAccess, Map<Direction, FluidState> flowResultByDirection) {
+        for (int i = 0; i < DirectionConstants.HORIZONTAL.length; i++) {
+            if ((holeAccess & (1 << i)) == 0) {
+                flowResultByDirection.remove(DirectionConstants.HORIZONTAL[i]);
+            }
+        }
+    }
+
+    /**
+     * Fast check to eliminate some choices for the flow direction
+     */
+    @Unique
+    private boolean canMaybeFlowIntoBlock(Level world, BlockState blockState, BlockPos flowTargetPos) {
+        //TODO maybe use this in more places
+        //TODO maybe use the blockstate predicate system
+        return canHoldFluid(world, flowTargetPos, blockState, this.getSource());
+    }
+
+    @Unique
+    private void calculateComplexFluidFlowDirections(ServerLevel world, BlockPos startPos, BlockState startState, BlockState[] blockStateCache, Map<Direction, FluidState> flowResultByDirection) {
         //Search like breadth-first-search for paths the fluid can flow
         //Only move in directions the fluid can move (e.g. block can contain / be replaced by fluid) (vanilla conditions)
         //For each node remember the first move step (direction) of the paths that led to this node
@@ -261,55 +304,14 @@ public abstract class FlowingFluidMixin {
     }
 
     @Unique
-    private BlockState getBlock(Level world, BlockPos pos, BlockState[] blockStateCache, int key) {
-        BlockState blockState = blockStateCache[key];
-        if (blockState == null) {
-            blockState = world.getBlockState(pos);
-            blockStateCache[key] = blockState;
-        }
-        return blockState;
-    }
-
-    @Unique
-    private void removeDirectionsWithoutHoleAccess(byte holeAccess, Map<Direction, FluidState> flowResultByDirection) {
-        for (int i = 0; i < DirectionConstants.HORIZONTAL.length; i++) {
-            if ((holeAccess & (1 << i)) == 0) {
-                flowResultByDirection.remove(DirectionConstants.HORIZONTAL[i]);
-            }
-        }
-    }
-
-    /**
-     * Fast check to eliminate some choices for the flow direction
-     */
-    @Unique
-    private boolean canMaybeFlowIntoBlock(Level world, BlockState blockState, BlockPos flowTargetPos) {
-        //TODO maybe use this in more places
-        //TODO maybe use the blockstate predicate system
-        return canHoldFluid(world, flowTargetPos, blockState, this.getSource());
-    }
-
-    @Unique
     private boolean isHoleBelow(LevelReader world, Byte2BooleanOpenHashMap holeCache, byte key, BlockPos flowTargetPos, BlockState targetBlockState) {
         if (holeCache.get(key)) {
             return true;
         }
         BlockPos downPos = flowTargetPos.below();
         BlockState downBlock = world.getBlockState(downPos);
-        boolean holeFound = this.isWaterHole(world, this.getFlowing(), flowTargetPos, targetBlockState, downPos, downBlock);
+        boolean holeFound = this.isWaterHole(world, flowTargetPos, targetBlockState, downPos, downBlock);
         holeCache.put(key, holeFound);
         return holeFound;
-    }
-
-    @Redirect(
-            method = "canHoldFluid(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/Fluid;)Z",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z")
-    )
-    private boolean isSign(BlockState blockState, TagKey<Block> tagKey, @Local Block block) {
-        if (tagKey == BlockTags.SIGNS) {
-            //The sign check is expensive when using the block tag lookup.
-            return block instanceof SignBlock;
-        }
-        return blockState.is(tagKey);
     }
 }

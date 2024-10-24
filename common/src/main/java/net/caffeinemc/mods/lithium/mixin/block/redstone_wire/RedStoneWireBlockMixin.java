@@ -64,7 +64,7 @@ public class RedStoneWireBlockMixin extends Block {
     }
 
     @Inject(
-            method = "calculateTargetStrength(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)I",
+            method = "getBlockSignal(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)I",
             cancellable = true,
             at = @At(
                     value = "HEAD"
