@@ -1,15 +1,17 @@
 plugins {
     id("java")
-    id("fabric-loom") version ("1.7.3") apply (false)
+    id("fabric-loom") version ("1.8.9") apply (false)
 
     // Mixin config plugin is a subproject for creating lithium's settings from annotations in each mixin package.
     id("net.caffeinemc.mixin-config-plugin") version ("1.0-SNAPSHOT") apply (false)
 }
 
-val MINECRAFT_VERSION by extra { "1.21.1" }
-val NEOFORGE_VERSION by extra { "21.1.46" }
-val FABRIC_LOADER_VERSION by extra { "0.16.4" }
-val FABRIC_API_VERSION by extra { "0.103.0+1.21.1" }
+// Fabric: https://fabricmc.net/develop/
+// Neoforge: https://neoforged.net/
+val MINECRAFT_VERSION by extra { "1.21.3" }
+val NEOFORGE_VERSION by extra { "21.3.1" }
+val FABRIC_LOADER_VERSION by extra { "0.16.7" }
+val FABRIC_API_VERSION by extra { "0.106.1+1.21.2" }
 
 // This value can be set to null to disable Parchment.
 // TODO: Re-add Parchment

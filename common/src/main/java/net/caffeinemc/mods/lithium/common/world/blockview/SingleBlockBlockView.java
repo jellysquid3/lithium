@@ -1,9 +1,5 @@
 package net.caffeinemc.mods.lithium.common.world.blockview;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -16,6 +12,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public record SingleBlockBlockView(BlockState state, BlockPos blockPos) implements BlockGetter, CollisionGetter {
     public static SingleBlockBlockView of(BlockState blockState, BlockPos blockPos) {
@@ -52,7 +52,7 @@ public record SingleBlockBlockView(BlockState state, BlockPos blockPos) implemen
     }
 
     @Override
-    public int getMinBuildHeight() {
+    public int getMinY() {
         throw SingleBlockViewException.INSTANCE;
     }
 

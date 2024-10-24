@@ -39,7 +39,7 @@ public class EntityCollisionContextMixin {
      * No need to use Opcodes.INSTANCEOF or similar.
      */
     @ModifyConstant(
-            method = "<init>(Lnet/minecraft/world/entity/Entity;)V",
+            method = "<init>(Lnet/minecraft/world/entity/Entity;Z)V",
             constant = @Constant(classValue = LivingEntity.class, ordinal = 0)
     )
     private static boolean redirectInstanceOf(Object obj, Class<?> clazz) {
@@ -47,7 +47,7 @@ public class EntityCollisionContextMixin {
     }
 
     @ModifyConstant(
-            method = "<init>(Lnet/minecraft/world/entity/Entity;)V",
+            method = "<init>(Lnet/minecraft/world/entity/Entity;Z)V",
             constant = @Constant(classValue = LivingEntity.class, ordinal = 2)
     )
     private static boolean redirectInstanceOf2(Object obj, Class<?> clazz) {
@@ -55,14 +55,14 @@ public class EntityCollisionContextMixin {
     }
 
     @Inject(
-            method = "<init>(Lnet/minecraft/world/entity/Entity;)V",
+            method = "<init>(Lnet/minecraft/world/entity/Entity;Z)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/phys/shapes/EntityCollisionContext;<init>(ZDLnet/minecraft/world/item/ItemStack;Ljava/util/function/Predicate;Lnet/minecraft/world/entity/Entity;)V",
                     shift = At.Shift.AFTER
             )
     )
-    private void initFields(Entity entity, CallbackInfo ci) {
+    private void initFields(Entity entity, boolean bl, CallbackInfo ci) {
         this.heldItem = null;
         this.canStandOnFluid = null;
     }

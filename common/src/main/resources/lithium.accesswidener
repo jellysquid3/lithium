@@ -7,6 +7,7 @@ accessible class net/minecraft/world/level/border/WorldBorder$BorderExtent
 accessible class net/minecraft/world/level/chunk/PaletteResize
 accessible class net/minecraft/world/level/chunk/PalettedContainer$Configuration
 accessible class net/minecraft/world/level/chunk/PalettedContainer$Data
+accessible class net/minecraft/world/level/material/FlowingFluid$BlockStatePairKey
 accessible class net/minecraft/world/phys/shapes/IndexMerger
 accessible field net/minecraft/server/level/Ticket createdTick J
 accessible field net/minecraft/util/Mth SIN [F
@@ -20,3 +21,4 @@ accessible method net/minecraft/world/level/chunk/PalettedContainer$Strategy cal
 accessible method net/minecraft/world/level/material/Fluid isEmpty ()Z
 accessible method net/minecraft/world/level/pathfinder/WalkNodeEvaluator getPathTypeFromState (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/pathfinder/PathType;
 accessible method net/minecraft/world/phys/shapes/Shapes findBits (DD)I
+accessible method net/minecraft/world/ticks/SavedTick saveTick (Ljava/lang/String;Lnet/minecraft/core/BlockPos;ILnet/minecraft/world/ticks/TickPriority;)Lnet/minecraft/nbt/CompoundTag;

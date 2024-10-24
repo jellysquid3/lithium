@@ -10,13 +10,13 @@ public class Pos {
             return view.getHeight();
         }
         public static int getMinY(LevelHeightAccessor view) {
-            return view.getMinBuildHeight();
+            return view.getMinY();
         }
         public static int getMaxYInclusive(LevelHeightAccessor view) {
-            return view.getMaxBuildHeight() - 1;
+            return view.getMaxY();
         }
         public static int getMaxYExclusive(LevelHeightAccessor view) {
-            return view.getMaxBuildHeight();
+            return view.getMaxY() + 1;
         }
 
         public static int getMaxInSectionCoord(int sectionCoord) {
@@ -51,13 +51,13 @@ public class Pos {
             return view.getSectionsCount();
         }
         public static int getMinYSection(LevelHeightAccessor view) {
-            return view.getMinSection();
+            return view.getMinSectionY();
         }
         public static int getMaxYSectionInclusive(LevelHeightAccessor view) {
-            return view.getMaxSection() - 1;
+            return view.getMaxSectionY() - 1;
         }
         public static int getMaxYSectionExclusive(LevelHeightAccessor view) {
-            return view.getMaxSection();
+            return view.getMaxSectionY();
         }
 
         public static int fromSectionIndex(LevelHeightAccessor view, int sectionCoord) {

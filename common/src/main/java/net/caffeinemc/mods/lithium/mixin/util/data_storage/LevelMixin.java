@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.function.Supplier;
-
 @Mixin(Level.class)
 public class LevelMixin implements LithiumData {
 
@@ -21,7 +19,7 @@ public class LevelMixin implements LithiumData {
     private Data storage;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void initLithiumData(WritableLevelData properties, ResourceKey<?> registryRef, RegistryAccess registryManager, Holder<?> dimensionEntry, Supplier<?> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates, CallbackInfo ci) {
+    private void initLithiumData(WritableLevelData writableLevelData, ResourceKey<?> resourceKey, RegistryAccess registryAccess, Holder<?> holder, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
         this.storage = new Data((Level) (Object) this);
     }
 

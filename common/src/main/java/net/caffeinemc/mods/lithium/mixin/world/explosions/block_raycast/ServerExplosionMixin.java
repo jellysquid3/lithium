@@ -2,11 +2,9 @@ package net.caffeinemc.mods.lithium.mixin.world.explosions.block_raycast;
 
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.caffeinemc.mods.lithium.common.util.Pos;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -21,15 +20,17 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,27 +40,17 @@ import java.util.Optional;
  * Slight performance and mod compatibility improvements by
  * @author 2No2Name
  */
-@Mixin(Explosion.class)
-public abstract class ExplosionMixin {
+@Mixin(ServerExplosion.class)
+public abstract class ServerExplosionMixin {
+
+    private static final HashSet<?> DUMMY_HASHSET = new HashSet<>(0);
     @Shadow
     @Final
     private float radius;
 
     @Shadow
     @Final
-    private double x;
-
-    @Shadow
-    @Final
-    private double y;
-
-    @Shadow
-    @Final
-    private double z;
-
-    @Shadow
-    @Final
-    private Level level;
+    private ServerLevel level;
 
     @Shadow
     @Final
@@ -67,6 +58,9 @@ public abstract class ExplosionMixin {
     @Shadow
     @Final
     private boolean fire;
+    @Shadow
+    @Final
+    private Vec3 center;
     // The cached mutable block position used during block traversal.
     private final BlockPos.MutableBlockPos cachedPos = new BlockPos.MutableBlockPos();
 
@@ -86,19 +80,19 @@ public abstract class ExplosionMixin {
     private int bottomY, topY;
 
     @Inject(
-            method = "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;DDDFZLnet/minecraft/world/level/Explosion$BlockInteraction;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/Holder;)V",
+            method = "<init>(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;Lnet/minecraft/world/phys/Vec3;FZLnet/minecraft/world/level/Explosion$BlockInteraction;)V",
             at = @At("TAIL")
     )
-    private void init(Level world, Entity entity, DamageSource damageSource, ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Explosion.BlockInteraction destructionType, ParticleOptions particle, ParticleOptions emitterParticle, Holder<?> soundEvent, CallbackInfo ci) {
-        this.bottomY = this.level.getMinBuildHeight();
-        this.topY = this.level.getMaxBuildHeight();
+    private void init(ServerLevel serverLevel, Entity entity, DamageSource damageSource, ExplosionDamageCalculator explosionDamageCalculator, Vec3 vec3, float f, boolean bl, Explosion.BlockInteraction blockInteraction, CallbackInfo ci) {
+        this.bottomY = this.level.getMinY();
+        this.topY = this.level.getMaxY();
 
         boolean explodeAir = this.fire; // air blocks are only relevant for the explosion when fire should be created inside them
         if (!explodeAir && this.level.dimension() == Level.END && this.level.dimensionTypeRegistration().is(BuiltinDimensionTypes.END)) {
             float overestimatedExplosionRange = (8 + (int) (6f * this.radius));
             int endPortalX = 0;
             int endPortalZ = 0;
-            if (overestimatedExplosionRange > Math.abs(this.x - endPortalX) && overestimatedExplosionRange > Math.abs(this.z - endPortalZ)) {
+            if (overestimatedExplosionRange > Math.abs(this.center.x - endPortalX) && overestimatedExplosionRange > Math.abs(this.center.z - endPortalZ)) {
                 explodeAir = true;
                 // exploding air works around accidentally fixing vanilla bug: an explosion cancelling the dragon fight start can destroy the newly placed end portal
             }
@@ -107,15 +101,15 @@ public abstract class ExplosionMixin {
     }
 
     @Redirect(
-            method = "explode()V",
-            at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Sets;newHashSet()Ljava/util/HashSet;", remap = false)
+            method = "calculateExplodedPositions",
+            at = @At(value = "NEW", target = "()Ljava/util/HashSet;", remap = false)
     )
     public HashSet<BlockPos> skipNewHashSet() {
         return null;
     }
 
     @ModifyConstant(
-            method = "explode()V",
+            method = "calculateExplodedPositions",
             constant = @Constant(intValue = 16, ordinal = 1)
     )
     public int skipLoop(int prevValue) {
@@ -125,9 +119,9 @@ public abstract class ExplosionMixin {
     /**
      * @author JellySquid
      */
-    @Redirect(method = "explode()V",
-            at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectArrayList;addAll(Ljava/util/Collection;)Z", remap = false))
-    public boolean collectBlocks(ObjectArrayList<BlockPos> affectedBlocks, Collection<BlockPos> collection) {
+    @Inject(method = "calculateExplodedPositions",
+            at = @At(value = "RETURN"))
+    public void collectBlocks(CallbackInfoReturnable<List<BlockPos>> cir) {
         // Using integer encoding for the block positions provides a massive speedup and prevents us from needing to
         // allocate a block position for every step we make along each ray, eliminating essentially all the memory
         // allocations of this function. The overhead of packing block positions into integer format is negligible
@@ -160,14 +154,13 @@ public abstract class ExplosionMixin {
 
         // We can now iterate back over the set of positions we modified and re-build BlockPos objects from them
         // This will only allocate as many objects as there are in the set, where otherwise we would allocate them
-        // each step of a every ray.
+        // each step of every ray.
+        List<BlockPos> affectedBlocks = cir.getReturnValue();
         LongIterator it = touched.iterator();
 
-        boolean added = false;
         while (it.hasNext()) {
-            added |= affectedBlocks.add(BlockPos.of(it.nextLong()));
+            affectedBlocks.add(BlockPos.of(it.nextLong()));
         }
-        return added;
     }
 
     @Unique
@@ -180,9 +173,9 @@ public abstract class ExplosionMixin {
 
         float strength = this.radius * (0.7F + (random.nextFloat() * 0.6F));
 
-        double stepX = this.x;
-        double stepY = this.y;
-        double stepZ = this.z;
+        double stepX = this.center.x();
+        double stepY = this.center.y();
+        double stepZ = this.center.z();
 
         int prevX = Integer.MIN_VALUE;
         int prevY = Integer.MIN_VALUE;
@@ -206,7 +199,7 @@ public abstract class ExplosionMixin {
             // aliasing and sampling, which is unacceptable for our purposes. As a band-aid, we can simply re-use the
             // previous result and get a decent boost.
             if (prevX != blockX || prevY != blockY || prevZ != blockZ) {
-                if (blockY < boundMinY || blockY >= boundMaxY || blockX < -30000000 || blockZ < -30000000 || blockX >= 30000000 || blockZ >= 30000000) {
+                if (blockY < boundMinY || blockY > boundMaxY || blockX < -30000000 || blockZ < -30000000 || blockX >= 30000000 || blockZ >= 30000000) {
                     return;
                 }
                 //The coordinates are within the world bounds, so we can safely traverse the block
@@ -278,7 +271,7 @@ public abstract class ExplosionMixin {
                     if (blockState.getBlock() != Blocks.AIR) {
                         // Rather than query the fluid state from the container as we just did with the block state, we can
                         // simply ask the block state we retrieved what fluid it has. This is exactly what the call would
-                        // do anyways, except that it would have to retrieve the block state a second time, adding overhead.
+                        // do anyway, except that it would have to retrieve the block state a second time, adding overhead.
                         FluidState fluidState = blockState.getFluidState();
 
                         // Get the explosion resistance like vanilla

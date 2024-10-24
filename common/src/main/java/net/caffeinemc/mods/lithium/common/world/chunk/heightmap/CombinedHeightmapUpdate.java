@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
+
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -96,7 +97,7 @@ public class CombinedHeightmapUpdate {
         }
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        int bottomY = worldChunk.getMinBuildHeight();
+        int bottomY = worldChunk.getMinY();
 
         for (int searchY = y - 1; searchY >= bottomY && heightmapsToUpdate > 0; --searchY) {
             mutable.set(x, searchY, z);

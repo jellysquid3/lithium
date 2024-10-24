@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class BiomeMixin {
 
     @Shadow
-    protected abstract float getHeightAdjustedTemperature(BlockPos pos);
+    protected abstract float getHeightAdjustedTemperature(BlockPos pos, int i);
 
     /**
      * @author 2No2Name
@@ -18,7 +18,7 @@ public abstract class BiomeMixin {
      */
     @Deprecated
     @Overwrite
-    public float getTemperature(BlockPos blockPos) {
-        return this.getHeightAdjustedTemperature(blockPos);
+    public float getTemperature(BlockPos blockPos, int i) {
+        return this.getHeightAdjustedTemperature(blockPos, i);
     }
 }

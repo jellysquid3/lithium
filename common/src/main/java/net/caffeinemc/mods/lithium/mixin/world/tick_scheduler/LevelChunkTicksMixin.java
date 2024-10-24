@@ -251,7 +251,7 @@ public class LevelChunkTicksMixin<T> {
         }
         for (OrderedTickQueue<T> nextTickQueue : this.tickQueuesByTimeAndPriority.values()) {
             for (ScheduledTick<T> orderedTick : nextTickQueue) {
-                nbtList.add(SavedTick.saveTick(orderedTick, function, l));
+                nbtList.add(orderedTick.toSavedTick(l).save(function));
             }
         }
         return nbtList;

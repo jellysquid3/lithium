@@ -32,7 +32,7 @@ public abstract class RaiderMixin extends Entity {
         ALLOWED_ITEMS = (itemEntity) -> {
             ItemStack ominousBanner = ((LithiumData) itemEntity.level()).lithium$getData().ominousBanner();
             if (ominousBanner == null) {
-                ominousBanner = Raid.getLeaderBannerInstance(itemEntity.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN));
+                ominousBanner = Raid.getOminousBannerInstance(itemEntity.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN));
             }
 
             return !itemEntity.hasPickUpDelay() && itemEntity.isAlive() &&
@@ -45,13 +45,13 @@ public abstract class RaiderMixin extends Entity {
     }
 
     @Redirect(
-            method = {"pickUpItem(Lnet/minecraft/world/entity/item/ItemEntity;)V", "isCaptain()Z"},
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;getLeaderBannerInstance(Lnet/minecraft/core/HolderGetter;)Lnet/minecraft/world/item/ItemStack;")
+            method = { "pickUpItem", "isCaptain" },
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;getOminousBannerInstance(Lnet/minecraft/core/HolderGetter;)Lnet/minecraft/world/item/ItemStack;")
     )
     private ItemStack getOminousBanner(HolderGetter<BannerPattern> bannerPatternLookup) {
         ItemStack ominousBanner = ((LithiumData) this.level()).lithium$getData().ominousBanner();
         if (ominousBanner == null) {
-            ominousBanner = Raid.getLeaderBannerInstance(bannerPatternLookup);
+            ominousBanner = Raid.getOminousBannerInstance(bannerPatternLookup);
         }
         return ominousBanner;
     }

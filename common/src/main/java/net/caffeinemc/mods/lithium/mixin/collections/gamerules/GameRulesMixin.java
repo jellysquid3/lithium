@@ -20,18 +20,10 @@ public class GameRulesMixin {
     private Map<GameRules.Key<?>, GameRules.Value<?>> rules;
 
     @Inject(
-            method = "<init>()V",
+            method = "<init>(Ljava/util/Map;Lnet/minecraft/world/flag/FeatureFlagSet;)V",
             at = @At("RETURN")
     )
     private void reinitializeMap(CallbackInfo ci) {
-        this.rules = new Object2ObjectOpenHashMap<>(this.rules);
-    }
-
-    @Inject(
-            method = "<init>(Ljava/util/Map;)V",
-            at = @At("RETURN")
-    )
-    private void reinitializeMap(Map<?, ?> rules, CallbackInfo ci) {
         this.rules = new Object2ObjectOpenHashMap<>(this.rules);
     }
 }

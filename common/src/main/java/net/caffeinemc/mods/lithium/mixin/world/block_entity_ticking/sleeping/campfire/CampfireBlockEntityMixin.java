@@ -5,6 +5,7 @@ import net.caffeinemc.mods.lithium.mixin.world.block_entity_ticking.sleeping.Wra
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -51,10 +52,10 @@ public class CampfireBlockEntityMixin extends BlockEntity implements SleepingBlo
 
 
     @Inject(
-            method = "placeFood(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;I)Z",
+            method = "placeFood(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)Z",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;set(ILjava/lang/Object;)Ljava/lang/Object;")
     )
-    private void wakeUpOnAddItem(LivingEntity user, ItemStack stack, int cookTime, CallbackInfoReturnable<Boolean> cir) {
+    private void wakeUpOnAddItem(ServerLevel serverLevel, LivingEntity livingEntity, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         this.wakeUpNow();
     }
 
