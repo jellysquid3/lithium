@@ -82,9 +82,10 @@ public class Option {
             for (Object2BooleanMap.Entry<Option> dependency : this.dependencies.object2BooleanEntrySet()) {
                 Option option = dependency.getKey();
                 boolean requiredValue = dependency.getBooleanValue();
-                if (option.isEnabledRecursive(config) != requiredValue) {
+                boolean enabledRecursive = option.isEnabledRecursive(config);
+                if (enabledRecursive != requiredValue) {
                     this.enabled = false;
-                    logger.warn("Option '{}' requires '{}={}' but found '{}'. Setting '{}={}'.", this.name, option.name, requiredValue, option.isEnabled(), this.name, this.enabled);
+                    logger.warn("Option '{}' requires '{}={}' but found '{}'. Setting '{}={}'.", this.name, option.name, requiredValue, enabledRecursive, this.name, this.enabled);
                     return true;
                 }
             }
