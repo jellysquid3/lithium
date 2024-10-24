@@ -1,5 +1,6 @@
 package net.caffeinemc.mods.lithium.mixin.entity.fast_retrieval;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.world.level.entity.EntityAccess;
@@ -12,7 +13,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySectionStorage.class)
 public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
@@ -24,6 +24,7 @@ public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
      * @author 2No2Name
      * @reason avoid iterating through LongAVLTreeSet, possibly iterating over hundreds of irrelevant longs to save up to 8 hash set gets
      */
+    @SuppressWarnings("DiscouragedShift")
     @Inject(
             method = "forEachAccessibleNonEmptySection",
             at = @At(
@@ -32,21 +33,20 @@ public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
                     target = "Lnet/minecraft/core/SectionPos;posToSectionCoord(D)I",
                     ordinal = 5
             ),
-            locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true
     )
-    public void forEachInBox(AABB box, AbortableIterationConsumer<EntitySection<T>> action, CallbackInfo ci, int i, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    public void forEachInBox(AABB box, AbortableIterationConsumer<EntitySection<T>> action, CallbackInfo ci, @Local(ordinal = 0) int minX, @Local(ordinal = 1) int minY, @Local(ordinal = 2) int minZ, @Local(ordinal = 3) int maxX, @Local(ordinal = 4) int maxY, @Local(ordinal = 5) int maxZ) {
         if (maxX >= minX + 4 || maxZ >= minZ + 4) {
             return; // Vanilla is likely more optimized when shooting entities with TNT cannons over huge distances.
             // Choosing a cutoff of 4 chunk size, as it becomes more likely that these entity sections do not exist when
-            // they are far away from the shot entity (player despawn range, position maybe not on the ground, etc)
+            // they are far away from the shot entity (player despawn range, position maybe not on the ground, etc.)
         }
         ci.cancel();
 
         // Vanilla order of the AVL long set is sorting by ascending long value. The x, y, z positions are packed into
         // a long with the x position's lowest 22 bits placed at the MSB.
-        // Therefore the long is negative iff the 22th bit of the x position is set, which happens iff the x position
-        // is negative. A positive x position will never have its 22th bit set, as these big coordinates are far outside
+        // Therefore, the long is negative iff the 22nd bit of the x position is set, which happens iff the x position
+        // is negative. A positive x position will never have its 22nd bit set, as these big coordinates are far outside
         // the world. y and z positions are treated as unsigned when sorting by ascending long value, as their sign bits
         // are placed somewhere inside the packed long
 
