@@ -21,7 +21,8 @@ mixin.gen.biome_noise_cache=false
 Mob AI optimizations  
   
 ### `mixin.ai.pathing`
-(default: `true`)  
+
+(default: `false`)  
 A faster code path is used for determining what kind of path-finding node type is associated with a
 given block. Additionally, a faster chunk cache will be used for accessing blocks while evaluating
 paths.
@@ -95,17 +96,9 @@ Disable the parent animal sensor when an animal is not a baby. Would differ from
 (default: `true`)  
 Patches that reduce memory allocations  
   
-### `mixin.alloc.blockstate`
-(default: `true`)  
-Improve the BlockState withTable lookup by using a custom table implementation.  
-  
 ### `mixin.alloc.chunk_random`
 (default: `true`)  
 Random block ticking uses fewer block position allocations, thereby reducing the object allocation rate.  
-  
-### `mixin.alloc.chunk_ticking`
-(default: `true`)  
-Reuse large chunk lists  
   
 ### `mixin.alloc.composter`
 (default: `true`)  
@@ -120,10 +113,6 @@ Reduce stream code usage when getting the passengers of an entity
 Entity trackers use a fastutil set for storing players instead of an IdentityHashSet  
   
 ### `mixin.alloc.enum_values`
-(default: `true`)  
-Avoid `Enum#values()` array copy in frequently called code  
-  
-### `mixin.alloc.enum_values.living_entity`
 (default: `true`)  
 Avoid `Enum#values()` array copy in frequently called code  
   
@@ -160,7 +149,8 @@ FluidStates store directly whether they are empty
 Fluid optimizations  
   
 ### `mixin.block.fluid.flow`
-(default: `true`)  
+
+(default: `false`)  
 Fluid flow optimization  
   
 ### `mixin.block.hopper`
@@ -249,10 +239,6 @@ Use ReferenceArraySet instead of HashSet to store the fluids the entity is curre
 ### `mixin.collections.gamerules`
 (default: `true`)  
 Uses fastutil hashmaps for gamerules  
-  
-### `mixin.collections.goals`
-(default: `true`)  
-Uses fastutil hashsets for goals in the AI goal selector  
   
 ### `mixin.collections.mob_spawning`
 (default: `true`)  
@@ -453,10 +439,6 @@ Requirements:
 (default: `true`)  
 Only check positions with expiring tickets during ticket expiration. Can cause reordering of chunks unloading. The chunk unloading order in vanilla is predictable, but depends on the hash of the chunk position of the tickets and the hashes of the other chunk tickets, and the order of creation of the chunk tickets when hash collisions occur. No known contraptions depend on the unload order.  
   
-### `mixin.profiler`
-(default: `true`)  
-Avoid indirection when accessing the profiler  
-  
 ### `mixin.shapes`
 (default: `true`)  
 Various VoxelShape optimizations  
@@ -498,7 +480,8 @@ Allow accessing certain fields and functions that are normally inaccessible
 Allows access to existing BlockEntities without creating new ones  
   
 ### `mixin.util.block_tracking`
-(default: `true`)  
+
+(default: `false`)  
 Chunk sections count certain blocks inside them and provide a method to quickly check whether a chunk contains any of these blocks. Furthermore, chunk sections can notify registered listeners about certain blocks being placed or broken.  
 Requirements:
 - `mixin.util.data_storage=true`
@@ -619,10 +602,6 @@ Various improvements to explosions.
 (default: `true`)  
 Various improvements to explosion block damage, e.g. not accessing blocks along an explosion ray multiple times  
   
-### `mixin.world.explosions.cache_exposure`
-(default: `true`)  
-Caches entity explosion exposure to avoid duplicate calculations.  
-  
 ### `mixin.world.game_events`
 (default: `true`)  
 Various improvements to game events (vibrations) that are detected by allays, wardens and several sculk blocks.  
@@ -638,7 +617,8 @@ Requirements:
 Faster block and fluid access due to inlining and reduced method size  
   
 ### `mixin.world.inline_height`
-(default: `true`)  
+
+(default: `false`)  
 Reduces indirection by inlining world height access methods  
   
 ### `mixin.world.raycast`
