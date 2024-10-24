@@ -37,7 +37,6 @@
     "ai.useless_sensors.parent_animal_sensor.AgeableMobMixin",
     "alloc.chunk_random.LevelMixin",
     "alloc.chunk_random.ServerLevelMixin",
-    "alloc.chunk_ticking.ServerChunkCacheMixin",
     "alloc.composter.ComposterMixin$ComposterBlockComposterInventoryMixin",
     "alloc.composter.ComposterMixin$ComposterBlockDummyInventoryMixin",
     "alloc.composter.ComposterMixin$ComposterBlockFullComposterInventoryMixin",
