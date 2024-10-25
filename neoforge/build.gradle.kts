@@ -1,6 +1,6 @@
 plugins {
     id("idea")
-    id("net.neoforged.moddev") version "2.0.28-beta"
+    id("net.neoforged.moddev") version "2.0.42-beta"
     id("java-library")
     id("net.caffeinemc.mixin-config-plugin") version ("1.0-SNAPSHOT")
 }
