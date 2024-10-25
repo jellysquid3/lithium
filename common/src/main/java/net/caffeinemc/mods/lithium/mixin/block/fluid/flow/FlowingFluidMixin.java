@@ -139,11 +139,14 @@ public abstract class FlowingFluidMixin {
             }
         }
         if (onlyPossibleFlowDirection != null) {
-            FluidState fluidState;
-            FluidState targetNewFluidState = this.getNewLiquid(world, onlyBlockPos, onlyBlockState);
-            if (this.canPassThrough(world, targetNewFluidState.getType(), pos, state, onlyPossibleFlowDirection, onlyBlockPos, onlyBlockState, onlyBlockState.getFluidState())) {
-                fluidState = targetNewFluidState;
-                flowResultByDirection.put(onlyPossibleFlowDirection, fluidState);
+            FluidState onlyFluidState = onlyBlockState.getFluidState();
+            if (this.canMaybePassThrough(world, pos, state, onlyPossibleFlowDirection, onlyBlockPos, onlyBlockState, onlyFluidState)) {
+                FluidState targetNewFluidState = this.getNewLiquid(world, onlyBlockPos, onlyBlockState);
+                if (canHoldSpecificFluid(world, onlyBlockPos, onlyBlockState, targetNewFluidState.getType())) {
+                    if (onlyFluidState.canBeReplacedWith(world, onlyBlockPos, targetNewFluidState.getType(), onlyPossibleFlowDirection)) {
+                        flowResultByDirection.put(onlyPossibleFlowDirection, targetNewFluidState);
+                    }
+                }
             }
         }
         cir.setReturnValue(flowResultByDirection);
@@ -227,16 +230,22 @@ public abstract class FlowingFluidMixin {
 
             BlockState targetBlockState = getBlock(world, flowTargetPos, blockStateCache, blockIndex);
             //TODO use block cache in getUpdatedState
-            FluidState targetNewFluidState = this.getNewLiquid(world, flowTargetPos, targetBlockState);
+            if (this.canMaybePassThrough(world, flowTargetPos, startState, flowDirection, flowTargetPos, targetBlockState, targetBlockState.getFluidState())) {
+                FluidState targetNewFluidState = this.getNewLiquid(world, flowTargetPos, targetBlockState);
+                if (canHoldSpecificFluid(world, flowTargetPos, targetBlockState, targetNewFluidState.getType())) {//Store the resulting fluid state for each direction, remove later if no closest hole access in this direction.
+                    // 1.21.2+ Specialty: Only add the direction if the fluid can replace the other fluid. If it cannot, it still counts for the hole search though.
+                    if (targetBlockState.getFluidState().canBeReplacedWith(world, flowTargetPos, targetNewFluidState.getType(), flowDirection)) {
+                        flowResultByDirection.put(flowDirection, targetNewFluidState);
+                    }
 
-            //Store the resulting fluid state for each direction, remove later if no closest hole access in this direction.
-            flowResultByDirection.put(flowDirection, targetNewFluidState);
-
-            if (this.canPassThrough(world, targetNewFluidState.getType(), startPos, startState, flowDirection, flowTargetPos, targetBlockState, targetBlockState.getFluidState())) {
-                prevPositions.put(blockIndex, (byte) (0b10001 << i));
-                if (isHoleBelow(world, holeCache, blockIndex, flowTargetPos, targetBlockState)) {
-                    holeAccess |= (byte) (1 << i);
+                    if (this.canPassThrough(world, targetNewFluidState.getType(), startPos, startState, flowDirection, flowTargetPos, targetBlockState, targetBlockState.getFluidState())) {
+                        prevPositions.put(blockIndex, (byte) (0b10001 << i));
+                        if (isHoleBelow(world, holeCache, blockIndex, flowTargetPos, targetBlockState)) {
+                            holeAccess |= (byte) (1 << i);
+                        }
+                    }
                 }
+
             }
         }
 
