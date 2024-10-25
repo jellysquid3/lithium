@@ -11,5 +11,4 @@ includeBuild("components/mixin-config-plugin")
 
 include("common")
 include("fabric")
-//Comment out neoforge when it is not available yet
-//include("neoforge")
+include("neoforge")

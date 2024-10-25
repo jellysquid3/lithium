@@ -9,7 +9,7 @@ plugins {
 // Fabric: https://fabricmc.net/develop/
 // Neoforge: https://neoforged.net/
 val MINECRAFT_VERSION by extra { "1.21.3" }
-val NEOFORGE_VERSION by extra { "21.3.1" }
+val NEOFORGE_VERSION by extra { "21.3.2-beta" }
 val FABRIC_LOADER_VERSION by extra { "0.16.7" }
 val FABRIC_API_VERSION by extra { "0.106.1+1.21.2" }
 
