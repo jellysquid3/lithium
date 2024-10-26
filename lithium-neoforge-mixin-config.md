@@ -21,7 +21,6 @@ mixin.gen.biome_noise_cache=false
 Mob AI optimizations  
   
 ### `mixin.ai.pathing`
-
 (default: `false`)  
 A faster code path is used for determining what kind of path-finding node type is associated with a
 given block. Additionally, a faster chunk cache will be used for accessing blocks while evaluating
@@ -150,7 +149,7 @@ Fluid optimizations
   
 ### `mixin.block.fluid.flow`
 
-(default: `false`)  
+(default: `true`)  
 Fluid flow optimization  
   
 ### `mixin.block.hopper`
@@ -383,8 +382,10 @@ Avoids indirection and inlines several functions
 Avoid indirection and inline several functions in Direction, Axis and Box code  
   
 ### `mixin.math.sine_lut`
-(default: `true`)  
-Reduces the sine table size to reduce memory usage and increase access speed  
+
+(default: `false`)  
+Reduces the sine table size to reduce memory usage and increase access speed. Broken in 1.21.2 and 1.21.3.
+
   
 ### `mixin.minimal_nonvanilla`
 (default: `true`)  
@@ -461,7 +462,6 @@ Allow accessing certain fields and functions that are normally inaccessible
 Allows access to existing BlockEntities without creating new ones  
   
 ### `mixin.util.block_tracking`
-
 (default: `false`)  
 Chunk sections count certain blocks inside them and provide a method to quickly check whether a chunk contains any of these blocks. Furthermore, chunk sections can notify registered listeners about certain blocks being placed or broken.  
 Requirements:
@@ -598,7 +598,6 @@ Requirements:
 Faster block and fluid access due to inlining and reduced method size  
   
 ### `mixin.world.inline_height`
-
 (default: `false`)  
 Reduces indirection by inlining world height access methods  
   

@@ -148,7 +148,8 @@ FluidStates store directly whether they are empty
 Fluid optimizations  
   
 ### `mixin.block.fluid.flow`
-(default: `false`)  
+
+(default: `true`)  
 Fluid flow optimization  
   
 ### `mixin.block.hopper`
@@ -404,8 +405,10 @@ Avoids indirection and inlines several functions
 Avoid indirection and inline several functions in Direction, Axis and Box code  
   
 ### `mixin.math.sine_lut`
-(default: `true`)  
-Reduces the sine table size to reduce memory usage and increase access speed  
+
+(default: `false`)  
+Reduces the sine table size to reduce memory usage and increase access speed. Broken in 1.21.2 and 1.21.3.
+
   
 ### `mixin.minimal_nonvanilla`
 (default: `true`)  
