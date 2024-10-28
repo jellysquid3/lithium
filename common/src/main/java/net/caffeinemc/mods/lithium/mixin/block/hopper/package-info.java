@@ -13,7 +13,8 @@
                 @MixinConfigDependency(dependencyPath = "mixin.util.block_entity_retrieval"),
                 @MixinConfigDependency(dependencyPath = "mixin.util.inventory_change_listening"),
                 @MixinConfigDependency(dependencyPath = "mixin.util.item_component_and_count_tracking")
-        }
+        },
+        enabled = false //TODO fix Intrinsic issue then re-enable
 )
 package net.caffeinemc.mods.lithium.mixin.block.hopper;
 
