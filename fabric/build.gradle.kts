@@ -72,8 +72,9 @@ loom {
     if (project(":common").file("src/main/resources/lithium.accesswidener").exists())
         accessWidenerPath.set(project(":common").file("src/main/resources/lithium.accesswidener"))
 
-    @Suppress("UnstableApiUsage")
-    mixin { defaultRefmapName.set("lithium-fabric.refmap.json") }
+    mixin {
+        useLegacyMixinAp = false
+    }
 
     runs {
         create("fabricClient") {

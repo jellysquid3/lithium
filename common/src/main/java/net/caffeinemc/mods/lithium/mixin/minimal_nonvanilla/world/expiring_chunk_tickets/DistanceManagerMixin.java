@@ -1,8 +1,8 @@
 package net.caffeinemc.mods.lithium.mixin.minimal_nonvanilla.world.expiring_chunk_tickets;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.caffeinemc.mods.lithium.common.util.collections.ChunkTicketSortedArraySet;
 import net.minecraft.server.level.DistanceManager;
 import net.minecraft.server.level.Ticket;
@@ -116,13 +116,13 @@ public abstract class DistanceManagerMixin {
         return canNoneExpire(tickets);
     }
 
-    @Inject(method = "purgeStaleTickets()V", locals = LocalCapture.CAPTURE_FAILHARD,
+    @Inject(method = "purgeStaleTickets()V",
             at = @At(
-                    value = "INVOKE", shift = At.Shift.BEFORE,
+                    value = "INVOKE",
                     target = "Lnet/minecraft/util/SortedArraySet;isEmpty()Z"
             )
     )
-    private void removeIfEmpty(CallbackInfo ci, ObjectIterator<?> objectIterator, Long2ObjectMap.Entry<SortedArraySet<Ticket<?>>> entry) {
+    private void removeIfEmpty(CallbackInfo ci, @Local Long2ObjectMap.Entry<SortedArraySet<Ticket<?>>> entry) {
         SortedArraySet<Ticket<?>> ticketsAtPos = entry.getValue();
         if (ticketsAtPos.isEmpty()) {
             this.tickets.remove(entry.getLongKey(), ticketsAtPos);

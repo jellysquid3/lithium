@@ -148,12 +148,12 @@ FluidStates store directly whether they are empty
 Fluid optimizations  
   
 ### `mixin.block.fluid.flow`
-
 (default: `true`)  
 Fluid flow optimization  
   
 ### `mixin.block.hopper`
-(default: `true`)  
+
+(default: `false`)  
 Reduces hopper lag using caching, notification systems and BlockEntity sleeping  
 Requirements:
 - `mixin.util.entity_movement_tracking=true`
@@ -317,7 +317,8 @@ Skip checking whether an entity is inside powder snow for movement speed slowdow
 Access entities faster when accessing a relatively small number of entity sections  
   
 ### `mixin.entity.inactive_navigations`
-(default: `true`)  
+
+(default: `false`)  
 Block updates skip notifying mobs that won't react to the block update anyways  
 Requirements:
 - `mixin.util.data_storage=true`  
@@ -406,8 +407,8 @@ Avoid indirection and inline several functions in Direction, Axis and Box code
   
 ### `mixin.math.sine_lut`
 
-(default: `false`)  
-Reduces the sine table size to reduce memory usage and increase access speed. Broken in 1.21.2 and 1.21.3.
+(default: `true`)  
+Reduces the sine table size to reduce memory usage and increase access speed
 
   
 ### `mixin.minimal_nonvanilla`
@@ -437,7 +438,8 @@ Requirements:
 - `mixin.world.block_entity_ticking=true`  
   
 ### `mixin.minimal_nonvanilla.world.expiring_chunk_tickets`
-(default: `true`)  
+
+(default: `false`)  
 Only check positions with expiring tickets during ticket expiration. Can cause reordering of chunks unloading. The chunk unloading order in vanilla is predictable, but depends on the hash of the chunk position of the tickets and the hashes of the other chunk tickets, and the order of creation of the chunk tickets when hash collisions occur. No known contraptions depend on the unload order.  
   
 ### `mixin.shapes`
@@ -449,7 +451,8 @@ Various VoxelShape optimizations
 Use a faster collection for the full cube test cache  
   
 ### `mixin.shapes.lazy_shape_context`
-(default: `true`)  
+
+(default: `false`)  
 Entity shape contexts initialize rarely used fields only on first use  
   
 ### `mixin.shapes.optimized_matching`
@@ -515,11 +518,13 @@ Requirements:
 Entity sections store their position  
   
 ### `mixin.util.inventory_change_listening`
-(default: `true`)  
+
+(default: `false`)  
 Certain BlockEntity Inventories emit updates to their listeners when their stack list is changed or the inventory becomes invalid  
   
 ### `mixin.util.inventory_comparator_tracking`
-(default: `true`)  
+
+(default: `false`)  
 BlockEntity Inventories update their listeners when a comparator is placed near them  
 Requirements:
 - `mixin.util.block_entity_retrieval=true`  
@@ -545,7 +550,8 @@ Various BlockEntity ticking optimizations
 Allows BlockEntities to sleep, meaning they are no longer ticked until woken up, e.g. by updates to their inventory or block state  
   
 ### `mixin.world.block_entity_ticking.sleeping.brewing_stand`
-(default: `true`)  
+
+(default: `false`)  
 BlockEntity sleeping for inactive brewing stands  
   
 ### `mixin.world.block_entity_ticking.sleeping.campfire`
@@ -561,7 +567,8 @@ BlockEntity sleeping for inactive lit campfires
 BlockEntity sleeping for inactive unlit campfires  
   
 ### `mixin.world.block_entity_ticking.sleeping.furnace`
-(default: `true`)  
+
+(default: `false`)  
 BlockEntity sleeping for inactive furnaces  
   
 ### `mixin.world.block_entity_ticking.sleeping.hopper`

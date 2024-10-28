@@ -56,6 +56,7 @@ sourceSets {
 loom {
     mixin {
         defaultRefmapName = "lithium.refmap.json"
+        useLegacyMixinAp = false
     }
 
     accessWidenerPath = file("src/main/resources/lithium.accesswidener")
