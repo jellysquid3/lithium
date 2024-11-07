@@ -135,7 +135,7 @@ public class NearbyPointOfInterestStream extends Spliterators.AbstractSpliterato
 
         LongArrayList chunkPositions = new LongArrayList();
 
-        // TODO: Find a better way to go about this that doesn't require allocating a ton of positions
+        // todo: Find a better way to go about this that doesn't require allocating a ton of positions
         for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
                 if (distanceLimitL2Sq >= Distances.getMinChunkToBlockDistanceL2Sq(origin, chunkX, chunkZ)) {

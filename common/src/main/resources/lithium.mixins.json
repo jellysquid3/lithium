@@ -1,12 +1,12 @@
 {
-  "package": "net.caffeinemc.mods.lithium.mixin",
-  "required": true,
-  "compatibilityLevel": "JAVA_21",
-  "plugin": "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
-  "injectors": {
-    "defaultRequire": 1
+  "package" : "net.caffeinemc.mods.lithium.mixin",
+  "required" : true,
+  "compatibilityLevel" : "JAVA_21",
+  "plugin" : "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
+  "injectors" : {
+    "defaultRequire" : 1
   },
-  "mixins": [
+  "mixins" : [
     "ai.pathing.BlockStateBaseMixin",
     "ai.pathing.FlyNodeEvaluatorMixin",
     "ai.pathing.PathfindingContextAccessor",
@@ -50,8 +50,9 @@
     "alloc.nbt.CompoundTagMixin$Type",
     "block.flatten_states.FluidStateMixin",
     "block.fluid.flow.FlowingFluidMixin",
+    "block.hopper.AbstractChestBoatMixin",
     "block.hopper.AbstractContainerMenuMixin",
-    "block.hopper.ChestBoatMixin",
+    "block.hopper.BlockBehaviourMixin",
     "block.hopper.ChiseledBookShelfBlockEntityMixin",
     "block.hopper.ClassInstanceMultiMapMixin",
     "block.hopper.ComposterMixin$ComposterBlockComposterInventoryMixin",
@@ -117,6 +118,7 @@
     "entity.fast_retrieval.EntitySectionStorageMixin",
     "entity.inactive_navigations.DrownedEntityLeaveWaterGoalMixin",
     "entity.inactive_navigations.DrownedMixin",
+    "entity.inactive_navigations.LivingEntityMixin",
     "entity.inactive_navigations.MobMixin",
     "entity.inactive_navigations.PathNavigationMixin",
     "entity.inactive_navigations.ServerLevel$EntityCallbacksMixin",
@@ -193,11 +195,12 @@
     "util.inventory_change_listening.StackListReplacementTracking$HopperBlockEntityMixin",
     "util.inventory_change_listening.StackListReplacementTracking$ShulkerBoxBlockEntityMixin",
     "util.inventory_comparator_tracking.BlockEntityMixin",
-    "util.inventory_comparator_tracking.ComparatorBlockMixin",
+    "util.inventory_comparator_tracking.DiodeBlockMixin",
     "util.item_component_and_count_tracking.ItemEntityMixin",
     "util.item_component_and_count_tracking.ItemStackMixin",
     "util.item_component_and_count_tracking.PatchedDataComponentMapMixin",
     "util.world_border_listener.WorldBorderMixin",
+    "world.block_entity_ticking.sleeping.BlockEntityMixin",
     "world.block_entity_ticking.sleeping.LevelChunkMixin",
     "world.block_entity_ticking.sleeping.LevelMixin",
     "world.block_entity_ticking.sleeping.ServerLevelMixin",

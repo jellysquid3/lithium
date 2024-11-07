@@ -3,33 +3,30 @@ package net.caffeinemc.mods.lithium.mixin.block.hopper;
 import net.caffeinemc.mods.lithium.common.entity.movement_tracker.ToggleableMovementTracker;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.ChestBoat;
+import net.minecraft.world.entity.vehicle.AbstractChestBoat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(ChestBoat.class)
-public abstract class ChestBoatMixin extends Entity {
-    public ChestBoatMixin(EntityType<?> type, Level world) {
+@Mixin(value = AbstractChestBoat.class, priority = 2000)
+// Apply this mixin after other mixins, so the fallback is our Intrinsic not being applied
+public abstract class AbstractChestBoatMixin extends Entity {
+    public AbstractChestBoatMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    @Intrinsic
+    @Intrinsic(displace = true)
+    // Intrinsic for mod compatibility: If this injection does not work, it is not critical, only a slight performance loss.
     @Override
     public void rideTick() {
-        super.rideTick();
+        this.tickRidingSummarizeMovementNotifications();
     }
 
-    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
-    @Redirect(
-            method = "rideTick()V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;rideTick()V")
-    )
-    private void tickRidingSummarizeMovementNotifications(Entity entity) {
+    @Unique
+    private void tickRidingSummarizeMovementNotifications() {
         EntityInLevelCallback changeListener = ((EntityAccessor) this).getChangeListener();
         if (changeListener instanceof ToggleableMovementTracker toggleableMovementTracker) {
             Vec3 beforeTickPos = this.position();

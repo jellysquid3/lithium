@@ -16,6 +16,7 @@
     "compat.worldedit.LevelChunkMixin",
     "entity.collisions.fluid.EntityMixin",
     "experimental.entity.block_caching.fluid_pushing.EntityMixin",
+    "util.inventory_change_listening.BlockEntityMixin",
     "util.inventory_change_listening.ChestBlockEntityMixin"
   ],
   "client" : [
