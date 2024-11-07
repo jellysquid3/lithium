@@ -1,5 +1,4 @@
-@MixinConfigOption(description = "BlockEntity sleeping for inactive furnaces",
-        enabled = false //TODO fix Intrinsic issue then re-enable
+@MixinConfigOption(description = "BlockEntity sleeping for inactive furnaces"
 )
 package net.caffeinemc.mods.lithium.mixin.world.block_entity_ticking.sleeping.furnace;
 

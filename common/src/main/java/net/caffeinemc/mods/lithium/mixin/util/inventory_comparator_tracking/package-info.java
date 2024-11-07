@@ -2,8 +2,7 @@
         description = "BlockEntity Inventories update their listeners when a comparator is placed near them",
         depends = {
                 @MixinConfigDependency(dependencyPath = "mixin.util.block_entity_retrieval")
-        },
-        enabled = false //TODO fix Intrinsic issue then re-enable
+        }
 )
 package net.caffeinemc.mods.lithium.mixin.util.inventory_comparator_tracking;
 
