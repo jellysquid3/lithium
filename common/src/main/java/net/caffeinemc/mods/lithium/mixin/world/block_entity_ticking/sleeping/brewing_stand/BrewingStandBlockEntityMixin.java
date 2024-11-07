@@ -1,5 +1,6 @@
 package net.caffeinemc.mods.lithium.mixin.world.block_entity_ticking.sleeping.brewing_stand;
 
+import net.caffeinemc.mods.lithium.common.block.entity.SetChangedHandlingBlockEntity;
 import net.caffeinemc.mods.lithium.common.block.entity.SleepingBlockEntity;
 import net.caffeinemc.mods.lithium.mixin.world.block_entity_ticking.sleeping.WrappedBlockEntityTickInvokerAccessor;
 import net.minecraft.core.BlockPos;
@@ -10,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandBlockEntity.class)
-public class BrewingStandBlockEntityMixin extends BlockEntity implements SleepingBlockEntity {
+public class BrewingStandBlockEntityMixin extends BlockEntity implements SleepingBlockEntity, SetChangedHandlingBlockEntity {
 
     @Shadow
     int brewTime;
@@ -75,14 +75,7 @@ public class BrewingStandBlockEntityMixin extends BlockEntity implements Sleepin
     }
 
     @Override
-    @Intrinsic
-    public void setChanged() {
-        super.setChanged();
-    }
-
-    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
-    @Inject(method = "setChanged()V", at = @At("RETURN"))
-    private void wakeOnMarkDirty(CallbackInfo ci) {
+    public void lithium$handleSetChanged() {
         if (this.isSleeping() && this.level != null && !this.level.isClientSide) {
             this.wakeUpNow();
         }

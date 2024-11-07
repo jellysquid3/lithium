@@ -82,7 +82,7 @@ public class EntityCollisionContextMixin {
 
     @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
     @Inject(
-            method = "getHeldItem",
+            method = "getHeldItem", remap = false,
             at = @At("HEAD")
     )
     private void initHeldItem(CallbackInfoReturnable<ItemStack> callbackInfoReturnable) {

@@ -21,7 +21,7 @@ public abstract class BlockStateBaseMixin implements BlockStatePathingCache {
     private PathType pathNodeType = null;
     private PathType pathNodeTypeNeighbor = null;
 
-    //TODO NEOFORGE INJECTION POINT
+    //TODO fix injection point
     @Inject(method = "initCache()V", at = @At("RETURN"))
     private void init(CallbackInfo ci) {
         // Reset the cached path node types, to ensure they are re-calculated.

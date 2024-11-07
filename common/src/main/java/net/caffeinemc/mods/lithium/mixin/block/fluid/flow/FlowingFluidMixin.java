@@ -194,8 +194,8 @@ public abstract class FlowingFluidMixin {
      */
     @Unique
     private boolean canMaybeFlowIntoBlock(Level world, BlockState blockState, BlockPos flowTargetPos) {
-        //TODO maybe use this in more places
-        //TODO maybe use the blockstate predicate system
+        //todo maybe use this in more places,
+        // maybe use the blockstate predicate system
         return canHoldFluid(world, flowTargetPos, blockState, this.getSource());
     }
 
