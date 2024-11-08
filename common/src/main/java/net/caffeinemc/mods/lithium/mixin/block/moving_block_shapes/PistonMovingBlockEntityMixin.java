@@ -52,7 +52,8 @@ public abstract class PistonMovingBlockEntityMixin {
             cancellable = true
     )
     private void skipVoxelShapeUnion(BlockGetter world, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir, VoxelShape voxelShape, Direction direction, BlockState blockState, float offset) {
-        if (offset != 0f && offset != 0.5f && offset != 1f) {
+        float absOffset = Math.abs(offset);
+        if (absOffset != 0f && absOffset != 0.5f && absOffset != 1f) {
             //This doesn't happen in vanilla, but we fall back to vanilla code in case mods use custom offsets
             return;
         }
@@ -62,7 +63,7 @@ public abstract class PistonMovingBlockEntityMixin {
             VoxelShape blockShape = blockState.getCollisionShape(world, pos);
 
             //we cache the simplified shapes, as the simplify() method costs a lot of CPU time and allocates several objects
-            VoxelShape offsetAndSimplified = getOffsetAndSimplified(blockShape, Math.abs(offset), offset < 0f ? this.direction.getOpposite() : this.direction);
+            VoxelShape offsetAndSimplified = getOffsetAndSimplified(blockShape, absOffset, offset < 0f ? this.direction.getOpposite() : this.direction);
             cir.setReturnValue(offsetAndSimplified);
         } else {
             //retracting piston heads have to act like their base as well, as the base block is replaced with the moving block
