@@ -2,7 +2,7 @@
         description = "Send updates to hoppers when adding inventory block entities to chunks when world edit is loaded. " +
                 "Fixes the issue of hoppers not noticing when inventories are placed using worldedit without any block updates. Enabled automatically when worldedit is present.",
         depends = @MixinConfigDependency(dependencyPath = "mixin.util.block_entity_retrieval"),
-        enabled = false
+        enabled = false // Enabled automatically when worldedit is present
 )
 package net.caffeinemc.mods.lithium.fabric.mixin.compat.worldedit;
 

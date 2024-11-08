@@ -12,18 +12,14 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import org.apache.commons.lang3.Validate;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBaseMixin implements BlockStatePathingCache {
     private PathType pathNodeType = null;
     private PathType pathNodeTypeNeighbor = null;
 
-    //TODO fix injection point
-    @Inject(method = "initCache()V", at = @At("RETURN"))
-    private void init(CallbackInfo ci) {
+    @Override
+    public void lithium$initializePathNodeTypeCache() {
         // Reset the cached path node types, to ensure they are re-calculated.
         this.pathNodeType = null;
         this.pathNodeTypeNeighbor = null;
@@ -41,7 +37,9 @@ public abstract class BlockStateBaseMixin implements BlockStatePathingCache {
         try {
             //Passing null as previous node type to the method signals to other lithium mixins that we only want the neighbor behavior of this block and not its neighbors
             //Using exceptions for control flow, but this way we do not need to copy the code for the cache initialization, reducing required maintenance and improving mod compatibility
+            //noinspection DataFlowIssue
             this.pathNodeTypeNeighbor = (WalkNodeEvaluator.checkNeighbourBlocks(new PathfindingContext(singleBlockBlockView, null), 1, 1, 1, null));
+            //noinspection ConstantValue
             if (this.pathNodeTypeNeighbor == null) {
                 this.pathNodeTypeNeighbor = PathType.OPEN;
             }

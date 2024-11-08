@@ -8,6 +8,7 @@
   },
   "mixins" : [
     "ai.pathing.BlockStateBaseMixin",
+    "ai.pathing.BootstrapMixin",
     "ai.pathing.FlyNodeEvaluatorMixin",
     "ai.pathing.PathfindingContextAccessor",
     "ai.pathing.PathfindingContextMixin",
@@ -172,6 +173,7 @@
     "util.accessors.ServerLevelAccessor",
     "util.block_entity_retrieval.LevelMixin",
     "util.block_tracking.BlockStateBaseMixin",
+    "util.block_tracking.BootstrapMixin",
     "util.block_tracking.LevelChunkSectionMixin",
     "util.chunk_access.LevelReaderMixin",
     "util.chunk_access.PathNavigationRegionMixin",
