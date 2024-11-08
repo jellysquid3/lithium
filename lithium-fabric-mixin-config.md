@@ -152,7 +152,6 @@ Fluid optimizations
 Fluid flow optimization  
   
 ### `mixin.block.hopper`
-
 (default: `true`)  
 Reduces hopper lag using caching, notification systems and BlockEntity sleeping  
 Requirements:
@@ -317,7 +316,6 @@ Skip checking whether an entity is inside powder snow for movement speed slowdow
 Access entities faster when accessing a relatively small number of entity sections  
   
 ### `mixin.entity.inactive_navigations`
-
 (default: `true`)  
 Block updates skip notifying mobs that won't react to the block update anyways  
 Requirements:
@@ -449,7 +447,6 @@ Various VoxelShape optimizations
 Use a faster collection for the full cube test cache  
   
 ### `mixin.shapes.lazy_shape_context`
-
 (default: `true`)  
 Entity shape contexts initialize rarely used fields only on first use  
   
@@ -516,12 +513,10 @@ Requirements:
 Entity sections store their position  
   
 ### `mixin.util.inventory_change_listening`
-
 (default: `true`)  
 Certain BlockEntity Inventories emit updates to their listeners when their stack list is changed or the inventory becomes invalid  
   
 ### `mixin.util.inventory_comparator_tracking`
-
 (default: `true`)  
 BlockEntity Inventories update their listeners when a comparator is placed near them  
 Requirements:
@@ -548,7 +543,6 @@ Various BlockEntity ticking optimizations
 Allows BlockEntities to sleep, meaning they are no longer ticked until woken up, e.g. by updates to their inventory or block state  
   
 ### `mixin.world.block_entity_ticking.sleeping.brewing_stand`
-
 (default: `true`)  
 BlockEntity sleeping for inactive brewing stands  
   
@@ -565,7 +559,6 @@ BlockEntity sleeping for inactive lit campfires
 BlockEntity sleeping for inactive unlit campfires  
   
 ### `mixin.world.block_entity_ticking.sleeping.furnace`
-
 (default: `true`)  
 BlockEntity sleeping for inactive furnaces  
   

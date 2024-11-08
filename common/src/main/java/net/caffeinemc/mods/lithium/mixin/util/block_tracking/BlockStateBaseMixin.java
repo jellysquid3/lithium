@@ -7,22 +7,14 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = BlockBehaviour.BlockStateBase.class, priority = 1010)
 public class BlockStateBaseMixin implements BlockStateFlagHolder {
     @Unique
     private int flags;
 
-    @Inject(method = "initCache()V", at = @At("RETURN"))
-    private void init(CallbackInfo ci) {
-        this.initFlags();
-    }
-
-    @Unique
-    private void initFlags() {
+    @Override
+    public void lithium$initializeFlags() {
         TrackedBlockStatePredicate.FULLY_INITIALIZED.set(true);
 
         int flags = 0;

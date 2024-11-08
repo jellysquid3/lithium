@@ -5,7 +5,8 @@
         depends = {
                 @MixinConfigDependency(dependencyPath = "mixin.util.data_storage"),
                 @MixinConfigDependency(dependencyPath = "mixin.util.chunk_status_tracking")
-        }, enabled = false // TODO inject point bad
+        },
+        enabled = false // TODO handle data pack tag changes etc. Just injecting into Bootstrap is not enough.
 )
 package net.caffeinemc.mods.lithium.mixin.util.block_tracking;
 
