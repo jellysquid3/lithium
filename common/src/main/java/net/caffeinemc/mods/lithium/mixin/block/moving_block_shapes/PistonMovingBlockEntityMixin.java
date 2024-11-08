@@ -51,18 +51,23 @@ public abstract class PistonMovingBlockEntityMixin {
             locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true
     )
-    private void skipVoxelShapeUnion(BlockGetter world, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir, VoxelShape voxelShape, Direction direction, BlockState blockState, float f) {
+    private void skipVoxelShapeUnion(BlockGetter world, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir, VoxelShape voxelShape, Direction direction, BlockState blockState, float offset) {
+        if (offset != 0f && offset != 0.5f && offset != 1f) {
+            //This doesn't happen in vanilla, but we fall back to vanilla code in case mods use custom offsets
+            return;
+        }
+
         if (this.extending || !this.isSourcePiston || !(this.movedState.getBlock() instanceof PistonBaseBlock)) {
             //here voxelShape2.isEmpty() is guaranteed, vanilla code would call union() which calls simplify()
             VoxelShape blockShape = blockState.getCollisionShape(world, pos);
 
             //we cache the simplified shapes, as the simplify() method costs a lot of CPU time and allocates several objects
-            VoxelShape offsetAndSimplified = getOffsetAndSimplified(blockShape, Math.abs(f), f < 0f ? this.direction.getOpposite() : this.direction);
+            VoxelShape offsetAndSimplified = getOffsetAndSimplified(blockShape, Math.abs(offset), offset < 0f ? this.direction.getOpposite() : this.direction);
             cir.setReturnValue(offsetAndSimplified);
         } else {
             //retracting piston heads have to act like their base as well, as the base block is replaced with the moving block
             //f >= 0f is guaranteed (assuming no other mod interferes)
-            int index = getIndexForMergedShape(f, this.direction);
+            int index = getIndexForMergedShape(offset, this.direction);
             cir.setReturnValue(PISTON_BASE_WITH_MOVING_HEAD_SHAPES[index]);
         }
     }
