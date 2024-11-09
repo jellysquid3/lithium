@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.RemapJarTask
+
 plugins {
     id("java")
     id("idea")
@@ -51,6 +53,30 @@ sourceSets {
             runtimeClasspath += api.output
         }
     }
+}
+
+tasks.register<Jar>("apiJar") {
+    from(sourceSets["api"].output)
+    archiveBaseName.set("lithium-neoforge")
+    archiveClassifier.set("api")
+    destinationDirectory = rootDir.resolve("build").resolve("libs")
+}
+
+tasks.register<RemapJarTask>("remapApiJar") {
+    dependsOn("apiJar")
+    archiveBaseName.set("lithium-fabric")
+    archiveClassifier.set("api")
+    inputFile.set(tasks.named<Jar>("apiJar").get().archiveFile)
+    destinationDirectory = rootDir.resolve("build").resolve("libs")
+}
+
+tasks.named<Jar>("jar") {
+    from(sourceSets["api"].output.classesDirs)
+    from(sourceSets["api"].output.resourcesDir)
+}
+
+tasks.named("build") {
+    dependsOn("remapApiJar", "apiJar")
 }
 
 loom {
