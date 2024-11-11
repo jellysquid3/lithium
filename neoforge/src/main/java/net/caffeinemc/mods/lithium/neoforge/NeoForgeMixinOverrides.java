@@ -21,7 +21,7 @@ public class NeoForgeMixinOverrides implements PlatformMixinOverrides {
         List<MixinOverride> list = new ArrayList<>();
 
         for (ModInfo meta : FMLLoader.getLoadingModList().getMods()) {
-            meta.getConfigElement(JSON_KEY_LITHIUM_OPTIONS).ifPresent(override -> {
+            meta.getOwningFile().getConfigElement(JSON_KEY_LITHIUM_OPTIONS).ifPresent(override -> {
                 if (override instanceof Map<?, ?> overrides && overrides.keySet().stream().allMatch(key -> key instanceof String)) {
                     overrides.forEach((key, value) -> {
                         if (!(value instanceof Boolean) || !(key instanceof String)) {
