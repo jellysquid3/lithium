@@ -14,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEventListenerRegistry;
 
+import java.util.Objects;
+
 public interface LithiumData {
 
     record Data(
@@ -41,7 +43,7 @@ public interface LithiumData {
         public Data(Level world) {
             this(
                     new Long2ReferenceOpenHashMap<>(),
-                    world.registryAccess().lookup(Registries.BANNER_PATTERN).map(Raid::getOminousBannerInstance).orElse(null),
+                    Objects.requireNonNullElse(world.registryAccess(), null).lookup(Registries.BANNER_PATTERN).map(Raid::getOminousBannerInstance).orElse(null),
                     new ReferenceOpenHashSet<>(),
                     new LithiumInterner<>(),
                     new LithiumInterner<>(),
