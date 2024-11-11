@@ -20,5 +20,6 @@ accessible method net/minecraft/world/level/chunk/PalettedContainer$Strategy <in
 accessible method net/minecraft/world/level/chunk/PalettedContainer$Strategy calculateBitsForSerialization (Lnet/minecraft/core/IdMap;I)I
 accessible method net/minecraft/world/level/material/Fluid isEmpty ()Z
 accessible method net/minecraft/world/level/pathfinder/WalkNodeEvaluator getPathTypeFromState (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/pathfinder/PathType;
+accessible method net/minecraft/world/level/redstone/RedstoneWireEvaluator getWireSignal (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)I
 accessible method net/minecraft/world/phys/shapes/Shapes findBits (DD)I
 accessible method net/minecraft/world/ticks/SavedTick saveTick (Ljava/lang/String;Lnet/minecraft/core/BlockPos;ILnet/minecraft/world/ticks/TickPriority;)Lnet/minecraft/nbt/CompoundTag;
