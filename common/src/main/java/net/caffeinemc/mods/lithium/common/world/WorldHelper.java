@@ -45,7 +45,7 @@ public class WorldHelper {
             EntitySectionStorage<Entity> cache = getEntityCacheOrNull(world);
             if (cache != null) {
                 Profiler.get().incrementCounter("getEntities");
-                return getEntitiesOfClassGroup(cache, collidingEntity, EntityClassGroup.NoDragonClassGroup.BOAT_SHULKER_LIKE_COLLISION, box);
+                return getEntitiesOfClassGroup(cache, collidingEntity, EntityClassGroup.NoDragonClassGroup.BOAT_SHULKER_LIKE_COLLISION, box, null);
             }
         }
         //use vanilla code in case the shortcut is not applicable
@@ -53,19 +53,19 @@ public class WorldHelper {
         return entityView.getEntities(collidingEntity, box);
     }
 
-    public static List<Entity> getOtherEntitiesForCollision(EntityGetter entityView, AABB box, @Nullable Entity collidingEntity, Predicate<? super Entity> entityPredicate) {
+    public static List<Entity> getOtherEntitiesForCollision(EntityGetter entityView, AABB box, @Nullable Entity collidingEntity, Predicate<? super Entity> entityFilter) {
         if (!CUSTOM_TYPE_FILTERABLE_LIST_DISABLED && entityView instanceof Level world) {
             if (collidingEntity == null || !EntityClassGroup.CUSTOM_COLLIDE_LIKE_MINECART_BOAT_WINDCHARGE.contains(collidingEntity.getClass())) {
                 EntitySectionStorage<Entity> cache = getEntityCacheOrNull(world);
                 if (cache != null) {
                     Profiler.get().incrementCounter("getEntities");
-                    return getEntitiesOfClassGroup(cache, collidingEntity, EntityClassGroup.NoDragonClassGroup.BOAT_SHULKER_LIKE_COLLISION, box);
+                    return getEntitiesOfClassGroup(cache, collidingEntity, EntityClassGroup.NoDragonClassGroup.BOAT_SHULKER_LIKE_COLLISION, box, entityFilter);
                 }
             }
         }
         //use vanilla code in case the shortcut is not applicable
         // due to the reference entity implementing special collision or the mixin being disabled in the config
-        return entityView.getEntities(collidingEntity, box, entityPredicate);
+        return entityView.getEntities(collidingEntity, box, entityFilter);
     }
 
 
@@ -81,7 +81,7 @@ public class WorldHelper {
         return null;
     }
 
-    public static List<Entity> getEntitiesOfClassGroup(EntitySectionStorage<Entity> cache, Entity collidingEntity, EntityClassGroup.NoDragonClassGroup entityClassGroup, AABB box) {
+    public static List<Entity> getEntitiesOfClassGroup(EntitySectionStorage<Entity> cache, Entity collidingEntity, EntityClassGroup.NoDragonClassGroup entityClassGroup, AABB box, Predicate<? super Entity> entityFilter) {
         ArrayList<Entity> entities = new ArrayList<>();
         cache.forEachAccessibleNonEmptySection(box, section -> {
             //noinspection unchecked
@@ -90,7 +90,7 @@ public class WorldHelper {
             Collection<Entity> entitiesOfType = ((ClassGroupFilterableList<Entity>) allEntities).lithium$getAllOfGroupType(entityClassGroup);
             if (!entitiesOfType.isEmpty()) {
                 for (Entity entity : entitiesOfType) {
-                    if (entity.getBoundingBox().intersects(box) && !entity.isSpectator() && entity != collidingEntity) {
+                    if (entity.getBoundingBox().intersects(box) && !entity.isSpectator() && entity != collidingEntity && (entityFilter == null || entityFilter.test(entity))) {
                         //skip the dragon piece check without issues by only allowing EntityClassGroup.NoDragonClassGroup as type
                         entities.add(entity);
                     }
