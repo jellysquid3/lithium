@@ -168,6 +168,10 @@ public class LithiumConfig {
     protected void applyModOverride(PlatformMixinOverrides.MixinOverride override) {
         Option option = this.options.get(override.option());
 
+        if (option == null && !override.option().startsWith("mixin.")) {
+            option = this.options.get("mixin." + override.option());
+        }
+
         if (option == null) {
             LOGGER.warn("Mod '{}' attempted to override option '{}', which doesn't exist, ignoring", override.modId(), override.option());
             return;
