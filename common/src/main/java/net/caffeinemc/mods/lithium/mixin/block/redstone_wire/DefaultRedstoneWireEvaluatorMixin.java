@@ -26,6 +26,6 @@ public abstract class DefaultRedstoneWireEvaluatorMixin extends RedstoneWireEval
             )
     )
     private void calculateTargetStrengthFaster(Level level, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(RedstoneWirePowerCalculations.getNeighborSignal(this.wireBlock, this, level, pos));
+        cir.setReturnValue(RedstoneWirePowerCalculations.getNeighborSignal(this.wireBlock, this, level, pos, false, false));
     }
 }
