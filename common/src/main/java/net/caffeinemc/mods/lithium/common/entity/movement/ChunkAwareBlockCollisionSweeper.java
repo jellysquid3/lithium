@@ -246,8 +246,9 @@ public class ChunkAwareBlockCollisionSweeper extends AbstractIterator<VoxelShape
 
             this.pos.set(x, y, z);
 
-            VoxelShape collisionShape = state.getCollisionShape(this.world, this.pos, this.context);
+            VoxelShape collisionShape = this.context.getCollisionShape(state, this.world, this.pos);
 
+            //noinspection ConstantValue
             if (collisionShape != Shapes.empty() && collisionShape != null /*collisionShape should never be null, but we received crash reports.*/) {
                 VoxelShape collidedShape = getCollidedShape(this.box, this.shape, collisionShape, x, y, z);
                 if (collidedShape != null) {
