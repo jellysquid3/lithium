@@ -52,6 +52,8 @@
     "block.flatten_states.FluidStateMixin",
     "block.fluid.flow.FlowingFluidMixin",
     "block.hopper.AbstractContainerMenuMixin",
+    "block.hopper.BlockBehaviourMixin",
+    "block.hopper.ChestBoatMixin",
     "block.hopper.ChiseledBookShelfBlockEntityMixin",
     "block.hopper.ClassInstanceMultiMapMixin",
     "block.hopper.ComposterMixin$ComposterBlockComposterInventoryMixin",
