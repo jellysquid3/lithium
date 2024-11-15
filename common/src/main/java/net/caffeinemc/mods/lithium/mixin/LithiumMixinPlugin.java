@@ -78,10 +78,10 @@ public class LithiumMixinPlugin implements IMixinConfigPlugin {
             }
 
             if (option.isEnabled()) {
-                this.logger.warn("Force-enabling mixin '{}' as rule '{}' (added by {}) enables it", mixin,
+                this.logger.info("Force-enabling mixin '{}' as rule '{}' (added by {}) enables it", mixin,
                         option.getName(), source);
             } else {
-                this.logger.warn("Force-disabling mixin '{}' as rule '{}' (added by {}) disables it and children", mixin,
+                this.logger.info("Force-disabling mixin '{}' as rule '{}' (added by {}) disables it and children", mixin,
                         option.getName(), source);
             }
         }

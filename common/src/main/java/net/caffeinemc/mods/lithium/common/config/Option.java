@@ -85,7 +85,7 @@ public class Option {
                 boolean enabledRecursive = option.isEnabledRecursive(config);
                 if (enabledRecursive != requiredValue) {
                     this.enabled = false;
-                    logger.warn("Option '{}' requires '{}={}' but found '{}'. Setting '{}={}'.", this.name, option.name, requiredValue, enabledRecursive, this.name, this.enabled);
+                    logger.info("Option '{}' requires '{}={}' but found '{}'. Setting '{}={}'.", this.name, option.name, requiredValue, enabledRecursive, this.name, this.enabled);
                     return true;
                 }
             }
