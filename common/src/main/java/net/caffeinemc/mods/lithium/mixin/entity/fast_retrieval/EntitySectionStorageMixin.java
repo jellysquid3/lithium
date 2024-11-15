@@ -1,6 +1,5 @@
 package net.caffeinemc.mods.lithium.mixin.entity.fast_retrieval;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.world.level.entity.EntityAccess;
@@ -13,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySectionStorage.class)
 public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
@@ -33,9 +33,10 @@ public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
                     target = "Lnet/minecraft/core/SectionPos;posToSectionCoord(D)I",
                     ordinal = 5
             ),
+            locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true
     )
-    public void forEachInBox(AABB box, AbortableIterationConsumer<EntitySection<T>> action, CallbackInfo ci, @Local(ordinal = 0) int minX, @Local(ordinal = 1) int minY, @Local(ordinal = 2) int minZ, @Local(ordinal = 3) int maxX, @Local(ordinal = 4) int maxY, @Local(ordinal = 5) int maxZ) {
+    public void forEachInBox(AABB box, AbortableIterationConsumer<EntitySection<T>> action, CallbackInfo ci, int i, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         if (maxX >= minX + 4 || maxZ >= minZ + 4) {
             return; // Vanilla is likely more optimized when shooting entities with TNT cannons over huge distances.
             // Choosing a cutoff of 4 chunk size, as it becomes more likely that these entity sections do not exist when

@@ -171,8 +171,8 @@ public class LithiumHashPalette<T> implements Palette<T> {
     }
 
     @Override
-    public Palette<T> copy(PaletteResize<T> resizeHandler) {
-        return new LithiumHashPalette<>(this.idList, resizeHandler, this.indexBits, this.entries.clone(), new Reference2IntOpenHashMap<>(this.table), this.size);
+    public Palette<T> copy() {
+        return new LithiumHashPalette<>(this.idList, this.resizeHandler, this.indexBits, this.entries.clone(), new Reference2IntOpenHashMap<>(this.table), this.size);
     }
 
     private void clear() {

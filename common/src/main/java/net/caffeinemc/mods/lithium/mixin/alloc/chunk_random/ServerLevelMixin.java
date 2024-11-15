@@ -4,6 +4,7 @@ import net.caffeinemc.mods.lithium.common.world.ChunkRandomSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -51,10 +52,10 @@ public abstract class ServerLevelMixin {
             method = "tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/material/FluidState;randomTick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"
+                    target = "Lnet/minecraft/world/level/material/FluidState;randomTick(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"
             )
     )
-    private void redirectFluidStateTick(FluidState fluidState, ServerLevel world, BlockPos pos, RandomSource rand) {
+    private void redirectFluidStateTick(FluidState fluidState, Level world, BlockPos pos, RandomSource rand) {
         fluidState.randomTick(world, pos.immutable(), rand);
     }
 }

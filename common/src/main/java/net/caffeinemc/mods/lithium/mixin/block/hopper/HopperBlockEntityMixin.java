@@ -334,16 +334,6 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
     }
 
     @Override
-    public void lithium$invalidateCacheOnUndirectedNeighborUpdate() {
-        if (this.extractionMode == HopperCachingState.BlockInventory.NO_BLOCK_INVENTORY || this.extractionMode == HopperCachingState.BlockInventory.BLOCK_STATE) {
-            this.invalidateBlockExtractionData();
-        }
-        if (this.insertionMode == HopperCachingState.BlockInventory.NO_BLOCK_INVENTORY || this.insertionMode == HopperCachingState.BlockInventory.BLOCK_STATE) {
-            this.invalidateBlockInsertionData();
-        }
-    }
-
-    @Override
     public void lithium$invalidateCacheOnNeighborUpdate(Direction fromDirection) {
         boolean fromAbove = fromDirection == Direction.UP;
         if (fromAbove || this.getBlockState().getValue(HopperBlock.FACING) == fromDirection) {

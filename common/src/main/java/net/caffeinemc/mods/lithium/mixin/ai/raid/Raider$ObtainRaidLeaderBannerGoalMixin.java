@@ -20,16 +20,16 @@ public class Raider$ObtainRaidLeaderBannerGoalMixin<T extends Raider> {
 
     // The call to Raid#getOminousBanner() is very expensive, use a cached banner during AI ticking
     @Redirect(
-            method = "cannotPickUpBanner",
+            method = "canUse()Z",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/raid/Raid;getOminousBannerInstance(Lnet/minecraft/core/HolderGetter;)Lnet/minecraft/world/item/ItemStack;"
+                    target = "Lnet/minecraft/world/entity/raid/Raid;getLeaderBannerInstance(Lnet/minecraft/core/HolderGetter;)Lnet/minecraft/world/item/ItemStack;"
             )
     )
     private ItemStack getOminousBanner(HolderGetter<BannerPattern> bannerPatternLookup) {
         ItemStack ominousBanner = ((LithiumData) this.mob.level()).lithium$getData().ominousBanner();
         if (ominousBanner == null) {
-            ominousBanner = Raid.getOminousBannerInstance(bannerPatternLookup);
+            ominousBanner = Raid.getLeaderBannerInstance(bannerPatternLookup);
         }
         return ominousBanner;
     }

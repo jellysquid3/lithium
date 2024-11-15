@@ -52,7 +52,7 @@ public record SingleBlockBlockView(BlockState state, BlockPos blockPos) implemen
     }
 
     @Override
-    public int getMinY() {
+    public int getMinBuildHeight() {
         throw SingleBlockViewException.INSTANCE;
     }
 

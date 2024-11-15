@@ -43,7 +43,7 @@ public interface LithiumData {
         public Data(Level world) {
             this(
                     new Long2ReferenceOpenHashMap<>(),
-                    Objects.requireNonNullElse(world.registryAccess(), null).lookup(Registries.BANNER_PATTERN).map(Raid::getOminousBannerInstance).orElse(null),
+                    Objects.requireNonNullElse(world.registryAccess(), null).lookup(Registries.BANNER_PATTERN).map(Raid::getLeaderBannerInstance).orElse(null),
                     new ReferenceOpenHashSet<>(),
                     new LithiumInterner<>(),
                     new LithiumInterner<>(),

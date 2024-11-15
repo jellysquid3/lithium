@@ -97,7 +97,7 @@ public class CombinedHeightmapUpdate {
         }
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        int bottomY = worldChunk.getMinY();
+        int bottomY = worldChunk.getMinBuildHeight();
 
         for (int searchY = y - 1; searchY >= bottomY && heightmapsToUpdate > 0; --searchY) {
             mutable.set(x, searchY, z);

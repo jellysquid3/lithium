@@ -1,7 +1,6 @@
 package net.caffeinemc.mods.lithium.mixin.ai.poi;
 
 import com.google.common.collect.AbstractIterator;
-import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.caffeinemc.mods.lithium.common.util.Pos;
@@ -23,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -39,17 +37,16 @@ public abstract class SectionStorageMixin<R> implements RegionBasedStorageSectio
     protected abstract Optional<R> get(long pos);
 
     @Shadow
-    @Final
-    protected LevelHeightAccessor levelHeightAccessor;
+    protected abstract void readColumn(ChunkPos pos);
 
     @Shadow
-    protected abstract void unpackChunk(ChunkPos chunkPos);
-
+    @Final
+    protected LevelHeightAccessor levelHeightAccessor;
     private Long2ObjectOpenHashMap<BitSet> columns;
 
     @SuppressWarnings("rawtypes")
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(SimpleRegionStorage simpleRegionStorage, Codec codec, Function function, BiFunction biFunction, Function function2, RegistryAccess registryAccess, ChunkIOErrorReporter chunkIOErrorReporter, LevelHeightAccessor levelHeightAccessor, CallbackInfo ci) {
+    private void init(SimpleRegionStorage storageAccess, Function codecFactory, Function factory, RegistryAccess registryManager, ChunkIOErrorReporter errorHandler, LevelHeightAccessor world, CallbackInfo ci) {
         this.columns = new Long2ObjectOpenHashMap<>();
         this.storage = new ListeningLong2ObjectOpenHashMap<>(this::onEntryAdded, this::onEntryRemoved);
     }
@@ -165,7 +162,7 @@ public abstract class SectionStorageMixin<R> implements RegionBasedStorageSectio
             return flags;
         }
 
-        this.unpackChunk(new ChunkPos(pos));
+        this.readColumn(new ChunkPos(pos));
 
         return this.getNonEmptySections(pos, true);
     }

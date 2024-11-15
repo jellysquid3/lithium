@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.caffeinemc.mods.lithium.common.world.scheduler.OrderedTickQueue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import net.minecraft.world.ticks.SavedTick;
 import net.minecraft.world.ticks.ScheduledTick;
@@ -16,8 +17,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -237,17 +242,19 @@ public class LevelChunkTicksMixin<T> {
      * @reason not use unused field
      */
     @Overwrite
-    public List<SavedTick<T>> pack(long l) {
-        List<SavedTick<T>> list = new ArrayList<>(this.count());
+    public ListTag save(long l, Function<T, String> function) {
+        ListTag nbtList = new ListTag();
         if (this.pendingTicks != null) {
-            list.addAll(this.pendingTicks);
+            for (SavedTick<T> tick : this.pendingTicks) {
+                nbtList.add(tick.save(function));
+            }
         }
         for (OrderedTickQueue<T> nextTickQueue : this.tickQueuesByTimeAndPriority.values()) {
             for (ScheduledTick<T> orderedTick : nextTickQueue) {
-                list.add(orderedTick.toSavedTick(l));
+                nbtList.add(SavedTick.saveTick(orderedTick, function, l));
             }
         }
-        return list;
+        return nbtList;
     }
 
 

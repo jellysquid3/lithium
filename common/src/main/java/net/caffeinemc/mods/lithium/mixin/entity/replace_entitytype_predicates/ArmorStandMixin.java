@@ -31,7 +31,7 @@ public class ArmorStandMixin {
         if (predicate == RIDABLE_MINECARTS) {
             // Not using MinecartEntity.class and no predicate, because mods may add another minecart that is type rideable without being MinecartEntity
             //noinspection unchecked,rawtypes
-            return (List) world.getEntitiesOfClass(AbstractMinecart.class, box, (AbstractMinecart e) -> e != excluded && e.isRideable());
+            return (List) world.getEntitiesOfClass(AbstractMinecart.class, box, (Entity e) -> e != excluded && ((AbstractMinecart) e).getMinecartType() == AbstractMinecart.Type.RIDEABLE);
         }
 
         return world.getEntities(excluded, box, predicate);

@@ -98,7 +98,12 @@ Patches that reduce memory allocations
 ### `mixin.alloc.chunk_random`
 (default: `true`)  
 Random block ticking uses fewer block position allocations, thereby reducing the object allocation rate.  
-  
+
+### `mixin.alloc.chunk_ticking`
+
+(default: `true`)  
+Reuse large chunk lists
+
 ### `mixin.alloc.composter`
 (default: `true`)  
 Composters will reuse the available slot arrays that are requested by hoppers  
@@ -237,7 +242,12 @@ Use ReferenceArraySet instead of HashSet to store the fluids the entity is curre
 ### `mixin.collections.gamerules`
 (default: `true`)  
 Uses fastutil hashmaps for gamerules  
-  
+
+### `mixin.collections.goals`
+
+(default: `true`)  
+Uses fastutil hashsets for goals in the AI goal selector
+
 ### `mixin.collections.mob_spawning`
 (default: `true`)  
 Uses custom hashset/list combination for faster mob spawn checks  
@@ -437,7 +447,12 @@ Requirements:
 ### `mixin.minimal_nonvanilla.world.expiring_chunk_tickets`
 (default: `false`)  
 Only check positions with expiring tickets during ticket expiration. Can cause reordering of chunks unloading. The chunk unloading order in vanilla is predictable, but depends on the hash of the chunk position of the tickets and the hashes of the other chunk tickets, and the order of creation of the chunk tickets when hash collisions occur. No known contraptions depend on the unload order.  
-  
+
+### `mixin.profiler`
+
+(default: `true`)  
+Avoid indirection when accessing the profiler
+
 ### `mixin.shapes`
 (default: `true`)  
 Various VoxelShape optimizations  
@@ -599,7 +614,12 @@ Various improvements to explosions.
 ### `mixin.world.explosions.block_raycast`
 (default: `true`)  
 Various improvements to explosion block damage, e.g. not accessing blocks along an explosion ray multiple times  
-  
+
+### `mixin.world.explosions.cache_exposure`
+
+(default: `true`)  
+Caches entity explosion exposure to avoid duplicate calculations.
+
 ### `mixin.world.game_events`
 (default: `true`)  
 Various improvements to game events (vibrations) that are detected by allays, wardens and several sculk blocks.  

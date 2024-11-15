@@ -18,11 +18,10 @@ import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Mixin(PoiManager.class)
-public abstract class PoiManagerMixin extends SectionStorage<PoiSection, PoiSection.Packed> {
+public abstract class PoiManagerMixin extends SectionStorage<PoiSection> {
 
     @Shadow
     @Final
@@ -33,8 +32,8 @@ public abstract class PoiManagerMixin extends SectionStorage<PoiSection, PoiSect
     @Unique
     private int preloadRadius = 0;
 
-    public PoiManagerMixin(SimpleRegionStorage simpleRegionStorage, Codec<PoiSection.Packed> codec, Function<PoiSection, PoiSection.Packed> function, BiFunction<PoiSection.Packed, Runnable, PoiSection> biFunction, Function<Runnable, PoiSection> function2, RegistryAccess registryAccess, ChunkIOErrorReporter chunkIOErrorReporter, LevelHeightAccessor levelHeightAccessor) {
-        super(simpleRegionStorage, codec, function, biFunction, function2, registryAccess, chunkIOErrorReporter, levelHeightAccessor);
+    public PoiManagerMixin(SimpleRegionStorage storageAccess, Function<Runnable, Codec<PoiSection>> codecFactory, Function<Runnable, PoiSection> factory, RegistryAccess registryManager, ChunkIOErrorReporter errorHandler, LevelHeightAccessor world) {
+        super(storageAccess, codecFactory, factory, registryManager, errorHandler, world);
     }
 
 
@@ -61,8 +60,8 @@ public abstract class PoiManagerMixin extends SectionStorage<PoiSection, PoiSect
         int chunkZ = SectionPos.blockToSectionCoord(pos.getZ());
 
         int chunkRadius = Math.floorDiv(radius, 16);
-        int maxHeight = this.levelHeightAccessor.getMaxSectionY() - 1;
-        int minHeight = this.levelHeightAccessor.getMinSectionY();
+        int maxHeight = this.levelHeightAccessor.getMaxSection() - 1;
+        int minHeight = this.levelHeightAccessor.getMinSection();
 
         for (int x = chunkX - chunkRadius, xMax = chunkX + chunkRadius; x <= xMax; x++) {
             for (int z = chunkZ - chunkRadius, zMax = chunkZ + chunkRadius; z <= zMax; z++) {
