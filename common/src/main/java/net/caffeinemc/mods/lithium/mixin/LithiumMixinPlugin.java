@@ -19,22 +19,22 @@ public class LithiumMixinPlugin implements IMixinConfigPlugin {
 
     private final Logger logger = LogManager.getLogger("Lithium");
 
-    private LithiumConfig config;
+    private static LithiumConfig CONFIG;
 
     @Override
     public void onLoad(String mixinPackage) {
-        if (this.config != null) {
+        if (CONFIG != null) {
             return;
         }
 
         try {
-            this.config = LithiumConfig.load(new File("./config/lithium.properties"));
+            CONFIG = LithiumConfig.load(new File("./config/lithium.properties"));
         } catch (Exception e) {
             throw new RuntimeException("Could not load configuration file for Lithium", e);
         }
 
         this.logger.info("Loaded configuration file for Lithium: {} options available, {} override(s) found",
-                this.config.getOptionCount(), this.config.getOptionOverrideCount());
+                CONFIG.getOptionCount(), CONFIG.getOptionOverrideCount());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LithiumMixinPlugin implements IMixinConfigPlugin {
             return false;
         }
 
-        Option option = this.config.getEffectiveOptionForMixin(mixin);
+        Option option = CONFIG.getEffectiveOptionForMixin(mixin);
 
         if (option == null) {
             this.logger.error("No rules matched mixin '{}', treating as foreign and disabling!", mixin);
