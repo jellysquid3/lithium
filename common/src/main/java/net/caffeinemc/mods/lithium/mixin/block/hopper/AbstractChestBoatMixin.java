@@ -18,7 +18,7 @@ public abstract class AbstractChestBoatMixin extends Entity {
         super(type, world);
     }
 
-    @Intrinsic(displace = true)
+    @Intrinsic()
     // Intrinsic for mod compatibility: If this injection does not work, it is not critical, only a slight performance loss.
     @Override
     public void rideTick() {
