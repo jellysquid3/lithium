@@ -4,7 +4,7 @@ import com.google.common.base.Predicates;
 import net.caffeinemc.mods.lithium.common.entity.pushable.EntityPushablePredicate;
 import net.caffeinemc.mods.lithium.common.world.WorldHelper;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.OldMinecartBehavior;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.minecraft.world.phys.AABB;
@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Mixin(AbstractMinecart.class)
-public class AbstractMinecartMixin {
+@Mixin(OldMinecartBehavior.class)
+public class OldMinecartBehaviorMixin {
 
     @Redirect(
-            method = "tick()V",
+            method = "pushAndPickupEntities()Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;"
