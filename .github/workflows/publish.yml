@@ -25,9 +25,7 @@ jobs:
               run: chmod +x gradlew
 
             - name: Upload assets to CurseForge
-              run: ./gradlew build
-              env:
-                  BUILD_RELEASE: ${{ github.event.prerelease == false }}
+              run: ./gradlew build -Pbuild.release=true
 
             - name: Upload assets to GitHub
               uses: AButler/upload-release-assets@v3.0
