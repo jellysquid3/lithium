@@ -67,7 +67,7 @@ public class DefaultConfigCreator {
                 writer.write("### `" + option.path() + "`\n");
                 writer.write("(default: `" + option.config().enabled() + "`)  \n");
                 if (option.config().description().length() > 0) {
-                    writer.write(option.config().description() + "  \n");
+                    writer.write(option.config().description() + "\n");
                 }
                 if (option.config().depends().length > 0) {
                     MixinConfigDependency[] dependencies = option.config().depends();
