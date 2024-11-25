@@ -7,6 +7,7 @@ import net.caffeinemc.mods.lithium.common.entity.block_tracking.ChunkSectionChan
 import net.caffeinemc.mods.lithium.common.entity.block_tracking.SectionedBlockChangeTracker;
 import net.caffeinemc.mods.lithium.common.entity.movement_tracker.SectionedEntityMovementTracker;
 import net.caffeinemc.mods.lithium.common.util.deduplication.LithiumInterner;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.raid.Raid;
@@ -43,7 +44,7 @@ public interface LithiumData {
         public Data(Level world) {
             this(
                     new Long2ReferenceOpenHashMap<>(),
-                    Objects.requireNonNullElse(world.registryAccess(), null).lookup(Registries.BANNER_PATTERN).map(Raid::getLeaderBannerInstance).orElse(null),
+                    Objects.requireNonNullElse(world.registryAccess(), RegistryAccess.EMPTY).lookup(Registries.BANNER_PATTERN).map(Raid::getLeaderBannerInstance).orElse(null),
                     new ReferenceOpenHashSet<>(),
                     new LithiumInterner<>(),
                     new LithiumInterner<>(),
