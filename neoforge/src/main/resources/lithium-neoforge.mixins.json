@@ -12,9 +12,9 @@
   },
   "mixins" : [
     "block.hopper.LevelMixin",
-    "startup.MinecraftMixin",
     "util.inventory_change_listening.ChestBlockEntityMixin"
   ],
   "client" : [
+    "startup.MinecraftMixin"
   ]
 }
