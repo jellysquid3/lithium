@@ -1,17 +1,18 @@
 {
-  "package" : "net.caffeinemc.mods.lithium.fabric.mixin",
-  "required" : true,
-  "compatibilityLevel" : "JAVA_21",
-  "plugin" : "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
-  "refmap" : "lithium-fabric.refmap.json",
-  "injectors" : {
-    "defaultRequire" : 1
+  "package": "net.caffeinemc.mods.lithium.fabric.mixin",
+  "required": true,
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
+  "refmap": "lithium-fabric.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
   },
-  "overwrites" : {
-    "conformVisibility" : true
+  "overwrites": {
+    "conformVisibility": true
   },
-  "mixins" : [
+  "mixins": [
     "block.hopper.LevelMixin",
+    "collections.poi_types.PoiTypesMixin",
     "compat.transfer_api.TransferApiHelperMixin",
     "compat.worldedit.LevelChunkMixin",
     "entity.collisions.fluid.EntityMixin",
@@ -19,6 +20,6 @@
     "util.inventory_change_listening.BlockEntityMixin",
     "util.inventory_change_listening.ChestBlockEntityMixin"
   ],
-  "client" : [
+  "client": [
   ]
 }
