@@ -242,6 +242,10 @@ Uses fastutil hashmaps for gamerules
 (default: `true`)  
 Uses custom hashset/list combination for faster mob spawn checks
   
+### `mixin.collections.poi_types`
+(default: `true`)  
+Uses fastutil hashmap for POI Types
+  
 ### `mixin.compat.transfer_api`
 (default: `false`)  
 Allow hoppers to check whether a transfer-api inventory is present to avoid sleeping, which would prevent the hopper-inventory interaction. Enabled automatically when the transfer-api is present.
