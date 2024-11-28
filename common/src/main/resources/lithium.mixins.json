@@ -16,7 +16,6 @@
     "ai.pathing.WalkNodeEvaluatorMixin",
     "ai.poi.PoiManagerMixin",
     "ai.poi.PoiSectionMixin",
-    "ai.poi.PoiTypesMixin",
     "ai.poi.SectionStorageMixin",
     "ai.poi.fast_portals.PoiManagerMixin",
     "ai.poi.fast_portals.PortalForcerMixin",

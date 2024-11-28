@@ -1,7 +1,6 @@
-package net.caffeinemc.mods.lithium.mixin.ai.poi;
+package net.caffeinemc.mods.lithium.fabric.mixin.collections.poi_types;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.caffeinemc.mods.lithium.common.world.interests.types.PointOfInterestTypeHelper;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +23,5 @@ public class PoiTypesMixin {
 
     static {
         TYPE_BY_STATE = new Reference2ReferenceOpenHashMap<>(TYPE_BY_STATE);
-
-        PointOfInterestTypeHelper.init(TYPE_BY_STATE.keySet());
     }
 }
