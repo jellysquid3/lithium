@@ -131,4 +131,4 @@ format and all available options. The wiki may be outdated.
 ### License
 
 Lithium is licensed under GNU LGPLv3, a free and open-source license. For more information, please see the
-[license file](LICENSE.txt).
+[license file](LICENSE.md).
