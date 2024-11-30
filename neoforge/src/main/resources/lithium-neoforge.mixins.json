@@ -3,7 +3,6 @@
   "required" : true,
   "compatibilityLevel" : "JAVA_21",
   "plugin" : "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
-  "refmap" : "lithium-neoforge.refmap.json",
   "injectors" : {
     "defaultRequire" : 1
   },
