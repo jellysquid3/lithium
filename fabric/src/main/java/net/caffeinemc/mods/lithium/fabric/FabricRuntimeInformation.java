@@ -28,7 +28,7 @@ public class FabricRuntimeInformation implements PlatformRuntimeInformation {
 
     @Override
     public boolean platformUsesRefmap() {
-        return true;
+        return false;
     }
 
     @Override
