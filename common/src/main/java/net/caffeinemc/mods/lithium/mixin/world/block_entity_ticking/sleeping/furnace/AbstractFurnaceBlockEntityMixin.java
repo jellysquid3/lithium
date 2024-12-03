@@ -24,7 +24,7 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity implem
     protected abstract boolean isLit();
 
     @Shadow
-    int cookingProgress;
+    int cookingTimer;
     private WrappedBlockEntityTickInvokerAccessor tickWrapper = null;
     private TickingBlockEntity sleepingTicker = null;
 
@@ -59,7 +59,7 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity implem
     }
 
     private void checkSleep(BlockState state) {
-        if (!this.isLit() && this.cookingProgress == 0 && (state.is(Blocks.FURNACE) || state.is(Blocks.BLAST_FURNACE) || state.is(Blocks.SMOKER)) && this.level != null) {
+        if (!this.isLit() && this.cookingTimer == 0 && (state.is(Blocks.FURNACE) || state.is(Blocks.BLAST_FURNACE) || state.is(Blocks.SMOKER)) && this.level != null) {
             this.lithium$startSleeping();
         }
     }
