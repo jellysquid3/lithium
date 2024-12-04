@@ -18,7 +18,7 @@ val FABRIC_API_VERSION by extra { "0.110.5+1.21.4" }
 val PARCHMENT_VERSION by extra { null }
 
 // https://semver.org/
-val MOD_VERSION by extra { "0.14.3" }
+val MOD_VERSION by extra { "0.14.4" }
 
 allprojects {
     apply(plugin = "java")
