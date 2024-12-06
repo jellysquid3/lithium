@@ -32,7 +32,7 @@ public abstract class CreateMixinConfigTask extends DefaultTask {
     @Option(option = "modShortName", description = "Short name of the mod.")
     public String modShortName;
     @Option(option = "outputPathForSummaryDocument", description = "Output path for the summary markdown with all mixin rules and descriptions.")
-    public String outputPathForSummaryDocument;
+    public String outputFilenameForSummaryDocument;
 
     @InputFiles
     public abstract ListProperty<Directory> getInputFiles();
@@ -126,7 +126,7 @@ public abstract class CreateMixinConfigTask extends DefaultTask {
             Files.createDirectories(outputDirectory.resolve(outputAssetsPath));
             DefaultConfigCreator.writeDefaultConfig(this.modShortName, outputDirectory.resolve(outputAssetsPath).resolve(this.modShortName.toLowerCase() + "-mixin-config-default.properties").toFile(), sortedMixinConfigOptions);
             DefaultConfigCreator.writeMixinDependencies(this.modShortName, outputDirectory.resolve(outputAssetsPath).resolve(this.modShortName.toLowerCase() + "-mixin-config-dependencies.properties").toFile(), sortedMixinConfigOptions);
-            DefaultConfigCreator.writeMixinConfigSummaryMarkdown(this.modShortName, Path.of(this.outputPathForSummaryDocument).toFile(), sortedMixinConfigOptions);
+            DefaultConfigCreator.writeMixinConfigSummaryMarkdown(this.modShortName, outputDirectory.resolve(this.outputFilenameForSummaryDocument).toFile(), sortedMixinConfigOptions);
         } catch (IOException e) {
             e.printStackTrace();
         }

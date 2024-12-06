@@ -164,12 +164,19 @@ tasks.named<net.caffeinemc.gradle.CreateMixinConfigTask>("neoforgeCreateMixinCon
     includeFiles.set(file("src/main/java/net/caffeinemc/mods/lithium"))
     outputDirectory.set(layout.buildDirectory.dir("neoforge-mixin-config-output"))
     outputAssetsPath = "assets/lithium"
-    outputPathForSummaryDocument = "lithium-neoforge-mixin-config.md"
+    outputFilenameForSummaryDocument = "lithium-neoforge-mixin-config.md"
     mixinParentPackages = listOf("net.caffeinemc.mods.lithium", "net.caffeinemc.mods.lithium.neoforge")
     modShortName = "Lithium"
 
     dependsOn("compileJava")
     dependsOn(project(":common").tasks.named("compileJava", JavaCompile::class))
+
+    doLast {
+        copy {
+            from(layout.buildDirectory.dir("neoforge-mixin-config-output").get().file("lithium-neoforge-mixin-config.md"))
+            into(rootDir)
+        }
+    }
 }
 
 tasks.named("processResources") {
