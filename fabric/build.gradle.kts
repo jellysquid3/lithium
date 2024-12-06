@@ -28,7 +28,6 @@ dependencies {
         }
     })
     modImplementation("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
-    modImplementation("com.github.2No2Name:McTester:v0.4.2")
 
     fun addEmbeddedFabricModule(name: String) {
         val module = fabricApi.module(name, FABRIC_API_VERSION)
@@ -41,7 +40,14 @@ dependencies {
         modCompileOnly(module)
     }
 
+    fun addFabricModule(name: String) {
+        val module = fabricApi.module(name, FABRIC_API_VERSION)
+        modImplementation(module)
+    }
+
     addCompileOnlyFabricModule("fabric-transfer-api-v1")
+    addFabricModule("fabric-gametest-api-v1")
+
 
 
     implementation("com.google.code.findbugs:jsr305:3.0.1")
@@ -68,6 +74,30 @@ afterEvaluate {
     }
 }
 
+sourceSets {
+    val main by getting
+    val parent = project(":common").sourceSets.getByName("gametest")
+
+    create("gametest") {
+        java.srcDir("src/gametest/java")
+        resources.srcDir("src/gametest/resources")
+
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        compileClasspath += parent.compileClasspath
+        runtimeClasspath += parent.runtimeClasspath
+    }
+}
+
+tasks.named<Copy>("processGametestResources") {
+    from(project(":common").sourceSets.getByName("gametest").resources.srcDirs)
+    into("build/resources/gametest")
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 loom {
     if (project(":common").file("src/main/resources/lithium.accesswidener").exists())
         accessWidenerPath.set(project(":common").file("src/main/resources/lithium.accesswidener"))
@@ -83,7 +113,6 @@ loom {
             ideConfigGenerated(true)
             runDir("run")
         }
-
         create("fabricServer") {
             server()
             configName = "Fabric Server"
@@ -91,21 +120,25 @@ loom {
             runDir("run")
         }
 
-        create("testmodServer") {
-            runDir("testserver");
+        create("gametestServer") {
             server()
-            configName = "Fabric Testmod Server"
-            ideConfigGenerated(project.rootProject == project)
-            vmArg("-Dfabric.autoTest")
+            name = "Game Test"
+            vmArg("-Dfabric-api.gametest")
+            runDir = "build/gametest"
+            source(sourceSets["gametest"])
         }
+        create("gametestClient") {
+            client()
+            name = "Game Test Client"
+            vmArg("-Dfabric-api.gametest")
+            runDir = "build/gametest"
+            source(sourceSets["gametest"])
+        }
+    }
 
-        create("autoTestServer") {
-            runDir("testserver");
-            inherit(runs.named("testmodServer").get())
-            server()
-            configName = "Fabric Auto Testmod Server"
-            ideConfigGenerated(project.rootProject == project)
-            vmArg("-Dfabric.autoTest")
+    mods {
+        create("lithium-gametest") {
+            sourceSet(sourceSets.getByName("gametest"))
         }
     }
 }

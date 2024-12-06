@@ -40,6 +40,7 @@ dependencies {
 sourceSets {
     val main = getByName("main")
     val api = create("api")
+    val gametest = create("gametest")
 
     api.apply {
         java {
@@ -53,6 +54,19 @@ sourceSets {
             runtimeClasspath += api.output
         }
     }
+
+    gametest.apply {
+        java.srcDir("src/gametest/java")
+        resources.srcDir("src/gametest/resources")
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+    }
+}
+
+tasks.named<Copy>("processGametestResources") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.register<Jar>("apiJar") {
