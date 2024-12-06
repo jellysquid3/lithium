@@ -147,12 +147,19 @@ tasks.named<net.caffeinemc.gradle.CreateMixinConfigTask>("fabricCreateMixinConfi
     includeFiles.set(file("src/main/java/net/caffeinemc/mods/lithium"))
     outputDirectory.set(layout.buildDirectory.dir("fabric-mixin-config-output"))
     outputAssetsPath = "assets/lithium"
-    outputPathForSummaryDocument = "lithium-fabric-mixin-config.md"
+    outputFilenameForSummaryDocument = "lithium-fabric-mixin-config.md"
     mixinParentPackages = listOf("net.caffeinemc.mods.lithium", "net.caffeinemc.mods.lithium.fabric")
     modShortName = "Lithium"
 
     dependsOn("compileJava")
     dependsOn(project(":common").tasks.named("compileJava", JavaCompile::class))
+
+    doLast {
+        copy {
+            from(layout.buildDirectory.dir("fabric-mixin-config-output").get().file("lithium-fabric-mixin-config.md"))
+            into(rootDir)
+        }
+    }
 }
 
 tasks.named("processResources") {
