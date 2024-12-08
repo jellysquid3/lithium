@@ -25,9 +25,12 @@ jobs:
             - name: Build with Gradle
               run: ./gradlew build
 
-            - name: Run Test Server
+            - name: Run Test Servers
               timeout-minutes: 5
-              run: ./gradlew runAutoTestServer
+              run: |
+                ./gradlew fabric:runGametestServer &
+                ./gradlew neoforge:runGametestServer &
+                wait
 
             - name: Upload Build Artifacts
               uses: actions/upload-artifact@v4
