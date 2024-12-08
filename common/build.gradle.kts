@@ -58,10 +58,6 @@ sourceSets {
     gametest.apply {
         java.srcDir("src/gametest/java")
         resources.srcDir("src/gametest/resources")
-        compileClasspath += main.compileClasspath
-        runtimeClasspath += main.runtimeClasspath
-        compileClasspath += main.output
-        runtimeClasspath += main.output
     }
 }
 
