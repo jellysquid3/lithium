@@ -14,11 +14,20 @@ base {
     archivesName = "lithium-neoforge"
 }
 
-sourceSets {
-
-
+project.sourceSets {
     main.get().apply {
+    }
 
+    val main by getting
+
+    create("gametest") {
+        java.srcDirs("src/gametest/java")
+        resources.srcDirs("src/gametest/resources")
+
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += main.output
+        runtimeClasspath += main.output
     }
 }
 
@@ -84,13 +93,30 @@ neoForge {
         create("server") {
             server()
         }
+        create("gametestClient") {
+            client()
+            gameDirectory.set(file("runs/gametestClient"))
+
+            sourceSet = sourceSets.getByName("gametest")
+            systemProperty("neoforge.enabledGameTestNamespaces", "lithium-gametest")
+            environment("LITHIUM_GAMETEST_RESOURCES", file("src/gametest/resources").path)
+        }
+        create("gametestServer") {
+            type = "gameTestServer"
+            gameDirectory.set(file("runs/gametestServer"))
+
+            sourceSet = sourceSets.getByName("gametest")
+            systemProperty("neoforge.enabledGameTestNamespaces", "lithium-gametest")
+            environment("LITHIUM_GAMETEST_RESOURCES", file("src/gametest/resources").path)
+        }
     }
 
     mods {
         create("lithium") {
-            sourceSet(sourceSets.main.get())
+            sourceSet(project.sourceSets.main.get())
             sourceSet(project.project(":common").sourceSets.main.get())
             sourceSet(project.project(":common").sourceSets.getByName("api"))
+            sourceSet(project.sourceSets.getByName("gametest"))
         }
     }
 }
@@ -110,7 +136,7 @@ tasks.named("compileTestJava").configure {
 }
 
 dependencies {
-    compileOnly(project.project(":common").sourceSets.main.get().output)
+    compileOnly(project.project(":common").sourceSets.getByName("main").output)
     compileOnly(project.project(":common").sourceSets.getByName("api").output)
 
     compileOnly("net.caffeinemc:mixin-config-plugin:1.0-SNAPSHOT")
@@ -120,7 +146,7 @@ dependencies {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-sourceSets {
+project.sourceSets {
     val main by getting {
         resources {
             srcDir(layout.buildDirectory.dir("neoforge-mixin-config-output"))
