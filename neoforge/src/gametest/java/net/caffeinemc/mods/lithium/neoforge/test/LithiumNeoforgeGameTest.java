@@ -24,8 +24,7 @@ import java.util.stream.Stream;
 @GameTestHolder("lithium-gametest")
 public class LithiumNeoforgeGameTest {
 
-    //Not very nice to do this but it works
-    public static final String LITHIUM_GAMETEST_SNBT_PATH = "../../../common/src/gametest/resources/data/lithium-gametest/gametest/structure";
+    public static final String LITHIUM_GAMETEST_SNBT_PATH = System.getenv("LITHIUM_GAMETEST_RESOURCES");
 
     //Some tests are excluded because Neoforge is breaking them, not lithium.
     //test_redstone.lava_push_speed broken by https://github.com/neoforged/NeoForge/issues/1575
@@ -113,6 +112,10 @@ public class LithiumNeoforgeGameTest {
 
     @GameTestGenerator
     public Collection<TestFunction> getAllRedstoneTests() {
+        if (LITHIUM_GAMETEST_SNBT_PATH == null) {
+            return List.of();
+        }
+
         List<String> structureNames = null;
         try {
             structureNames = getLithiumSNBTFilenames();
