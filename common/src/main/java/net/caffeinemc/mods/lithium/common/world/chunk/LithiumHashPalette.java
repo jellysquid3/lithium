@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
 import net.minecraft.core.IdMap;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
@@ -129,7 +132,20 @@ public class LithiumHashPalette<T> implements Palette<T> {
         if (entry != null) {
             return entry;
         } else {
+            throw this.missingPaletteEntryCrash(id);
+        }
+    }
+
+    private ReportedException missingPaletteEntryCrash(int id) {
+        try {
             throw new MissingPaletteEntryException(id);
+        } catch (MissingPaletteEntryException e) {
+            CrashReport crashReport = CrashReport.forThrowable(e, "[Lithium] Getting Palette Entry");
+            CrashReportCategory crashReportCategory = crashReport.addCategory("Chunk section");
+            crashReportCategory.setDetail("IndexBits", this.indexBits);
+            crashReportCategory.setDetail("Entries", this.entries.length + " Elements: " + Arrays.toString(this.entries));
+            crashReportCategory.setDetail("Table", this.table.size() + " Elements: " + this.table);
+            return new ReportedException(crashReport);
         }
     }
 
