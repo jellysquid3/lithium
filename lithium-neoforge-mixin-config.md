@@ -51,6 +51,14 @@ Requirements:
 (default: `true`)  
 Brain sensor optimizations
   
+### `mixin.ai.sensor.replace_streams`
+(default: `true`)  
+Replace Stream code of AI sensors with more traditional iteration
+  
+### `mixin.ai.sensor.replace_streams.tempting`
+(default: `true`)  
+Replace Stream code of tempting sensor player search with more traditional iteration
+  
 ### `mixin.ai.sensor.secondary_poi`
 (default: `true`)  
 Avoid unnecessary secondary POI searches of non-farmer villagers
