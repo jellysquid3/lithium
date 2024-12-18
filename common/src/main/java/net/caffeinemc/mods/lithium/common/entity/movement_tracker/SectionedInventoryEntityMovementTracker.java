@@ -11,7 +11,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionedInventoryEntityMovementTracker<S> extends SectionedEntityMovementTracker<Entity, S> {
+public class SectionedInventoryEntityMovementTracker<S> extends SectionedEntityMovementTracker<Entity> {
 
     public SectionedInventoryEntityMovementTracker(WorldSectionBox entityAccessBox, Class<S> clazz) {
         super(entityAccessBox, clazz);
@@ -33,7 +33,8 @@ public class SectionedInventoryEntityMovementTracker<S> extends SectionedEntityM
                 //noinspection unchecked
                 ClassInstanceMultiMap<S> collection = ((EntitySectionAccessor<S>) this.sortedSections.get(i)).getCollection();
 
-                for (S entity : collection.find(this.clazz)) {
+                //noinspection unchecked
+                for (S entity : collection.find((Class<S>) this.clazz)) {
                     Entity inventoryEntity = (Entity) entity;
                     if (inventoryEntity.isAlive() && inventoryEntity.getBoundingBox().intersects(box)) {
                         entities.add(entity);

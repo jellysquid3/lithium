@@ -11,7 +11,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionedItemEntityMovementTracker<S extends Entity> extends SectionedEntityMovementTracker<Entity, S> {
+public class SectionedItemEntityMovementTracker<S extends Entity> extends SectionedEntityMovementTracker<Entity> {
 
     public SectionedItemEntityMovementTracker(WorldSectionBox worldSectionBox, Class<S> clazz) {
         super(worldSectionBox, clazz);
@@ -33,7 +33,8 @@ public class SectionedItemEntityMovementTracker<S extends Entity> extends Sectio
                 //noinspection unchecked
                 ClassInstanceMultiMap<S> collection = ((EntitySectionAccessor<S>) this.sortedSections.get(sectionIndex)).getCollection();
 
-                for (S entity : collection.find(this.clazz)) {
+                //noinspection unchecked
+                for (S entity : collection.find((Class<S>) this.clazz)) {
                     if (entity.isAlive()) {
                         AABB entityBoundingBox = entity.getBoundingBox();
                         if (entityBoundingBox.intersects(interactionArea)) {

@@ -2,10 +2,12 @@ package net.caffeinemc.mods.lithium.common.entity.movement_tracker;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.caffeinemc.mods.lithium.api.inventory.LithiumInventory;
+import net.caffeinemc.mods.lithium.common.entity.EntityClassGroup;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.entity.EntityAccess;
+
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ import java.util.List;
  */
 public abstract class MovementTrackerHelper {
     public static final List<Class<?>> MOVEMENT_NOTIFYING_ENTITY_CLASSES;
+    public static final List<EntityClassGroup> MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS;
     public static volatile Reference2IntOpenHashMap<Class<? extends EntityAccess>> CLASS_2_NOTIFY_MASK;
     public static final int NUM_MOVEMENT_NOTIFYING_CLASSES;
 
@@ -26,10 +29,15 @@ public abstract class MovementTrackerHelper {
         } else {
             MOVEMENT_NOTIFYING_ENTITY_CLASSES = List.of();
         }
+        if (SectionedColliderEntityMovementTracker.ENABLED) {
+            MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS = List.of(EntityClassGroup.NoDragonClassGroup.BOAT_SHULKER_LIKE_COLLISION);
+        } else {
+            MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS = List.of();
+        }
 
         CLASS_2_NOTIFY_MASK = new Reference2IntOpenHashMap<>();
         CLASS_2_NOTIFY_MASK.defaultReturnValue(-1);
-        NUM_MOVEMENT_NOTIFYING_CLASSES = MOVEMENT_NOTIFYING_ENTITY_CLASSES.size();
+        NUM_MOVEMENT_NOTIFYING_CLASSES = MOVEMENT_NOTIFYING_ENTITY_CLASSES.size() + MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS.size();
     }
 
     public static int getNotificationMask(Class<? extends EntityAccess> entityClass) {
@@ -47,6 +55,12 @@ public abstract class MovementTrackerHelper {
                 mask |= 1 << i;
             }
         }
+        for (int i = 0; i < MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS.size(); i++) {
+            EntityClassGroup group = MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS.get(i);
+            if (group.contains(entityClass)) {
+                mask |= 1 << (i + MOVEMENT_NOTIFYING_ENTITY_CLASSES.size());
+            }
+        }
 
         //progress can be lost here, but it can only cost performance
         //copy on write followed by publication in volatile field guarantees visibility of the final state
@@ -57,4 +71,12 @@ public abstract class MovementTrackerHelper {
         return mask;
     }
 
+    static int getTrackerIndex(Object classOrClassGroup) {
+        if (classOrClassGroup instanceof Class<?>) {
+            return MOVEMENT_NOTIFYING_ENTITY_CLASSES.indexOf(classOrClassGroup);
+        } else if (classOrClassGroup instanceof EntityClassGroup) {
+            return MOVEMENT_NOTIFYING_ENTITY_CLASSES.size() + MOVEMENT_NOTIFYING_ENTITY_CLASS_GROUPS.indexOf(classOrClassGroup);
+        }
+        return -1;
+    }
 }

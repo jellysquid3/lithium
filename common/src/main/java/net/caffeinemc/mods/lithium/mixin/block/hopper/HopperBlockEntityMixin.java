@@ -824,7 +824,7 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
     }
 
     @Override
-    public void lithium$handleEntityMovement(Class<?> category) {
+    public void lithium$handleEntityMovement(Object category) {
         if (this instanceof SleepingBlockEntity sleepingBlockEntity) {
             sleepingBlockEntity.wakeUpNow();
         }

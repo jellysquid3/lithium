@@ -36,7 +36,7 @@ public interface LithiumData {
             LithiumInterner<SectionedBlockChangeTracker> blockChangeTrackers,
 
             // Entity movement tracker deduplication
-            LithiumInterner<SectionedEntityMovementTracker<?, ?>> entityMovementTrackers,
+            LithiumInterner<SectionedEntityMovementTracker<?>> entityMovementTrackers,
 
             // Block ChunkSection listeners
             Long2ReferenceOpenHashMap<ChunkSectionChangeCallback> chunkSectionChangeCallbacks

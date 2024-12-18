@@ -27,15 +27,15 @@ public abstract class EntitySectionMixin implements EntityMovementTrackerSection
     public abstract boolean isEmpty();
 
     @Unique
-    private final ReferenceOpenHashSet<SectionedEntityMovementTracker<?, ?>> sectionVisibilityListeners = new ReferenceOpenHashSet<>(0);
+    private final ReferenceOpenHashSet<SectionedEntityMovementTracker<?>> sectionVisibilityListeners = new ReferenceOpenHashSet<>(0);
     @Unique
     @SuppressWarnings("unchecked")
-    private final ArrayList<SectionedEntityMovementTracker<?, ?>>[] entityMovementListenersByType = new ArrayList[MovementTrackerHelper.NUM_MOVEMENT_NOTIFYING_CLASSES];
+    private final ArrayList<SectionedEntityMovementTracker<?>>[] entityMovementListenersByType = new ArrayList[MovementTrackerHelper.NUM_MOVEMENT_NOTIFYING_CLASSES];
     @Unique
     private final long[] lastEntityMovementByType = new long[MovementTrackerHelper.NUM_MOVEMENT_NOTIFYING_CLASSES];
 
     @Override
-    public void lithium$addListener(SectionedEntityMovementTracker<?, ?> listener) {
+    public void lithium$addListener(SectionedEntityMovementTracker<?> listener) {
         this.sectionVisibilityListeners.add(listener);
         if (this.chunkStatus.isAccessible()) {
             listener.onSectionEnteredRange(this);
@@ -43,7 +43,7 @@ public abstract class EntitySectionMixin implements EntityMovementTrackerSection
     }
 
     @Override
-    public void lithium$removeListener(EntitySectionStorage<?> sectionedEntityCache, SectionedEntityMovementTracker<?, ?> listener) {
+    public void lithium$removeListener(EntitySectionStorage<?> sectionedEntityCache, SectionedEntityMovementTracker<?> listener) {
         boolean removed = this.sectionVisibilityListeners.remove(listener);
         if (this.chunkStatus.isAccessible() && removed) {
             listener.onSectionLeftRange(this);
@@ -61,10 +61,10 @@ public abstract class EntitySectionMixin implements EntityMovementTrackerSection
         for (int entityClassIndex = Integer.numberOfTrailingZeros(notificationMask); entityClassIndex < size; ) {
             lastEntityMovementByType[entityClassIndex] = time;
 
-            ArrayList<SectionedEntityMovementTracker<?, ?>> entityMovementListeners = this.entityMovementListenersByType[entityClassIndex];
+            ArrayList<SectionedEntityMovementTracker<?>> entityMovementListeners = this.entityMovementListenersByType[entityClassIndex];
             if (entityMovementListeners != null) {
                 for (int listIndex = entityMovementListeners.size() - 1; listIndex >= 0; listIndex--) {
-                    SectionedEntityMovementTracker<?, ?> sectionedEntityMovementTracker = entityMovementListeners.remove(listIndex);
+                    SectionedEntityMovementTracker<?> sectionedEntityMovementTracker = entityMovementListeners.remove(listIndex);
                     sectionedEntityMovementTracker.emitEntityMovement(notificationMask, this);
                 }
             }
@@ -90,13 +90,13 @@ public abstract class EntitySectionMixin implements EntityMovementTrackerSection
         if (this.chunkStatus.isAccessible() != newStatus.isAccessible()) {
             if (!newStatus.isAccessible()) {
                 if (!this.sectionVisibilityListeners.isEmpty()) {
-                    for (SectionedEntityMovementTracker<?, ?> listener : this.sectionVisibilityListeners) {
+                    for (SectionedEntityMovementTracker<?> listener : this.sectionVisibilityListeners) {
                         listener.onSectionLeftRange(this);
                     }
                 }
             } else {
                 if (!this.sectionVisibilityListeners.isEmpty()) {
-                    for (SectionedEntityMovementTracker<?, ?> listener : this.sectionVisibilityListeners) {
+                    for (SectionedEntityMovementTracker<?> listener : this.sectionVisibilityListeners) {
                         listener.onSectionEnteredRange(this);
                     }
                 }
@@ -106,7 +106,7 @@ public abstract class EntitySectionMixin implements EntityMovementTrackerSection
     }
 
     @Override
-    public <S, E extends EntityAccess> void lithium$listenToMovementOnce(SectionedEntityMovementTracker<E, S> listener, int trackedClass) {
+    public <S, E extends EntityAccess> void lithium$listenToMovementOnce(SectionedEntityMovementTracker<E> listener, int trackedClass) {
         if (this.entityMovementListenersByType[trackedClass] == null) {
             this.entityMovementListenersByType[trackedClass] = new ArrayList<>();
         }
@@ -114,7 +114,7 @@ public abstract class EntitySectionMixin implements EntityMovementTrackerSection
     }
 
     @Override
-    public <S, E extends EntityAccess> void lithium$removeListenToMovementOnce(SectionedEntityMovementTracker<E, S> listener, int trackedClass) {
+    public <S, E extends EntityAccess> void lithium$removeListenToMovementOnce(SectionedEntityMovementTracker<E> listener, int trackedClass) {
         if (this.entityMovementListenersByType[trackedClass] != null) {
             this.entityMovementListenersByType[trackedClass].remove(listener);
         }

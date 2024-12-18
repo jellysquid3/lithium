@@ -14,10 +14,10 @@ import net.minecraft.world.level.entity.EntitySectionStorage;
 
 import java.util.ArrayList;
 
-public abstract class SectionedEntityMovementTracker<E extends EntityAccess, S> {
+public abstract class SectionedEntityMovementTracker<E extends EntityAccess> {
     final WorldSectionBox trackedWorldSections;
-    final Class<S> clazz;
-    private final int trackedClass;
+    final Object clazz; //EntityClassGroup or Entity class / superclass
+    private final int trackedIndex;
     ArrayList<EntitySection<E>> sortedSections;
     boolean[] sectionVisible;
     private int timesRegistered;
@@ -27,25 +27,25 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess, S> 
 
     private ReferenceOpenHashSet<SectionedEntityMovementListener> sectionedEntityMovementListeners;
 
-    public SectionedEntityMovementTracker(WorldSectionBox interactionChunks, Class<S> clazz) {
-        this.clazz = clazz;
+    public SectionedEntityMovementTracker(WorldSectionBox interactionChunks, Object entityType) {
+        this.clazz = entityType;
         this.trackedWorldSections = interactionChunks;
-        this.trackedClass = MovementTrackerHelper.MOVEMENT_NOTIFYING_ENTITY_CLASSES.indexOf(clazz);
-        assert this.trackedClass != -1;
+        this.trackedIndex = MovementTrackerHelper.getTrackerIndex(entityType);
+        assert this.trackedIndex != -1;
         this.sectionedEntityMovementListeners = null;
         this.sectionsNotListeningTo = new ArrayList<>();
     }
 
     @Override
     public int hashCode() {
-        return HashCommon.mix(this.trackedWorldSections.hashCode()) ^ HashCommon.mix(this.trackedClass) ^ this.getClass().hashCode();
+        return HashCommon.mix(this.trackedWorldSections.hashCode()) ^ HashCommon.mix(this.trackedIndex) ^ this.getClass().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         return obj.getClass() == this.getClass() &&
-                this.clazz == ((SectionedEntityMovementTracker<?, ?>) obj).clazz &&
-                this.trackedWorldSections.equals(((SectionedEntityMovementTracker<?, ?>) obj).trackedWorldSections);
+                this.clazz == ((SectionedEntityMovementTracker<?>) obj).clazz &&
+                this.trackedWorldSections.equals(((SectionedEntityMovementTracker<?>) obj).trackedWorldSections);
     }
 
     /**
@@ -71,8 +71,8 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess, S> 
         ArrayList<EntityMovementTrackerSection> notListeningTo = this.sectionsNotListeningTo;
         for (int i = notListeningTo.size() - 1; i >= 0; i--) {
             EntityMovementTrackerSection entityMovementTrackerSection = notListeningTo.remove(i);
-            entityMovementTrackerSection.lithium$listenToMovementOnce(this, this.trackedClass);
-            maxChangeTime = Math.max(maxChangeTime, entityMovementTrackerSection.lithium$getChangeTime(this.trackedClass));
+            entityMovementTrackerSection.lithium$listenToMovementOnce(this, this.trackedIndex);
+            maxChangeTime = Math.max(maxChangeTime, entityMovementTrackerSection.lithium$getChangeTime(this.trackedIndex));
         }
         return maxChangeTime;
     }
@@ -124,7 +124,7 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess, S> 
             EntityMovementTrackerSection sectionAccess = (EntityMovementTrackerSection) section;
             sectionAccess.lithium$removeListener(cache, this);
             if (!this.sectionsNotListeningTo.remove(section)) {
-                ((EntityMovementTrackerSection) section).lithium$removeListenToMovementOnce(this, this.trackedClass);
+                ((EntityMovementTrackerSection) section).lithium$removeListenToMovementOnce(this, this.trackedIndex);
             }
         }
         this.setChanged(world.getGameTime());
@@ -151,7 +151,7 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess, S> 
         this.sectionVisible[sectionIndex] = false;
 
         if (!this.sectionsNotListeningTo.remove(section)) {
-            section.lithium$removeListenToMovementOnce(this, this.trackedClass);
+            section.lithium$removeListenToMovementOnce(this, this.trackedIndex);
             this.notifyAllListeners();
         }
     }
@@ -178,7 +178,7 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess, S> 
     }
 
     public void emitEntityMovement(int classMask, EntityMovementTrackerSection section) {
-        if ((classMask & (1 << this.trackedClass)) != 0) {
+        if ((classMask & (1 << this.trackedIndex)) != 0) {
             this.notifyAllListeners();
             this.sectionsNotListeningTo.add(section);
         }
