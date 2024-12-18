@@ -16,7 +16,7 @@ on:
         options:
           - both
           - fabric
-          - forge
+          - neoforge
 
 jobs:
   build:
@@ -34,7 +34,7 @@ jobs:
           path: "**/.gradle/loom-cache"
           key: "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}"
           restore-keys: "${{ runner.os }}-gradle-loom"
-          
+
       - name: ModDevGradle Cache
         uses: actions/cache@v4
         with:

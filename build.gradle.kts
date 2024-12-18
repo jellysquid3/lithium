@@ -95,7 +95,7 @@ subprojects {
 tasks.create("lithiumPublish") {
     when (val platform = providers.environmentVariable("PLATFORM").orNull) {
         "both" -> {
-            dependsOn(tasks.build, ":fabric:publishMods", ":forge:publishMods")
+            dependsOn(tasks.build, ":fabric:publishMods", ":neoforge:publishMods")
         }
         "fabric", "forge" -> {
             dependsOn("${platform}:build", "${platform}:publish", "${platform}:publishMods")
