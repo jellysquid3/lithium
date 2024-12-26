@@ -1,13 +1,14 @@
-package net.caffeinemc.mods.lithium.common.tracking.block;
+package net.caffeinemc.mods.lithium.common.tracking;
 
 import it.unimi.dsi.fastutil.objects.Reference2DoubleArrayMap;
+import net.caffeinemc.mods.lithium.common.tracking.block.SectionedBlockChangeTracker;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 
-public final class BlockCache {
+public final class VicinityCache {
     // To avoid slowing down setblock operations, only start caching after 1.5 Seconds = 30 gameticks with estimated 6 accesses per tick
     private static final int MIN_DELAY = 30 * 6;
     private int initDelay; //Changing MIN_DELAY should not affect correctness, just performance in some cases
@@ -29,7 +30,7 @@ public final class BlockCache {
 
     //Future: maybe cache last failed movement vector
 
-    public BlockCache() {
+    public VicinityCache() {
         this.tracker = null;
         this.trackedPos = null;
         this.initDelay = 0;

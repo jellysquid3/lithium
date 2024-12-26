@@ -47,7 +47,7 @@ public class SectionedBlockChangeTracker {
         return tracker;
     }
 
-    long getWorldTime() {
+    public long getWorldTime() {
         return this.trackedWorldSections.world().getGameTime();
     }
 

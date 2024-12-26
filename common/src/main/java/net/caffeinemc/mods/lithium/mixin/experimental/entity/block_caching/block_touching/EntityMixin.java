@@ -3,8 +3,8 @@ package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.bloc
 import com.llamalad7.mixinextras.sugar.Local;
 import net.caffeinemc.mods.lithium.common.block.BlockStateFlagHolder;
 import net.caffeinemc.mods.lithium.common.block.BlockStateFlags;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCache;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCacheProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +21,7 @@ import java.util.Set;
  * and the nearby blocks cannot be interacted with by touching them.
  */
 @Mixin(Entity.class)
-public abstract class EntityMixin implements BlockCacheProvider {
+public abstract class EntityMixin implements VicinityCacheProvider {
     @Inject(
             method = "checkInsideBlocks(Ljava/util/List;Ljava/util/Set;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;makeBoundingBox(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/AABB;"), cancellable = true
@@ -33,7 +33,7 @@ public abstract class EntityMixin implements BlockCacheProvider {
         }
         //noinspection ConstantConditions
         if (!((Object) this instanceof ServerPlayer)) {
-            BlockCache bc = this.getUpdatedBlockCache((Entity) (Object) this);
+            VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
             if (bc.canSkipBlockTouching()) {
                 ci.cancel();
                 //TODO This could lead to mod compat issues with other mods, if they implement something similar to
@@ -51,7 +51,7 @@ public abstract class EntityMixin implements BlockCacheProvider {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;deflate(D)Lnet/minecraft/world/phys/AABB;")
     )
     private void assumeNoTouchableBlock(CallbackInfo ci) {
-        BlockCache bc = this.lithium$getBlockCache();
+        VicinityCache bc = this.lithium$getVicinityCache();
         if (bc.isTracking()) {
             bc.setCanSkipBlockTouching(true);
         }
@@ -62,7 +62,7 @@ public abstract class EntityMixin implements BlockCacheProvider {
             at = @At(value = "RETURN")
     )
     private void checkTouchableBlock(CallbackInfo ci, @Local(argsOnly = true) Set<BlockState> set) {
-        BlockCache bc = this.lithium$getBlockCache();
+        VicinityCache bc = this.lithium$getVicinityCache();
         if (bc.canSkipBlockTouching()) {
             for (BlockState blockState : set) {
                 if (0 != (((BlockStateFlagHolder) blockState).lithium$getAllFlags() & 1 << BlockStateFlags.ENTITY_TOUCHABLE.getIndex())) {

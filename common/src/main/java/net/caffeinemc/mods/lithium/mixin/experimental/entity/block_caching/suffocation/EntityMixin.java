@@ -1,7 +1,7 @@
 package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.suffocation;
 
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCache;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCacheProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements BlockCacheProvider {
+public abstract class EntityMixin implements VicinityCacheProvider {
 
     @Shadow
     public Level level;
@@ -55,7 +55,7 @@ public abstract class EntityMixin implements BlockCacheProvider {
         int maxY = Mth.floor(box.maxY);
         int maxZ = Mth.floor(box.maxZ);
 
-        BlockCache bc = this.getUpdatedBlockCache((Entity) (Object) this);
+        VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
 
         byte cachedSuffocation = bc.getIsSuffocating();
         if (cachedSuffocation == (byte) 0) {

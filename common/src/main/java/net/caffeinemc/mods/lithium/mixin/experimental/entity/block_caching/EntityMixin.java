@@ -1,7 +1,7 @@
 package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching;
 
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCache;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCacheProvider;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -10,20 +10,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public class EntityMixin implements BlockCacheProvider {
+public class EntityMixin implements VicinityCacheProvider {
     @Unique
-    private final BlockCache blockCache = new BlockCache();
+    private final VicinityCache vicinityCache = new VicinityCache();
 
     @Override
-    public BlockCache lithium$getBlockCache() {
-        return blockCache;
+    public VicinityCache lithium$getVicinityCache() {
+        return this.vicinityCache;
     }
 
     @Inject(
             method = "remove",
             at = @At("HEAD")
     )
-    private void removeBlockCache(Entity.RemovalReason reason, CallbackInfo ci) {
-        this.blockCache.remove();
+    private void removeVicinityCache(Entity.RemovalReason reason, CallbackInfo ci) {
+        this.vicinityCache.remove();
     }
 }

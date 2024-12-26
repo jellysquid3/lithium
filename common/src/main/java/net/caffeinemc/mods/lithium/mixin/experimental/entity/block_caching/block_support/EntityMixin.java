@@ -2,8 +2,8 @@ package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.bloc
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.caffeinemc.mods.lithium.common.entity.LithiumEntityCollisions;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCache;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCacheProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCollisions.SupportingBlockCollisionShapeProvider {
+public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntityCollisions.SupportingBlockCollisionShapeProvider {
     @Shadow
     public abstract Level level();
 
@@ -41,7 +41,7 @@ public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCo
     private void cancelIfSkippable(boolean onGround, Vec3 movement, CallbackInfo ci) {
         if (movement == null || (movement.x == 0 && movement.z == 0)) {
             //noinspection ConstantConditions
-            BlockCache bc = this.getUpdatedBlockCache((Entity) (Object) this);
+            VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
             if (bc.canSkipSupportingBlockSearch()) {
                 ci.cancel();
             }
@@ -57,7 +57,7 @@ public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCo
             )
     )
     private void cacheSupportingBlockSearch(CallbackInfo ci, @Local Optional<BlockPos> pos) {
-        BlockCache bc = this.lithium$getBlockCache();
+        VicinityCache bc = this.lithium$getVicinityCache();
         if (bc.isTracking()) {
             bc.setCanSkipSupportingBlockSearch(true);
             if (pos.isPresent() && this.getGravity() > 0D) {
@@ -71,7 +71,7 @@ public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCo
             at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/world/level/Level;findSupportingBlock(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/Optional;")
     )
     private void uncacheSupportingBlockSearch(CallbackInfo ci) {
-        BlockCache bc = this.lithium$getBlockCache();
+        VicinityCache bc = this.lithium$getVicinityCache();
         if (bc.isTracking()) {
             bc.setCanSkipSupportingBlockSearch(false);
         }
@@ -82,7 +82,7 @@ public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCo
             at = @At(value = "INVOKE", target = "Ljava/util/Optional;empty()Ljava/util/Optional;", remap = false)
     )
     private void uncacheSupportingBlockSearch1(boolean onGround, Vec3 movement, CallbackInfo ci) {
-        BlockCache bc = this.lithium$getBlockCache();
+        VicinityCache bc = this.lithium$getVicinityCache();
         if (bc.isTracking()) {
             bc.setCanSkipSupportingBlockSearch(false);
         }
@@ -90,7 +90,7 @@ public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCo
 
     @Override
     public @Nullable VoxelShape lithium$getCollisionShapeBelow() {
-        BlockCache bc = this.getUpdatedBlockCache((Entity) (Object) this);
+        VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
         if (bc.isTracking()) {
             BlockState cachedSupportingBlock = bc.getCachedSupportingBlock();
             if (cachedSupportingBlock != null && this.mainSupportingBlockPos.isPresent()) {

@@ -1,7 +1,7 @@
 package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.fire_lava_touching;
 
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
-import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCache;
+import net.caffeinemc.mods.lithium.common.tracking.VicinityCacheProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.stream.Stream;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements BlockCacheProvider {
+public abstract class EntityMixin implements VicinityCacheProvider {
     private static final Stream<BlockState> EMPTY_BLOCKSTATE_STREAM = Stream.empty();
     @Shadow
     private int remainingFireTicks;
@@ -49,7 +49,7 @@ public abstract class EntityMixin implements BlockCacheProvider {
         }
 
 
-        BlockCache bc = this.getUpdatedBlockCache((Entity) (Object) this);
+        VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
 
         byte cachedTouchingFireLava = bc.getIsTouchingFireLava();
         if (cachedTouchingFireLava == (byte) 0) {
