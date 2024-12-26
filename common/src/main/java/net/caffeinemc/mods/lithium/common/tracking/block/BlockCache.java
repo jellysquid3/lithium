@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.block_tracking;
+package net.caffeinemc.mods.lithium.common.tracking.block;
 
 import it.unimi.dsi.fastutil.objects.Reference2DoubleArrayMap;
 import net.minecraft.tags.TagKey;

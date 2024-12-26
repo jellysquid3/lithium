@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.block_tracking;
+package net.caffeinemc.mods.lithium.common.tracking.block;
 
 import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import net.caffeinemc.mods.lithium.common.block.BlockListeningSection;

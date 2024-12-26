@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.movement_tracker;
+package net.caffeinemc.mods.lithium.common.tracking.entity;
 
 import net.caffeinemc.mods.lithium.common.util.tuples.WorldSectionBox;
 import net.caffeinemc.mods.lithium.common.world.LithiumData;

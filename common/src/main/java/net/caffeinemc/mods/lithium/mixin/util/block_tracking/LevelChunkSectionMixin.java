@@ -2,8 +2,8 @@ package net.caffeinemc.mods.lithium.mixin.util.block_tracking;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.caffeinemc.mods.lithium.common.block.*;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.ChunkSectionChangeCallback;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.SectionedBlockChangeTracker;
+import net.caffeinemc.mods.lithium.common.tracking.block.ChunkSectionChangeCallback;
+import net.caffeinemc.mods.lithium.common.tracking.block.SectionedBlockChangeTracker;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;

@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.block_tracking;
+package net.caffeinemc.mods.lithium.common.tracking.block;
 
 import net.caffeinemc.mods.lithium.common.block.BlockListeningSection;
 import net.caffeinemc.mods.lithium.common.util.Pos;

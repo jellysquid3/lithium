@@ -1,6 +1,6 @@
 package net.caffeinemc.mods.lithium.mixin.block.hopper;
 
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.ToggleableMovementTracker;
+import net.caffeinemc.mods.lithium.common.tracking.entity.ToggleableMovementTracker;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.AbstractChestBoat;

@@ -3,8 +3,8 @@ package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.bloc
 import com.llamalad7.mixinextras.sugar.Local;
 import net.caffeinemc.mods.lithium.common.block.BlockStateFlagHolder;
 import net.caffeinemc.mods.lithium.common.block.BlockStateFlags;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCache;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;

@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.movement_tracker;
+package net.caffeinemc.mods.lithium.common.tracking.entity;
 
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;

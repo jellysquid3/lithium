@@ -1,7 +1,6 @@
 package net.caffeinemc.mods.lithium.common.entity;
 
 import com.google.common.collect.AbstractIterator;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.block_support.SupportingBlockCollisionShapeProvider;
 import net.caffeinemc.mods.lithium.common.entity.movement.ChunkAwareBlockCollisionSweeper;
 import net.caffeinemc.mods.lithium.common.util.Pos;
 import net.caffeinemc.mods.lithium.common.world.WorldHelper;
@@ -296,5 +295,10 @@ public class LithiumEntityCollisions {
             appendWorldBorderCollision(worldBorderCollisions, entity, movementSpace);
         }
         return false;
+    }
+
+    public interface SupportingBlockCollisionShapeProvider {
+
+        @Nullable VoxelShape lithium$getCollisionShapeBelow();
     }
 }
