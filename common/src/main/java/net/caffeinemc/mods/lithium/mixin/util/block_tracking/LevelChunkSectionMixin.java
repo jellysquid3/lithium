@@ -1,5 +1,6 @@
 package net.caffeinemc.mods.lithium.mixin.util.block_tracking;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.caffeinemc.mods.lithium.common.block.*;
 import net.caffeinemc.mods.lithium.common.entity.block_tracking.ChunkSectionChangeCallback;
 import net.caffeinemc.mods.lithium.common.entity.block_tracking.SectionedBlockChangeTracker;
@@ -18,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Keep track of how many blocks that meet certain criteria are in this chunk section.
@@ -37,8 +37,6 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
     private short[] countsByFlag = null;
     @Unique
     private ChunkSectionChangeCallback changeListener;
-    @Unique
-    private short listeningMask;
 
     @Unique
     private static void addToFlagCount(short[] countsByFlag, BlockState state, short change) {
@@ -103,13 +101,14 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/state/BlockState;getFluidState()Lnet/minecraft/world/level/material/FluidState;",
-                    ordinal = 0,
-                    shift = At.Shift.BEFORE
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+                    ordinal = 0
+            )
     )
-    private void updateFlagCounters(int x, int y, int z, BlockState newState, boolean lock, CallbackInfoReturnable<BlockState> cir, BlockState oldState) {
+    private void updateFlagCounters(int x, int y, int z, BlockState newState, boolean lock, CallbackInfoReturnable<BlockState> cir, @Local(ordinal = 1) BlockState oldState) {
         this.lithium$trackBlockStateChange(newState, oldState);
+        if (this.changeListener != null) {
+            this.changeListener.onBlockChange(this);
+        }
     }
 
     @Override
@@ -122,24 +121,16 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
         int flags = ((BlockStateFlagHolder) newState).lithium$getAllFlags();
 
         int flagsXOR = prevFlags ^ flags;
-        //we need to iterate over indices that changed or are in the listeningMask
-        //Some Listening Flags are sensitive to both the previous and the new block. Others are only sensitive to
-        //blocks that are different according to the predicate (XOR). For XOR, the block counting needs to be updated
-        //as well.
-        int iterateFlags = (~BlockStateFlags.LISTENING_MASK_OR & flagsXOR) |
-                (BlockStateFlags.LISTENING_MASK_OR & this.listeningMask & (prevFlags | flags));
+        //iterate over indices that changed and update each counter
         int flagIndex;
 
-        while ((flagIndex = Integer.numberOfTrailingZeros(iterateFlags)) < 32 && flagIndex < countsByFlag.length) {
+        while ((flagIndex = Integer.numberOfTrailingZeros(flagsXOR)) < 32 && flagIndex < countsByFlag.length) {
             int flagBit = 1 << flagIndex;
             //either count up by one (prevFlag not set) or down by one (prevFlag set)
             if ((flagsXOR & flagBit) != 0) {
                 countsByFlag[flagIndex] += (short) (1 - (((prevFlags >>> flagIndex) & 1) << 1));
             }
-            if ((this.listeningMask & flagBit) != 0) {
-                this.listeningMask = this.changeListener.onBlockChange(flagIndex, this);
-            }
-            iterateFlags &= ~flagBit;
+            flagsXOR &= ~flagBit;
         }
     }
 
@@ -152,22 +143,19 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
             this.changeListener = ChunkSectionChangeCallback.create(sectionPos, world);
         }
 
-        this.listeningMask = this.changeListener.addTracker(tracker, blockGroup);
+        this.changeListener.addTracker(tracker, blockGroup);
     }
 
     @Override
     public void lithium$removeFromCallback(ListeningBlockStatePredicate blockGroup, SectionedBlockChangeTracker tracker) {
         if (this.changeListener != null) {
-            this.listeningMask = this.changeListener.removeTracker(tracker, blockGroup);
+            this.changeListener.removeTracker(tracker, blockGroup);
         }
     }
 
     @Override
     @Unique
     public void lithium$invalidateListeningSection(SectionPos sectionPos) {
-        if (this.listeningMask != 0) {
-            this.changeListener.onChunkSectionInvalidated(sectionPos);
-            this.listeningMask = 0;
-        }
+        this.changeListener.onChunkSectionInvalidated(sectionPos);
     }
 }

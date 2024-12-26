@@ -142,7 +142,7 @@ public final class BlockCache {
         this.cachedSupportingBlock = null;
     }
 
-    public void cacheSupportingBlock(BlockState blockState) {
+    public void cacheSupportingBlockState(BlockState blockState) {
         this.cachedSupportingBlock = blockState;
     }
 

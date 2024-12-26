@@ -61,7 +61,7 @@ public abstract class EntityMixin implements BlockCacheProvider, SupportingBlock
         if (bc.isTracking()) {
             bc.setCanSkipSupportingBlockSearch(true);
             if (pos.isPresent() && this.getGravity() > 0D) {
-                bc.cacheSupportingBlock(this.level().getBlockState(pos.get()));
+                bc.cacheSupportingBlockState(this.level().getBlockState(pos.get()));
             }
         }
     }
