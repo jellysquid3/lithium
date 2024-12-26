@@ -21,11 +21,11 @@ mixin.gen.biome_noise_cache=false
 Mob AI optimizations
   
 ### `mixin.ai.pathing`
-(default: `false`)  
+
+(default: `true`)  
 A faster code path is used for determining what kind of path-finding node type is associated with a
 given block. Additionally, a faster chunk cache will be used for accessing blocks while evaluating
 paths.
-
 Requirements:
 - `mixin.util.chunk_access=true`  
   
@@ -482,7 +482,8 @@ Allow accessing certain fields and functions that are normally inaccessible
 Allows access to existing BlockEntities without creating new ones
   
 ### `mixin.util.block_tracking`
-(default: `false`)  
+
+(default: `true`)  
 Chunk sections count certain blocks inside them and provide a method to quickly check whether a chunk contains any of these blocks. Furthermore, chunk sections can notify registered listeners about certain blocks being placed or broken.
 Requirements:
 - `mixin.util.data_storage=true`
