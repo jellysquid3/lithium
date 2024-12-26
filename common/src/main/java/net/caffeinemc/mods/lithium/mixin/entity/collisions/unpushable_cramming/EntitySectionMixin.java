@@ -1,7 +1,7 @@
 package net.caffeinemc.mods.lithium.mixin.entity.collisions.unpushable_cramming;
 
-import net.caffeinemc.mods.lithium.common.entity.pushable.BlockCachingEntity;
 import net.caffeinemc.mods.lithium.common.entity.pushable.EntityPushablePredicate;
+import net.caffeinemc.mods.lithium.common.entity.pushable.FeetBlockCachingEntity;
 import net.caffeinemc.mods.lithium.common.entity.pushable.PushableEntityClassGroup;
 import net.caffeinemc.mods.lithium.common.util.collections.ReferenceMaskedList;
 import net.caffeinemc.mods.lithium.common.world.ClimbingMobCachingSection;
@@ -84,7 +84,7 @@ public abstract class EntitySectionMixin<T extends EntityAccess> implements Clim
     //This might be called while the world is in an inconsistent state. E.g. the entity may be in a different section than
     //it is registered to.
     @Override
-    public void lithium$onEntityModifiedCachedBlock(BlockCachingEntity entity, BlockState newBlockState) {
+    public void lithium$onEntityModifiedCachedBlock(FeetBlockCachingEntity entity, BlockState newBlockState) {
         if (this.pushableEntities == null) {
             entity.lithium$SetClimbingMobCachingSectionUpdateBehavior(false);
         } else {
@@ -92,7 +92,7 @@ public abstract class EntitySectionMixin<T extends EntityAccess> implements Clim
         }
     }
 
-    private void updatePushabilityOnCachedStateChange(BlockCachingEntity entity, BlockState newBlockState) {
+    private void updatePushabilityOnCachedStateChange(FeetBlockCachingEntity entity, BlockState newBlockState) {
         boolean visible = entityPushableHeuristic(newBlockState);
         //The entity might be moving into this section right now but isn't registered yet.
         // If the entity is not in the collection, do nothing.
@@ -106,9 +106,9 @@ public abstract class EntitySectionMixin<T extends EntityAccess> implements Clim
             this.pushableEntities.add(entity);
             boolean shouldTrackBlockChanges = PushableEntityClassGroup.CACHABLE_UNPUSHABILITY.contains(entityClass);
             if (shouldTrackBlockChanges) {
-                BlockCachingEntity blockCachingEntity = (BlockCachingEntity) entity;
-                this.updatePushabilityOnCachedStateChange(blockCachingEntity, blockCachingEntity.lithium$getCachedFeetBlockState());
-                blockCachingEntity.lithium$SetClimbingMobCachingSectionUpdateBehavior(true);
+                FeetBlockCachingEntity feetBlockCachingEntity = (FeetBlockCachingEntity) entity;
+                this.updatePushabilityOnCachedStateChange(feetBlockCachingEntity, feetBlockCachingEntity.lithium$getCachedFeetBlockState());
+                feetBlockCachingEntity.lithium$SetClimbingMobCachingSectionUpdateBehavior(true);
             }
         }
     }

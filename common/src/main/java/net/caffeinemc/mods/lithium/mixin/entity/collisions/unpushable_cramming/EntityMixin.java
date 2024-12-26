@@ -1,6 +1,6 @@
 package net.caffeinemc.mods.lithium.mixin.entity.collisions.unpushable_cramming;
 
-import net.caffeinemc.mods.lithium.common.entity.pushable.BlockCachingEntity;
+import net.caffeinemc.mods.lithium.common.entity.pushable.FeetBlockCachingEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public class EntityMixin implements BlockCachingEntity {
+public class EntityMixin implements FeetBlockCachingEntity {
     @Shadow
     private @Nullable BlockState inBlockState;
 
@@ -26,7 +26,7 @@ public class EntityMixin implements BlockCachingEntity {
             )
     )
     private void onPositionChanged(double x, double y, double z, CallbackInfo ci) {
-        this.lithium$OnBlockCacheDeleted();
+        this.lithium$OnFeetBlockCacheDeleted();
     }
 
     @Inject(
@@ -39,7 +39,7 @@ public class EntityMixin implements BlockCachingEntity {
             )
     )
     private void onBaseTick(CallbackInfo ci) {
-        this.lithium$OnBlockCacheDeleted();
+        this.lithium$OnFeetBlockCacheDeleted();
     }
 
     @Inject(
@@ -51,7 +51,7 @@ public class EntityMixin implements BlockCachingEntity {
             )
     )
     private void onBlockCached(CallbackInfoReturnable<BlockState> cir) {
-        this.lithium$OnBlockCacheSet(this.inBlockState);
+        this.lithium$OnFeetBlockCacheSet(this.inBlockState);
     }
 
     @Override

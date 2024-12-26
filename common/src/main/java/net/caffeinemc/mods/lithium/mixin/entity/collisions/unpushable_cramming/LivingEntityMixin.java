@@ -1,8 +1,8 @@
 package net.caffeinemc.mods.lithium.mixin.entity.collisions.unpushable_cramming;
 
 import com.google.common.base.Predicates;
-import net.caffeinemc.mods.lithium.common.entity.pushable.BlockCachingEntity;
 import net.caffeinemc.mods.lithium.common.entity.pushable.EntityPushablePredicate;
+import net.caffeinemc.mods.lithium.common.entity.pushable.FeetBlockCachingEntity;
 import net.caffeinemc.mods.lithium.common.world.ClimbingMobCachingSection;
 import net.caffeinemc.mods.lithium.common.world.WorldHelper;
 import net.minecraft.core.SectionPos;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements BlockCachingEntity {
+public abstract class LivingEntityMixin extends Entity implements FeetBlockCachingEntity {
 
     boolean updateClimbingMobCachingSectionOnChange;
 
@@ -60,7 +60,7 @@ public abstract class LivingEntityMixin extends Entity implements BlockCachingEn
     }
 
     @Override
-    public void lithium$OnBlockCacheDeleted() {
+    public void lithium$OnFeetBlockCacheDeleted() {
         if (this.updateClimbingMobCachingSectionOnChange) {
             this.updateClimbingMobCachingSection(null);
         }
@@ -68,7 +68,7 @@ public abstract class LivingEntityMixin extends Entity implements BlockCachingEn
 
 
     @Override
-    public void lithium$OnBlockCacheSet(BlockState newState) {
+    public void lithium$OnFeetBlockCacheSet(BlockState newState) {
         if (this.updateClimbingMobCachingSectionOnChange) {
             this.updateClimbingMobCachingSection(newState);
         }

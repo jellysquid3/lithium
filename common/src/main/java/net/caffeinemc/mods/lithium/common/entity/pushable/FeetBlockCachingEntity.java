@@ -2,13 +2,13 @@ package net.caffeinemc.mods.lithium.common.entity.pushable;
 
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface BlockCachingEntity {
+public interface FeetBlockCachingEntity {
 
-    default void lithium$OnBlockCacheDeleted() {
+    default void lithium$OnFeetBlockCacheDeleted() {
 
     }
 
-    default void lithium$OnBlockCacheSet(BlockState newState) {
+    default void lithium$OnFeetBlockCacheSet(BlockState newState) {
 
     }
 
