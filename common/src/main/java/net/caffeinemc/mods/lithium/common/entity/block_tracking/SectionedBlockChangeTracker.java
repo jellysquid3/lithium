@@ -1,7 +1,6 @@
 package net.caffeinemc.mods.lithium.common.entity.block_tracking;
 
 import net.caffeinemc.mods.lithium.common.block.BlockListeningSection;
-import net.caffeinemc.mods.lithium.common.block.ListeningBlockStatePredicate;
 import net.caffeinemc.mods.lithium.common.util.Pos;
 import net.caffeinemc.mods.lithium.common.util.deduplication.LithiumInterner;
 import net.caffeinemc.mods.lithium.common.util.tuples.WorldSectionBox;
@@ -12,12 +11,12 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.AABB;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class SectionedBlockChangeTracker {
     public final WorldSectionBox trackedWorldSections;
-    public final ListeningBlockStatePredicate blockGroup;
 
     private long maxChangeTime;
 
@@ -27,9 +26,8 @@ public class SectionedBlockChangeTracker {
     private ArrayList<SectionPos> sectionsNotListeningTo = null;
     private ArrayList<BlockListeningSection> sectionsUnsubscribed = null;
 
-    public SectionedBlockChangeTracker(WorldSectionBox trackedWorldSections, ListeningBlockStatePredicate blockGroup) {
+    public SectionedBlockChangeTracker(WorldSectionBox trackedWorldSections) {
         this.trackedWorldSections = trackedWorldSections;
-        this.blockGroup = blockGroup;
 
         this.maxChangeTime = 0;
     }
@@ -38,9 +36,9 @@ public class SectionedBlockChangeTracker {
         return this.trackedWorldSections.matchesRelevantBlocksBox(box);
     }
 
-    public static SectionedBlockChangeTracker registerAt(Level world, AABB entityBoundingBox, ListeningBlockStatePredicate blockGroup) {
+    public static SectionedBlockChangeTracker registerAt(Level world, AABB entityBoundingBox) {
         WorldSectionBox worldSectionBox = WorldSectionBox.relevantExpandedBlocksBox(world, entityBoundingBox);
-        SectionedBlockChangeTracker tracker = new SectionedBlockChangeTracker(worldSectionBox, blockGroup);
+        SectionedBlockChangeTracker tracker = new SectionedBlockChangeTracker(worldSectionBox);
 
         LithiumInterner<SectionedBlockChangeTracker> blockChangeTrackers = ((LithiumData) world).lithium$getData().blockChangeTrackers();
         tracker = blockChangeTrackers.getCanonical(tracker);
@@ -76,7 +74,7 @@ public class SectionedBlockChangeTracker {
                         LevelChunkSection section = sectionArray[Pos.SectionYIndex.fromSectionCoord(world, y)];
 
                         BlockListeningSection blockListeningSection = (BlockListeningSection) section;
-                        blockListeningSection.lithium$addToCallback(this.blockGroup, this, SectionPos.asLong(x, y, z), world);
+                        blockListeningSection.lithium$addToCallback(this, SectionPos.asLong(x, y, z), world);
                     }
                 }
             }
@@ -108,7 +106,7 @@ public class SectionedBlockChangeTracker {
                     LevelChunkSection section = sectionArray[Pos.SectionYIndex.fromSectionCoord(world, y)];
 
                     BlockListeningSection blockListeningSection = (BlockListeningSection) section;
-                    blockListeningSection.lithium$removeFromCallback(this.blockGroup, this);
+                    blockListeningSection.lithium$removeFromCallback(this);
                 }
             }
         }
@@ -134,7 +132,7 @@ public class SectionedBlockChangeTracker {
                 }
                 LevelChunkSection section = chunk.getSections()[Pos.SectionYIndex.fromSectionCoord(world, chunkSectionPos.getY())];
                 BlockListeningSection blockListeningSection = (BlockListeningSection) section;
-                blockListeningSection.lithium$addToCallback(this.blockGroup, this, chunkSectionPos.asLong(), world);
+                blockListeningSection.lithium$addToCallback(this, chunkSectionPos.asLong(), world);
             }
         }
         if (this.sectionsUnsubscribed != null) {
@@ -142,7 +140,7 @@ public class SectionedBlockChangeTracker {
             for (int i = unsubscribed.size() - 1; i >= 0; i--) {
                 changed = true;
                 BlockListeningSection blockListeningSection = unsubscribed.remove(i);
-                blockListeningSection.lithium$addToCallback(this.blockGroup, this, Long.MIN_VALUE, null);
+                blockListeningSection.lithium$addToCallback(this, Long.MIN_VALUE, null);
             }
         }
         this.isListeningToAll = true;
@@ -190,13 +188,12 @@ public class SectionedBlockChangeTracker {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (SectionedBlockChangeTracker) obj;
-        return Objects.equals(this.trackedWorldSections, that.trackedWorldSections) &&
-                Objects.equals(this.blockGroup, that.blockGroup);
+        return Objects.equals(this.trackedWorldSections, that.trackedWorldSections);
     }
     //Do not modify, used for deduplication of instances
     @Override
     public int hashCode() {
-        return this.getClass().hashCode() ^ this.trackedWorldSections.hashCode() ^ this.blockGroup.hashCode();
+        return this.getClass().hashCode() ^ this.trackedWorldSections.hashCode();
     }
 
     public void onChunkSectionInvalidated(SectionPos sectionPos) {

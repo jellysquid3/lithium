@@ -1,7 +1,6 @@
 package net.caffeinemc.mods.lithium.common.entity.block_tracking;
 
 import it.unimi.dsi.fastutil.objects.Reference2DoubleArrayMap;
-import net.caffeinemc.mods.lithium.common.block.BlockStateFlags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,7 +44,7 @@ public final class BlockCache {
         if (this.isTracking()) {
             throw new IllegalStateException("Cannot init cache that is already initialized!");
         }
-        this.tracker = SectionedBlockChangeTracker.registerAt(entity.level(), entity.getBoundingBox(), BlockStateFlags.ANY);
+        this.tracker = SectionedBlockChangeTracker.registerAt(entity.level(), entity.getBoundingBox());
         this.initDelay = 0;
         this.resetCachedInfo();
     }

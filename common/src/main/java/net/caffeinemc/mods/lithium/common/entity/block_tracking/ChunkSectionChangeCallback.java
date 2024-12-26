@@ -2,7 +2,6 @@ package net.caffeinemc.mods.lithium.common.entity.block_tracking;
 
 import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import net.caffeinemc.mods.lithium.common.block.BlockListeningSection;
-import net.caffeinemc.mods.lithium.common.block.ListeningBlockStatePredicate;
 import net.caffeinemc.mods.lithium.common.util.Pos;
 import net.caffeinemc.mods.lithium.common.world.LithiumData;
 import net.caffeinemc.mods.lithium.common.world.chunk.ChunkStatusTracker;
@@ -56,7 +55,7 @@ public final class ChunkSectionChangeCallback {
         }
     }
 
-    public void addTracker(SectionedBlockChangeTracker tracker, ListeningBlockStatePredicate blockGroup) {
+    public void addTracker(SectionedBlockChangeTracker tracker) {
         ArrayList<SectionedBlockChangeTracker> sectionedBlockChangeTrackers = this.trackers;
         if (sectionedBlockChangeTrackers == null) {
             this.trackers = (sectionedBlockChangeTrackers = new ArrayList<>());
@@ -64,7 +63,7 @@ public final class ChunkSectionChangeCallback {
         sectionedBlockChangeTrackers.add(tracker);
     }
 
-    public void removeTracker(SectionedBlockChangeTracker tracker, ListeningBlockStatePredicate blockGroup) {
+    public void removeTracker(SectionedBlockChangeTracker tracker) {
         ArrayList<SectionedBlockChangeTracker> sectionedBlockChangeTrackers = this.trackers;
         if (sectionedBlockChangeTrackers != null) {
             sectionedBlockChangeTrackers.remove(tracker);

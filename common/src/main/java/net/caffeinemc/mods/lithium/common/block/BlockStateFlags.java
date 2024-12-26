@@ -1,6 +1,5 @@
 package net.caffeinemc.mods.lithium.common.block;
 
-import it.unimi.dsi.fastutil.objects.Reference2BooleanArrayMap;
 import net.caffeinemc.mods.lithium.common.ai.pathing.BlockStatePathingCache;
 import net.caffeinemc.mods.lithium.common.ai.pathing.PathNodeCache;
 import net.caffeinemc.mods.lithium.common.entity.FluidCachingEntity;
@@ -17,14 +16,6 @@ import java.util.ArrayList;
 
 public class BlockStateFlags {
     public static final boolean ENABLED = BlockCountingSection.class.isAssignableFrom(LevelChunkSection.class);
-
-    public static final int NUM_LISTENING_FLAGS;
-    public static final ListeningBlockStatePredicate[] LISTENING_FLAGS;
-    public static final int LISTENING_MASK_OR;
-
-    //Listening Flag
-    public static final ListeningBlockStatePredicate ANY;
-
     public static final int NUM_TRACKED_FLAGS;
     public static final TrackedBlockStatePredicate[] TRACKED_FLAGS;
 
@@ -40,31 +31,9 @@ public class BlockStateFlags {
     public static final TrackedBlockStatePredicate ENTITY_TOUCHABLE;
 
     static {
-        Reference2BooleanArrayMap<ListeningBlockStatePredicate> listeningFlags = new Reference2BooleanArrayMap<>();
+        ArrayList<TrackedBlockStatePredicate> countingFlags = new ArrayList<>();
 
-        ANY = new ListeningBlockStatePredicate(listeningFlags.size()) {
-            @Override
-            public boolean test(BlockState operand) {
-                return true;
-            }
-        };
-        //false -> we listen to changes of all blocks that pass the predicate test.
-        //true -> we only listen to changes of the predicate test result
-        listeningFlags.put(ANY, false);
-
-        NUM_LISTENING_FLAGS = listeningFlags.size();
-        int listenMaskOR = 0;
-        int iteration = 0;
-        for (var entry : listeningFlags.reference2BooleanEntrySet()) {
-            boolean listenOnlyXOR = entry.getBooleanValue();
-            listenMaskOR |= listenOnlyXOR ? 0 : 1 << iteration;
-        }
-        LISTENING_MASK_OR = listenMaskOR;
-        LISTENING_FLAGS = listeningFlags.keySet().toArray(new ListeningBlockStatePredicate[NUM_LISTENING_FLAGS]);
-
-
-        ArrayList<TrackedBlockStatePredicate> countingFlags = new ArrayList<>(listeningFlags.keySet());
-
+        //noinspection ConstantValue
         OVERSIZED_SHAPE = new TrackedBlockStatePredicate(countingFlags.size()) {
             @Override
             public boolean test(BlockState operand) {

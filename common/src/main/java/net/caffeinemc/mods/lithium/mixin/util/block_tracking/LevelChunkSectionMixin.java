@@ -135,7 +135,7 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
     }
 
     @Override
-    public void lithium$addToCallback(ListeningBlockStatePredicate blockGroup, SectionedBlockChangeTracker tracker, long sectionPos, Level world) {
+    public void lithium$addToCallback(SectionedBlockChangeTracker tracker, long sectionPos, Level world) {
         if (this.changeListener == null) {
             if (sectionPos == Long.MIN_VALUE || world == null) {
                 throw new IllegalArgumentException("Expected world and section pos during intialization!");
@@ -143,13 +143,13 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
             this.changeListener = ChunkSectionChangeCallback.create(sectionPos, world);
         }
 
-        this.changeListener.addTracker(tracker, blockGroup);
+        this.changeListener.addTracker(tracker);
     }
 
     @Override
-    public void lithium$removeFromCallback(ListeningBlockStatePredicate blockGroup, SectionedBlockChangeTracker tracker) {
+    public void lithium$removeFromCallback(SectionedBlockChangeTracker tracker) {
         if (this.changeListener != null) {
-            this.changeListener.removeTracker(tracker, blockGroup);
+            this.changeListener.removeTracker(tracker);
         }
     }
 
