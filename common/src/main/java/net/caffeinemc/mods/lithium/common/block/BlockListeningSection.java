@@ -1,6 +1,6 @@
 package net.caffeinemc.mods.lithium.common.block;
 
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.SectionedBlockChangeTracker;
+import net.caffeinemc.mods.lithium.common.tracking.block.SectionedBlockChangeTracker;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 

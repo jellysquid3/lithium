@@ -1,7 +1,7 @@
 package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.suffocation;
 
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCache;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;

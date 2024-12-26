@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.movement_tracker;
+package net.caffeinemc.mods.lithium.common.tracking.entity;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.caffeinemc.mods.lithium.api.inventory.LithiumInventory;
@@ -6,6 +6,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.entity.EntityAccess;
+
 import java.util.List;
 
 /**
