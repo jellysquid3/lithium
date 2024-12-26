@@ -24,9 +24,9 @@ import java.util.Set;
 public abstract class EntityMixin implements BlockCacheProvider {
     @Inject(
             method = "checkInsideBlocks(Ljava/util/List;Ljava/util/Set;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getBoundingBox()Lnet/minecraft/world/phys/AABB;"), cancellable = true
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;makeBoundingBox(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/AABB;"), cancellable = true
     )
-    private void cancelIfSkippable(List<?> movementList, Set<BlockState> stateCollector, CallbackInfo ci) {
+    private void cancelIfSkippable(List<?> movementList, Set<BlockState> touchedBlocks, CallbackInfo ci) {
         if (movementList.size() != 1) {
             return; // If there are multiple movements, blocks far away, outside the cached range are queried.
             // Not sure whether this special case is really needed, but it's here to be safe.
@@ -36,6 +36,12 @@ public abstract class EntityMixin implements BlockCacheProvider {
             BlockCache bc = this.getUpdatedBlockCache((Entity) (Object) this);
             if (bc.canSkipBlockTouching()) {
                 ci.cancel();
+                //TODO This could lead to mod compat issues with other mods, if they implement something similar to
+                // vanilla's FIRE / LAVA check. To work around this, other mods
+                // have to override the method where blocks interact with entities that touch it.
+                // Mojmap (1.21.4): entityInside . If mapping changed, look up how cactus damages entities, implement the same
+                // method on the modded block, even if it is empty.
+                // The method name is also defined at net.caffeinemc.mods.lithium.common.reflection.ReflectionUtil.REMAPPED_ON_ENTITY_COLLISION:
             }
         }
     }
