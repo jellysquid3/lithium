@@ -2,8 +2,8 @@ package net.caffeinemc.mods.lithium.fabric.mixin.experimental.entity.block_cachi
 
 import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCache;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCacheProvider;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.material.Fluid;

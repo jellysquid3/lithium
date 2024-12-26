@@ -1,9 +1,9 @@
 package net.caffeinemc.mods.lithium.mixin.experimental.entity.block_caching.block_support;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCache;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.BlockCacheProvider;
-import net.caffeinemc.mods.lithium.common.entity.block_tracking.block_support.SupportingBlockCollisionShapeProvider;
+import net.caffeinemc.mods.lithium.common.entity.LithiumEntityCollisions;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCache;
+import net.caffeinemc.mods.lithium.common.tracking.block.BlockCacheProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements BlockCacheProvider, SupportingBlockCollisionShapeProvider {
+public abstract class EntityMixin implements BlockCacheProvider, LithiumEntityCollisions.SupportingBlockCollisionShapeProvider {
     @Shadow
     public abstract Level level();
 

@@ -8,10 +8,10 @@ import net.caffeinemc.mods.lithium.common.block.entity.inventory_change_tracking
 import net.caffeinemc.mods.lithium.common.block.entity.inventory_change_tracking.InventoryChangeTracker;
 import net.caffeinemc.mods.lithium.common.block.entity.inventory_comparator_tracking.ComparatorTracker;
 import net.caffeinemc.mods.lithium.common.compat.TransferApiHelper;
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.SectionedEntityMovementListener;
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.SectionedInventoryEntityMovementTracker;
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.SectionedItemEntityMovementTracker;
 import net.caffeinemc.mods.lithium.common.hopper.*;
+import net.caffeinemc.mods.lithium.common.tracking.entity.SectionedEntityMovementListener;
+import net.caffeinemc.mods.lithium.common.tracking.entity.SectionedInventoryEntityMovementTracker;
+import net.caffeinemc.mods.lithium.common.tracking.entity.SectionedItemEntityMovementTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

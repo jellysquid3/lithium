@@ -1,4 +1,4 @@
-package net.caffeinemc.mods.lithium.common.entity.block_tracking;
+package net.caffeinemc.mods.lithium.common.tracking.block;
 
 import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import net.caffeinemc.mods.lithium.common.block.BlockListeningSection;
@@ -10,6 +10,7 @@ import net.caffeinemc.mods.lithium.common.world.chunk.ChunkStatusTracker;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+
 import java.util.ArrayList;
 
 public final class ChunkSectionChangeCallback {

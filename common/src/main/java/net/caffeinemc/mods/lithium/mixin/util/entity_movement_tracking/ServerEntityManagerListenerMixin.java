@@ -1,8 +1,8 @@
 package net.caffeinemc.mods.lithium.mixin.util.entity_movement_tracking;
 
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.EntityMovementTrackerSection;
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.MovementTrackerHelper;
-import net.caffeinemc.mods.lithium.common.entity.movement_tracker.ToggleableMovementTracker;
+import net.caffeinemc.mods.lithium.common.tracking.entity.EntityMovementTrackerSection;
+import net.caffeinemc.mods.lithium.common.tracking.entity.MovementTrackerHelper;
+import net.caffeinemc.mods.lithium.common.tracking.entity.ToggleableMovementTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.entity.EntityAccess;
