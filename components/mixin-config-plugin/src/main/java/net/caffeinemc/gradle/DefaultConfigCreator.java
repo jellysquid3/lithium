@@ -66,10 +66,11 @@ public class DefaultConfigCreator {
             for (CreateMixinConfigTask.MixinRuleRepresentation option : sortedMixinConfigOptions) {
                 writer.write("### `" + option.path() + "`\n");
                 writer.write("(default: `" + option.config().enabled() + "`)  \n");
+                boolean hasDependencies = option.config().depends().length > 0;
                 if (option.config().description().length() > 0) {
-                    writer.write(option.config().description() + "\n");
+                    writer.write(option.config().description() + (hasDependencies ? "  " : "") + "\n");
                 }
-                if (option.config().depends().length > 0) {
+                if (hasDependencies) {
                     MixinConfigDependency[] dependencies = option.config().depends();
                     StringBuilder dependencyList = new StringBuilder();
                     for (int i = 0; i < dependencies.length; i++) {

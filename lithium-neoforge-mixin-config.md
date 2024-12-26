@@ -21,11 +21,11 @@ mixin.gen.biome_noise_cache=false
 Mob AI optimizations
   
 ### `mixin.ai.pathing`
-(default: `false`)  
+(default: `true`)  
 A faster code path is used for determining what kind of path-finding node type is associated with a
 given block. Additionally, a faster chunk cache will be used for accessing blocks while evaluating
 paths.
-
+  
 Requirements:
 - `mixin.util.chunk_access=true`  
   
@@ -43,7 +43,7 @@ Mob Tasks which search for POIs use the optimized POI search
   
 ### `mixin.ai.raid`
 (default: `true`)  
-Avoids unnecessary raid bar updates and optimizes expensive leader banner operations
+Avoids unnecessary raid bar updates and optimizes expensive leader banner operations  
 Requirements:
 - `mixin.util.data_storage=true`  
   
@@ -161,7 +161,7 @@ Fluid flow optimization
   
 ### `mixin.block.hopper`
 (default: `true`)  
-Reduces hopper lag using caching, notification systems and BlockEntity sleeping
+Reduces hopper lag using caching, notification systems and BlockEntity sleeping  
 Requirements:
 - `mixin.util.entity_movement_tracking=true`
 - `mixin.util.block_entity_retrieval=true`
@@ -186,7 +186,7 @@ Various world chunk optimizations
   
 ### `mixin.chunk.entity_class_groups`
 (default: `true`)  
-Allow grouping entity classes for faster entity access, e.g. boats and shulkers
+Allow grouping entity classes for faster entity access, e.g. boats and shulkers  
 Requirements:
 - `mixin.util.accessors=true`  
   
@@ -260,25 +260,25 @@ Various entity collision optimizations
   
 ### `mixin.entity.collisions.intersection`
 (default: `true`)  
-Uses faster block access for block collisions and delayed entity access with grouped boat/shulker for entity collisions when available
+Uses faster block access for block collisions and delayed entity access with grouped boat/shulker for entity collisions when available  
 Requirements:
 - `mixin.util.chunk_access=true`  
   
 ### `mixin.entity.collisions.movement`
 (default: `true`)  
-Entity movement uses optimized block access and optimized and delayed entity access. Additionally, the supporting block of entities that only move downwards is checked first. This can profit from mixin.experimental.entity.block_caching.block_support, but it is not required.
+Entity movement uses optimized block access and optimized and delayed entity access. Additionally, the supporting block of entities that only move downwards is checked first. This can profit from mixin.experimental.entity.block_caching.block_support, but it is not required.  
 Requirements:
 - `mixin.util.chunk_access=true`  
   
 ### `mixin.entity.collisions.unpushable_cramming`
 (default: `true`)  
-In chunks with many mobs in ladders a separate list of pushable entities for cramming tests is used
+In chunks with many mobs in ladders a separate list of pushable entities for cramming tests is used  
 Requirements:
 - `mixin.chunk.entity_class_groups=true`  
   
 ### `mixin.entity.equipment_tracking`
 (default: `true`)  
-Skips repeated checks whether the equipment of an entity changed. Equipment updates are detected instead.
+Skips repeated checks whether the equipment of an entity changed. Equipment updates are detected instead.  
 Requirements:
 - `mixin.util.item_component_and_count_tracking=true`  
   
@@ -308,7 +308,7 @@ Access entities faster when accessing a relatively small number of entity sectio
   
 ### `mixin.entity.inactive_navigations`
 (default: `true`)  
-Block updates skip notifying mobs that won't react to the block update anyways
+Block updates skip notifying mobs that won't react to the block update anyways  
 Requirements:
 - `mixin.util.data_storage=true`  
   
@@ -330,19 +330,19 @@ Experimental entity optimizations
   
 ### `mixin.experimental.entity.block_caching`
 (default: `true`)  
-Use block listening system to allow skipping stuff in entity code
+Use block listening system to allow skipping stuff in entity code  
 Requirements:
 - `mixin.util.block_tracking=true`  
   
 ### `mixin.experimental.entity.block_caching.block_support`
 (default: `true`)  
-Use the block listening system to skip supporting block search (used for honey block pushing, velocity modifiers like soulsand, etc)
+Use the block listening system to skip supporting block search (used for honey block pushing, velocity modifiers like soulsand, etc)  
 Requirements:
 - `mixin.util.block_tracking=true`  
   
 ### `mixin.experimental.entity.block_caching.block_touching`
 (default: `true`)  
-Use the block listening system to skip block touching (like cactus touching).
+Use the block listening system to skip block touching (like cactus touching).  
 Requirements:
 - `mixin.util.block_tracking=true`  
   
@@ -352,13 +352,13 @@ Skip searching for fire or lava in the burn time countdown logic when they are n
   
 ### `mixin.experimental.entity.block_caching.suffocation`
 (default: `true`)  
-Use the block listening system to cache the entity suffocation check.
+Use the block listening system to cache the entity suffocation check.  
 Requirements:
 - `mixin.util.block_tracking=true`  
   
 ### `mixin.experimental.entity.item_entity_merging`
 (default: `true`)  
-Optimize item entity merging by categorizing item entities by item type and only attempting to merge with the same type. Categorizing by stack size allows skipping merge attempts of full item entities or two more than half full item entities.
+Optimize item entity merging by categorizing item entities by item type and only attempting to merge with the same type. Categorizing by stack size allows skipping merge attempts of full item entities or two more than half full item entities.  
 Requirements:
 - `mixin.util.accessors=true`
 - `mixin.util.entity_collection_replacement=true`
@@ -414,7 +414,7 @@ Speed up finding empty spaces mobs fit into. This speeds up entity pose checks a
   
 ### `mixin.minimal_nonvanilla.world.block_entity_ticking.support_cache`
 (default: `true`)  
-BlockEntity ticking caches whether the BlockEntity can exist in the BlockState at the same location. This deviates from vanilla in the case of placing a hopper in a powered location, immediately updating the cached BlockState (which is incorrect in vanilla). This most likely does not affect your gameplay, as this deviation only affects hoppers, and in vanilla, hoppers never use the cached state information anyway.
+BlockEntity ticking caches whether the BlockEntity can exist in the BlockState at the same location. This deviates from vanilla in the case of placing a hopper in a powered location, immediately updating the cached BlockState (which is incorrect in vanilla). This most likely does not affect your gameplay, as this deviation only affects hoppers, and in vanilla, hoppers never use the cached state information anyway.  
 Requirements:
 - `mixin.world.block_entity_ticking=true`  
   
@@ -467,8 +467,8 @@ Allow accessing certain fields and functions that are normally inaccessible
 Allows access to existing BlockEntities without creating new ones
   
 ### `mixin.util.block_tracking`
-(default: `false`)  
-Chunk sections count certain blocks inside them and provide a method to quickly check whether a chunk contains any of these blocks. Furthermore, chunk sections can notify registered listeners about certain blocks being placed or broken.
+(default: `true`)  
+Chunk sections count certain blocks inside them and provide a method to quickly check whether a chunk contains any of these blocks. Furthermore, chunk sections can notify registered listeners about certain blocks being placed or broken.  
 Requirements:
 - `mixin.util.data_storage=true`
 - `mixin.util.chunk_status_tracking=true`  
@@ -491,7 +491,7 @@ Allow replacing entity collections with custom collection types.
   
 ### `mixin.util.entity_movement_tracking`
 (default: `true`)  
-System to notify subscribers of certain entity sections about position changes of certain entity types.
+System to notify subscribers of certain entity sections about position changes of certain entity types.  
 Requirements:
 - `mixin.util.entity_section_position=true`
 - `mixin.util.data_storage=true`  
@@ -506,7 +506,7 @@ Certain BlockEntity Inventories emit updates to their listeners when their stack
   
 ### `mixin.util.inventory_comparator_tracking`
 (default: `true`)  
-BlockEntity Inventories update their listeners when a comparator is placed near them
+BlockEntity Inventories update their listeners when a comparator is placed near them  
 Requirements:
 - `mixin.util.block_entity_retrieval=true`  
   
@@ -560,7 +560,7 @@ BlockEntity sleeping for closed shulker boxes
   
 ### `mixin.world.block_entity_ticking.world_border`
 (default: `true`)  
-Avoids repeatedly testing whether the BlockEntity is inside the world border by caching the test result and listening for world border changes
+Avoids repeatedly testing whether the BlockEntity is inside the world border by caching the test result and listening for world border changes  
 Requirements:
 - `mixin.util.world_border_listener=true`  
   
@@ -594,7 +594,7 @@ Various improvements to game events (vibrations) that are detected by allays, wa
   
 ### `mixin.world.game_events.dispatch`
 (default: `false`)  
-Create game event dispatchers for chunk sections only when needed, i.e. when a listener is added to a section. This reduces memory usage for chunks that do not have any listeners. The dispatchers are accessed more directly instead of indirectly through chunks. In total this speeds up attempting to dispatch events especially when there are no nearby listeners.
+Create game event dispatchers for chunk sections only when needed, i.e. when a listener is added to a section. This reduces memory usage for chunks that do not have any listeners. The dispatchers are accessed more directly instead of indirectly through chunks. In total this speeds up attempting to dispatch events especially when there are no nearby listeners.  
 Requirements:
 - `mixin.util.data_storage=true`  
   
