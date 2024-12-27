@@ -41,7 +41,7 @@ public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntit
     private void cancelIfSkippable(boolean onGround, Vec3 movement, CallbackInfo ci) {
         if (movement == null || (movement.x == 0 && movement.z == 0)) {
             //noinspection ConstantConditions
-            VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+            VicinityCache bc = this.lithium$getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
             if (bc.canSkipSupportingBlockSearch()) {
                 ci.cancel();
             }
@@ -90,7 +90,7 @@ public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntit
 
     @Override
     public @Nullable VoxelShape lithium$getCollisionShapeBelow() {
-        VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+        VicinityCache bc = this.lithium$getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
         if (bc.isTrackingBlocks()) {
             BlockState cachedSupportingBlock = bc.getCachedSupportingBlock();
             if (cachedSupportingBlock != null && this.mainSupportingBlockPos.isPresent()) {

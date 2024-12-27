@@ -11,11 +11,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.stream.Stream;
-
 @Mixin(Entity.class)
 public abstract class EntityMixin implements VicinityCacheProvider {
-    private static final Stream<BlockState> EMPTY_BLOCKSTATE_STREAM = Stream.empty();
     @Shadow
     private int remainingFireTicks;
 
@@ -49,7 +46,7 @@ public abstract class EntityMixin implements VicinityCacheProvider {
         }
 
 
-        VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+        VicinityCache bc = this.lithium$getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
 
         byte cachedTouchingFireLava = bc.getIsTouchingFireLava();
         if (cachedTouchingFireLava == (byte) 0) {

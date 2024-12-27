@@ -1,12 +1,12 @@
 {
-  "package" : "net.caffeinemc.mods.lithium.mixin",
-  "required" : true,
-  "compatibilityLevel" : "JAVA_21",
-  "plugin" : "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
-  "injectors" : {
-    "defaultRequire" : 1
+  "package": "net.caffeinemc.mods.lithium.mixin",
+  "required": true,
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "net.caffeinemc.mods.lithium.mixin.LithiumMixinPlugin",
+  "injectors": {
+    "defaultRequire": 1
   },
-  "mixins" : [
+  "mixins": [
     "ai.pathing.BlockStateBaseMixin",
     "ai.pathing.FlyNodeEvaluatorMixin",
     "ai.pathing.FuelValuesMixin",
@@ -137,13 +137,11 @@
     "experimental.entity.block_caching.block_support.EntityMixin",
     "experimental.entity.block_caching.block_touching.EntityMixin",
     "experimental.entity.block_caching.fire_lava_touching.EntityMixin",
+    "experimental.entity.block_caching.movement.EntityMixin",
     "experimental.entity.block_caching.suffocation.EntityMixin",
     "experimental.entity.item_entity_merging.ItemEntityMixin",
-    "experimental.spawning.EntitySectionAccessor",
     "experimental.spawning.EntitySectionStorageMixin",
-    "experimental.spawning.PersistentEntitySectionManagerAccessor",
     "experimental.spawning.ServerChunkCacheMixin",
-    "experimental.spawning.ServerLevelAccessor",
     "gen.cached_generator_settings.NoiseBasedChunkGeneratorMixin",
     "math.fast_blockpos.BlockPosMixin",
     "math.fast_blockpos.DirectionMixin",
@@ -184,7 +182,6 @@
     "util.data_storage.LevelMixin",
     "util.entity_collection_replacement.ClassInstanceMultiMapMixin",
     "util.entity_movement_tracking.EntitySectionMixin",
-    "util.entity_movement_tracking.PersistentEntitySectionManagerAccessor",
     "util.entity_movement_tracking.ServerEntityManagerListenerMixin",
     "util.entity_movement_tracking.ServerLevelAccessor",
     "util.entity_section_position.EntitySectionMixin",
@@ -237,7 +234,7 @@
     "world.temperature_cache.BiomeMixin",
     "world.tick_scheduler.LevelChunkTicksMixin"
   ],
-  "client" : [
+  "client": [
     "chunk.entity_class_groups.ClientLevelMixin",
     "util.accessors.TransientEntitySectionManagerAccessor"
   ]

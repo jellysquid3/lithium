@@ -33,10 +33,10 @@ public abstract class EntityMixin implements VicinityCacheProvider {
         }
         //noinspection ConstantConditions
         if (!((Object) this instanceof ServerPlayer)) {
-            VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+            VicinityCache bc = this.lithium$getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
             if (bc.canSkipBlockTouching()) {
                 ci.cancel();
-                //TODO This could lead to mod compat issues with other mods, if they implement something similar to
+                //This could lead to mod compat issues with other mods, if they implement something similar to
                 // vanilla's FIRE / LAVA check. To work around this, other mods
                 // have to override the method where blocks interact with entities that touch it.
                 // Mojmap (1.21.4): entityInside . If mapping changed, look up how cactus damages entities, implement the same

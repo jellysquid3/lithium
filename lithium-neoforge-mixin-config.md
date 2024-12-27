@@ -349,6 +349,12 @@ Requirements:
 (default: `true`)  
 Skip searching for fire or lava in the burn time countdown logic when they are not on fire and the result does not make a difference. Also use the block listening system to cache whether the entity is touching fire or lava.
   
+### `mixin.experimental.entity.block_caching.movement`
+(default: `false`)  
+Use the block and collider entity listening system to skip block collisions when movement attempts fail (e.g. when a mob stands on the ground or on top of a boat). This optimization comes with a lot of complexity, but measurements do not show a performance benefit over other optimizations (experimental.entity.block_caching.block_support) in normal worlds, which is why this optimization is disabled by default.  
+Requirements:
+- `mixin.util.block_tracking=true`  
+  
 ### `mixin.experimental.entity.block_caching.suffocation`
 (default: `true`)  
 Use the block listening system to cache the entity suffocation check.  
@@ -365,7 +371,9 @@ Requirements:
   
 ### `mixin.experimental.spawning`
 (default: `true`)  
-Experimental optimizations to spawning conditions. Reorders the iteration over entities to match the chunks and chunk sections, reducing the number of cache misses.
+Experimental optimizations to spawning conditions. Reorders the iteration over entities to match the chunks and chunk sections, reducing the number of cache misses.  
+Requirements:
+- `mixin.util.accessors=true`  
   
 ### `mixin.gen`
 (default: `true`)  
@@ -493,7 +501,8 @@ Allow replacing entity collections with custom collection types.
 System to notify subscribers of certain entity sections about position changes of certain entity types.  
 Requirements:
 - `mixin.util.entity_section_position=true`
-- `mixin.util.data_storage=true`  
+- `mixin.util.data_storage=true`
+- `mixin.util.accessors=true`  
   
 ### `mixin.util.entity_section_position`
 (default: `true`)  

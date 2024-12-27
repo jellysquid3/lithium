@@ -18,7 +18,8 @@ public final class VicinityCache {
     private AABB trackedPos;
     private SectionedBlockChangeTracker blockTracker;
     private SectionedColliderEntityMovementTracker collisionEntityTracker;
-    private long trackingSince;
+    private long trackingBlocksSince;
+    private long trackingCollisionEntitiesSince;
 
     private boolean canSkipSupportingBlockSearch;
     private BlockState cachedSupportingBlock;
@@ -71,7 +72,7 @@ public final class VicinityCache {
             if (isStationaryOtherwiseUpdate(entity)) {
                 if (!this.isTrackingBlocks()) {
                     this.initTrackingBlocks(entity);
-                } else if (!this.blockTracker.isUnchangedSince(this.trackingSince)) {
+                } else if (!this.blockTracker.isUnchangedSince(this.trackingBlocksSince)) {
                     this.resetCache();
                 }
             }
@@ -85,11 +86,11 @@ public final class VicinityCache {
             if (isStationaryOtherwiseUpdate(entity)) {
                 if (!this.isTrackingBlocks()) {
                     this.initTrackingBlocks(entity);
-                } else if (!this.blockTracker.isUnchangedSince(this.trackingSince)) {
+                } else if (!this.blockTracker.isUnchangedSince(this.trackingBlocksSince)) {
                     this.resetCache();
                 } else if (!this.isTrackingCollisionEntities()) {
                     this.initTrackingEntities(entity);
-                } else if (!this.collisionEntityTracker.isUnchangedSince(this.trackingSince)) {
+                } else if (!this.collisionEntityTracker.isUnchangedSince(this.trackingCollisionEntitiesSince)) {
                     this.resetEntityAndBlockDependentCache();
                 }
             }
@@ -126,7 +127,7 @@ public final class VicinityCache {
     }
 
     private void resetCache() {
-        this.trackingSince = !this.isTrackingBlocks() ? Long.MIN_VALUE : this.blockTracker.getWorldTime();
+        this.trackingBlocksSince = !this.isTrackingBlocks() ? Long.MIN_VALUE : this.blockTracker.getWorldTime();
         this.canSkipSupportingBlockSearch = false;
         this.cachedSupportingBlock = null;
         this.cachedIsSuffocating = (byte) -1;
@@ -137,6 +138,7 @@ public final class VicinityCache {
     }
 
     private void resetEntityAndBlockDependentCache() {
+        this.trackingCollisionEntitiesSince = !this.isTrackingCollisionEntities() ? Long.MIN_VALUE : this.collisionEntityTracker.getWorldTime();
         this.cachedFailedMovement = null;
     }
 
@@ -208,7 +210,6 @@ public final class VicinityCache {
     }
 
     public Vec3 getCachedFailedMovement() {
-        //TODO check world border. Either subscribe to world border changes, or only cache a value if the movement is not failing due to a world border collision
         if (this.isTrackingBlocks() && this.isTrackingCollisionEntities()) {
             return this.cachedFailedMovement;
         }

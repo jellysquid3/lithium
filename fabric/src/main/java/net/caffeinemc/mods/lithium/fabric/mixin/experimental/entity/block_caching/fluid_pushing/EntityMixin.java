@@ -25,7 +25,7 @@ public abstract class EntityMixin implements VicinityCacheProvider {
             cancellable = true
     )
     private void skipFluidSearchUsingCache(TagKey<Fluid> fluid, double speed, CallbackInfoReturnable<Boolean> cir) {
-        VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+        VicinityCache bc = this.lithium$getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
         double fluidHeight = bc.getStationaryFluidHeightOrDefault(fluid, -1d);
         if (fluidHeight != -1d) {
             this.fluidHeight.put(fluid, fluidHeight); //Note: If the region is unloaded in target method, this still puts 0. However, default return value is 0, and vanilla doesn't use any method that reveals this difference.

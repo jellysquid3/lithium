@@ -1,6 +1,7 @@
 package net.caffeinemc.mods.lithium.mixin.experimental.spawning;
 
 import net.caffeinemc.mods.lithium.common.world.ChunkAwareEntityIterable;
+import net.caffeinemc.mods.lithium.common.world.WorldHelper;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,6 @@ public class ServerChunkCacheMixin {
     )
     private Iterable<Entity> iterateEntitiesChunkAware(ServerLevel serverWorld) {
         //noinspection unchecked
-        return ((ChunkAwareEntityIterable<Entity>) ((PersistentEntitySectionManagerAccessor<Entity>) ((ServerLevelAccessor) serverWorld).getEntityManager()).getCache()).lithium$IterateEntitiesInTrackedSections();
+        return ((ChunkAwareEntityIterable<Entity>) WorldHelper.getServerEntityCache(serverWorld)).lithium$IterateEntitiesInTrackedSections();
     }
 }

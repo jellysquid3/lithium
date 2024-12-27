@@ -55,7 +55,7 @@ public abstract class EntityMixin implements VicinityCacheProvider {
         int maxY = Mth.floor(box.maxY);
         int maxZ = Mth.floor(box.maxZ);
 
-        VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+        VicinityCache bc = this.lithium$getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
 
         byte cachedSuffocation = bc.getIsSuffocating();
         if (cachedSuffocation == (byte) 0) {

@@ -4,8 +4,7 @@ import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.caffeinemc.mods.lithium.common.util.tuples.WorldSectionBox;
 import net.caffeinemc.mods.lithium.common.world.LithiumData;
-import net.caffeinemc.mods.lithium.mixin.util.entity_movement_tracking.PersistentEntitySectionManagerAccessor;
-import net.caffeinemc.mods.lithium.mixin.util.entity_movement_tracking.ServerLevelAccessor;
+import net.caffeinemc.mods.lithium.common.world.WorldHelper;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
@@ -80,9 +79,8 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess> {
     public void register(Level world) {
         assert world == this.trackedWorldSections.world();
 
-        if (this.timesRegistered == 0) { //TODO client world implementation!
-            //noinspection unchecked
-            EntitySectionStorage<E> cache = ((PersistentEntitySectionManagerAccessor<E>) ((ServerLevelAccessor) world).getEntityManager()).getCache();
+        if (this.timesRegistered == 0) {
+            EntitySectionStorage<E> cache = WorldHelper.getEntityCacheOrNull(world);
 
             WorldSectionBox trackedSections = this.trackedWorldSections;
             int size = trackedSections.numSections();
@@ -114,8 +112,7 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess> {
             return;
         }
         assert this.timesRegistered == 0;
-        //noinspection unchecked
-        EntitySectionStorage<E> cache = ((PersistentEntitySectionManagerAccessor<E>) ((ServerLevelAccessor) world).getEntityManager()).getCache();
+        EntitySectionStorage<E> cache = WorldHelper.getEntityCacheOrNull(world);
         ((LithiumData) world).lithium$getData().entityMovementTrackers().deleteCanonical(this);
 
         ArrayList<EntitySection<E>> sections = this.sortedSections;
@@ -192,5 +189,9 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess> {
             }
             listeners.clear();
         }
+    }
+
+    public long getWorldTime() {
+        return this.trackedWorldSections.world().getGameTime();
     }
 }

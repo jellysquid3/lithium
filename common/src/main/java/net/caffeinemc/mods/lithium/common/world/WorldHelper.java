@@ -9,12 +9,14 @@ import net.caffeinemc.mods.lithium.mixin.util.accessors.PersistentEntitySectionM
 import net.caffeinemc.mods.lithium.mixin.util.accessors.ServerLevelAccessor;
 import net.caffeinemc.mods.lithium.mixin.util.accessors.TransientEntitySectionManagerAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.util.ClassInstanceMultiMap;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -70,15 +72,21 @@ public class WorldHelper {
 
 
     //Requires util.accessors
-    public static EntitySectionStorage<Entity> getEntityCacheOrNull(Level world) {
+    public static <E extends EntityAccess> EntitySectionStorage<E> getEntityCacheOrNull(Level world) {
         if (world instanceof ClientWorldAccessor) {
             //noinspection unchecked
-            return ((TransientEntitySectionManagerAccessor<Entity>) ((ClientWorldAccessor) world).lithium$getEntityManager()).getCache();
+            return ((TransientEntitySectionManagerAccessor<E>) ((ClientWorldAccessor) world).lithium$getEntityManager()).getCache();
         } else if (world instanceof ServerLevelAccessor) {
             //noinspection unchecked
-            return ((PersistentEntitySectionManagerAccessor<Entity>) ((ServerLevelAccessor) world).getEntityManager()).getCache();
+            return ((PersistentEntitySectionManagerAccessor<E>) ((ServerLevelAccessor) world).getEntityManager()).getCache();
         }
-        return null;
+        throw new AssertionError("Missing mixin config dependency for mixin.util.accessors!");
+    }
+
+    //Requires util.accessors
+    public static <E extends EntityAccess> EntitySectionStorage<E> getServerEntityCache(ServerLevel world) {
+        //noinspection unchecked
+        return ((PersistentEntitySectionManagerAccessor<E>) ((ServerLevelAccessor) world).getEntityManager()).getCache();
     }
 
     public static List<Entity> getEntitiesOfClassGroup(EntitySectionStorage<Entity> cache, Entity collidingEntity, EntityClassGroup.NoDragonClassGroup entityClassGroup, AABB box, Predicate<? super Entity> entityFilter) {
