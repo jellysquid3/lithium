@@ -2,11 +2,13 @@ package net.caffeinemc.mods.lithium.common.tracking;
 
 import it.unimi.dsi.fastutil.objects.Reference2DoubleArrayMap;
 import net.caffeinemc.mods.lithium.common.tracking.block.SectionedBlockChangeTracker;
+import net.caffeinemc.mods.lithium.common.tracking.entity.SectionedColliderEntityMovementTracker;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public final class VicinityCache {
     // To avoid slowing down setblock operations, only start caching after 1.5 Seconds = 30 gameticks with estimated 6 accesses per tick
@@ -14,7 +16,8 @@ public final class VicinityCache {
     private int initDelay; //Changing MIN_DELAY should not affect correctness, just performance in some cases
 
     private AABB trackedPos;
-    private SectionedBlockChangeTracker tracker;
+    private SectionedBlockChangeTracker blockTracker;
+    private SectionedColliderEntityMovementTracker collisionEntityTracker;
     private long trackingSince;
 
     private boolean canSkipSupportingBlockSearch;
@@ -27,73 +30,124 @@ public final class VicinityCache {
     private byte cachedIsSuffocating;
     //Touched fluid's height IF fluid pushing is 0. Touched fluid height is 0 when not touching that fluid. Not in collection: No cached value (uninitialized OR fluid pushing is not 0)
     private final Reference2DoubleArrayMap<TagKey<Fluid>> fluidType2FluidHeightMap;
-
-    //Future: maybe cache last failed movement vector
+    //Last failed movement vector(s)
+    private Vec3 cachedFailedMovement;
 
     public VicinityCache() {
-        this.tracker = null;
+        this.blockTracker = null;
         this.trackedPos = null;
         this.initDelay = 0;
         this.fluidType2FluidHeightMap = new Reference2DoubleArrayMap<>(2);
     }
 
-    public boolean isTracking() {
-        return this.tracker != null;
+    public boolean isTrackingBlocks() {
+        return this.blockTracker != null;
     }
 
-    public void initTracking(Entity entity) {
-        if (this.isTracking()) {
+    public boolean isTrackingCollisionEntities() {
+        return this.collisionEntityTracker != null;
+    }
+
+    public void initTrackingBlocks(Entity entity) {
+        if (this.isTrackingBlocks()) {
             throw new IllegalStateException("Cannot init cache that is already initialized!");
         }
-        this.tracker = SectionedBlockChangeTracker.registerAt(entity.level(), entity.getBoundingBox());
+        this.blockTracker = SectionedBlockChangeTracker.registerAtForCollisions(entity.level(), entity.getBoundingBox());
         this.initDelay = 0;
-        this.resetCachedInfo();
+        this.resetCache();
     }
-    public void updateCache(Entity entity) {
-        if (this.isTracking() || this.initDelay >= MIN_DELAY) {
-            AABB boundingBox = entity.getBoundingBox();
-            if (boundingBox.equals(this.trackedPos)) {
-                if (!this.isTracking()) {
-                    this.initTracking(entity);
-                } else if (!this.tracker.isUnchangedSince(this.trackingSince)) {
-                    this.resetCachedInfo();
+
+    public void initTrackingEntities(Entity entity) {
+        if (this.isTrackingCollisionEntities()) {
+            throw new IllegalStateException("Cannot init cache that is already initialized!");
+        }
+        this.collisionEntityTracker = SectionedColliderEntityMovementTracker.registerAt(entity.level(), entity.getBoundingBox());
+        this.initDelay = 0;
+        this.resetCache();
+    }
+
+    public void updateCacheBlocksOnly(Entity entity) {
+        if (this.isTrackingBlocks() || this.initDelay >= MIN_DELAY) {
+            if (isStationaryOtherwiseUpdate(entity)) {
+                if (!this.isTrackingBlocks()) {
+                    this.initTrackingBlocks(entity);
+                } else if (!this.blockTracker.isUnchangedSince(this.trackingSince)) {
+                    this.resetCache();
                 }
-            } else {
-                if (this.isTracking() && !this.tracker.matchesMovedBox(boundingBox)) {
-                    this.tracker.unregister();
-                    this.tracker = null;
-                }
-                this.resetTrackedPos(boundingBox);
             }
         } else {
             this.initDelay++;
         }
     }
 
-    public void resetTrackedPos(AABB boundingBox) {
-        this.trackedPos = boundingBox;
-        this.initDelay = 0;
-        this.resetCachedInfo();
+    public void updateCacheBlocksAndEntities(Entity entity) {
+        if (this.isTrackingBlocks() && this.isTrackingCollisionEntities() || this.initDelay >= MIN_DELAY) {
+            if (isStationaryOtherwiseUpdate(entity)) {
+                if (!this.isTrackingBlocks()) {
+                    this.initTrackingBlocks(entity);
+                } else if (!this.blockTracker.isUnchangedSince(this.trackingSince)) {
+                    this.resetCache();
+                } else if (!this.isTrackingCollisionEntities()) {
+                    this.initTrackingEntities(entity);
+                } else if (!this.collisionEntityTracker.isUnchangedSince(this.trackingSince)) {
+                    this.resetEntityAndBlockDependentCache();
+                }
+            }
+        } else {
+            this.initDelay++;
+        }
     }
 
-    public void resetCachedInfo() {
-        this.trackingSince = !this.isTracking() ? Long.MIN_VALUE : this.tracker.getWorldTime();
+    private boolean isStationaryOtherwiseUpdate(Entity entity) {
+        AABB boundingBox = entity.getBoundingBox();
+        boolean stationary = boundingBox.equals(this.trackedPos);
+        if (!stationary) {
+            this.shiftPosition(entity, boundingBox);
+        }
+        return stationary;
+    }
+
+    private void shiftPosition(Entity entity, AABB boundingBox) {
+        if (this.isTrackingBlocks() && !this.blockTracker.matchesMovedBox(boundingBox)) {
+            this.blockTracker.unregister();
+            this.blockTracker = null;
+        }
+        if (this.isTrackingCollisionEntities() && !this.collisionEntityTracker.matchesMovedBox(boundingBox)) {
+            this.collisionEntityTracker.unRegister(entity.level());
+            this.collisionEntityTracker = null;
+        }
+        this.resetTrackedPos(boundingBox);
+    }
+
+    private void resetTrackedPos(AABB boundingBox) {
+        this.trackedPos = boundingBox;
+        this.initDelay = 0;
+        this.resetCache();
+    }
+
+    private void resetCache() {
+        this.trackingSince = !this.isTrackingBlocks() ? Long.MIN_VALUE : this.blockTracker.getWorldTime();
         this.canSkipSupportingBlockSearch = false;
         this.cachedSupportingBlock = null;
         this.cachedIsSuffocating = (byte) -1;
         this.cachedTouchingFireLava = (byte) -1;
         this.canSkipBlockTouching = false;
         this.fluidType2FluidHeightMap.clear();
+        this.resetEntityAndBlockDependentCache();
+    }
+
+    private void resetEntityAndBlockDependentCache() {
+        this.cachedFailedMovement = null;
     }
 
     public void remove() {
-        if (this.tracker != null) {
-            this.tracker.unregister();
+        if (this.blockTracker != null) {
+            this.blockTracker.unregister();
         }
     }
 
     public boolean canSkipBlockTouching() {
-        return this.isTracking() && this.canSkipBlockTouching;
+        return this.isTrackingBlocks() && this.canSkipBlockTouching;
     }
 
     public void setCanSkipBlockTouching(boolean value) {
@@ -101,7 +155,7 @@ public final class VicinityCache {
     }
 
     public double getStationaryFluidHeightOrDefault(TagKey<Fluid> fluid, double defaultValue) {
-        if (this.isTracking()) {
+        if (this.isTrackingBlocks()) {
             return this.fluidType2FluidHeightMap.getOrDefault(fluid, defaultValue);
         }
         return defaultValue;
@@ -112,7 +166,7 @@ public final class VicinityCache {
     }
 
     public byte getIsTouchingFireLava() {
-        if (this.isTracking()) {
+        if (this.isTrackingBlocks()) {
             return this.cachedTouchingFireLava;
         }
         return (byte) -1;
@@ -123,7 +177,7 @@ public final class VicinityCache {
     }
 
     public byte getIsSuffocating() {
-        if (this.isTracking()) {
+        if (this.isTrackingBlocks()) {
             return this.cachedIsSuffocating;
         }
         return (byte) -1;
@@ -134,7 +188,7 @@ public final class VicinityCache {
     }
 
     public boolean canSkipSupportingBlockSearch() {
-        return this.isTracking() && this.canSkipSupportingBlockSearch;
+        return this.isTrackingBlocks() && this.canSkipSupportingBlockSearch;
     }
 
     public void setCanSkipSupportingBlockSearch(boolean canSkip) {
@@ -147,9 +201,21 @@ public final class VicinityCache {
     }
 
     public BlockState getCachedSupportingBlock() {
-        if (!this.isTracking()) {
+        if (!this.isTrackingBlocks()) {
             return null;
         }
         return this.cachedSupportingBlock;
+    }
+
+    public Vec3 getCachedFailedMovement() {
+        //TODO check world border. Either subscribe to world border changes, or only cache a value if the movement is not failing due to a world border collision
+        if (this.isTrackingBlocks() && this.isTrackingCollisionEntities()) {
+            return this.cachedFailedMovement;
+        }
+        return null;
+    }
+
+    public void setCachedFailedMovement(Vec3 cachedFailedMovement) {
+        this.cachedFailedMovement = cachedFailedMovement;
     }
 }

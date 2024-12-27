@@ -41,7 +41,7 @@ public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntit
     private void cancelIfSkippable(boolean onGround, Vec3 movement, CallbackInfo ci) {
         if (movement == null || (movement.x == 0 && movement.z == 0)) {
             //noinspection ConstantConditions
-            VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
+            VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
             if (bc.canSkipSupportingBlockSearch()) {
                 ci.cancel();
             }
@@ -58,7 +58,7 @@ public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntit
     )
     private void cacheSupportingBlockSearch(CallbackInfo ci, @Local Optional<BlockPos> pos) {
         VicinityCache bc = this.lithium$getVicinityCache();
-        if (bc.isTracking()) {
+        if (bc.isTrackingBlocks()) {
             bc.setCanSkipSupportingBlockSearch(true);
             if (pos.isPresent() && this.getGravity() > 0D) {
                 bc.cacheSupportingBlockState(this.level().getBlockState(pos.get()));
@@ -72,7 +72,7 @@ public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntit
     )
     private void uncacheSupportingBlockSearch(CallbackInfo ci) {
         VicinityCache bc = this.lithium$getVicinityCache();
-        if (bc.isTracking()) {
+        if (bc.isTrackingBlocks()) {
             bc.setCanSkipSupportingBlockSearch(false);
         }
     }
@@ -83,15 +83,15 @@ public abstract class EntityMixin implements VicinityCacheProvider, LithiumEntit
     )
     private void uncacheSupportingBlockSearch1(boolean onGround, Vec3 movement, CallbackInfo ci) {
         VicinityCache bc = this.lithium$getVicinityCache();
-        if (bc.isTracking()) {
+        if (bc.isTrackingBlocks()) {
             bc.setCanSkipSupportingBlockSearch(false);
         }
     }
 
     @Override
     public @Nullable VoxelShape lithium$getCollisionShapeBelow() {
-        VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
-        if (bc.isTracking()) {
+        VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
+        if (bc.isTrackingBlocks()) {
             BlockState cachedSupportingBlock = bc.getCachedSupportingBlock();
             if (cachedSupportingBlock != null && this.mainSupportingBlockPos.isPresent()) {
                 BlockPos blockPos = this.mainSupportingBlockPos.get();

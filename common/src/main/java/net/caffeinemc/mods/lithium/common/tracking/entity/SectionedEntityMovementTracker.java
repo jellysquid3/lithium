@@ -7,7 +7,7 @@ import net.caffeinemc.mods.lithium.common.world.LithiumData;
 import net.caffeinemc.mods.lithium.mixin.util.entity_movement_tracking.PersistentEntitySectionManagerAccessor;
 import net.caffeinemc.mods.lithium.mixin.util.entity_movement_tracking.ServerLevelAccessor;
 import net.minecraft.core.SectionPos;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.level.entity.EntitySection;
 import net.minecraft.world.level.entity.EntitySectionStorage;
@@ -77,10 +77,10 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess> {
         return maxChangeTime;
     }
 
-    public void register(ServerLevel world) {
+    public void register(Level world) {
         assert world == this.trackedWorldSections.world();
 
-        if (this.timesRegistered == 0) {
+        if (this.timesRegistered == 0) { //TODO client world implementation!
             //noinspection unchecked
             EntitySectionStorage<E> cache = ((PersistentEntitySectionManagerAccessor<E>) ((ServerLevelAccessor) world).getEntityManager()).getCache();
 
@@ -108,7 +108,7 @@ public abstract class SectionedEntityMovementTracker<E extends EntityAccess> {
         this.timesRegistered++;
     }
 
-    public void unRegister(ServerLevel world) {
+    public void unRegister(Level world) {
         assert world == this.trackedWorldSections.world();
         if (--this.timesRegistered > 0) {
             return;

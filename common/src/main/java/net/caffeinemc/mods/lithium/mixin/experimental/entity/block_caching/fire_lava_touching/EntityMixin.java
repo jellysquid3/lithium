@@ -49,7 +49,7 @@ public abstract class EntityMixin implements VicinityCacheProvider {
         }
 
 
-        VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
+        VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
 
         byte cachedTouchingFireLava = bc.getIsTouchingFireLava();
         if (cachedTouchingFireLava == (byte) 0) {

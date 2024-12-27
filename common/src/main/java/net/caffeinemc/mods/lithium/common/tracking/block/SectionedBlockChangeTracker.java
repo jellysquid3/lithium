@@ -32,12 +32,8 @@ public class SectionedBlockChangeTracker {
         this.maxChangeTime = 0;
     }
 
-    public boolean matchesMovedBox(AABB box) {
-        return this.trackedWorldSections.matchesRelevantBlocksBox(box);
-    }
-
-    public static SectionedBlockChangeTracker registerAt(Level world, AABB entityBoundingBox) {
-        WorldSectionBox worldSectionBox = WorldSectionBox.relevantExpandedBlocksBox(world, entityBoundingBox);
+    public static SectionedBlockChangeTracker registerAtForCollisions(Level world, AABB entityBoundingBox) {
+        WorldSectionBox worldSectionBox = WorldSectionBox.blockCollisionAccessBox(world, entityBoundingBox);
         SectionedBlockChangeTracker tracker = new SectionedBlockChangeTracker(worldSectionBox);
 
         LithiumInterner<SectionedBlockChangeTracker> blockChangeTrackers = ((LithiumData) world).lithium$getData().blockChangeTrackers();
@@ -45,6 +41,10 @@ public class SectionedBlockChangeTracker {
 
         tracker.register();
         return tracker;
+    }
+
+    public boolean matchesMovedBox(AABB box) {
+        return this.trackedWorldSections.matchesRelevantExpandedBlocksBox(box);
     }
 
     public long getWorldTime() {
@@ -124,12 +124,11 @@ public class SectionedBlockChangeTracker {
                 SectionPos chunkSectionPos = notListeningTo.get(i);
                 Level world = this.trackedWorldSections.world();
                 ChunkAccess chunk = world.getChunk(chunkSectionPos.getX(), chunkSectionPos.getZ(), ChunkStatus.FULL, false);
-                if (chunk != null) {
-                    notListeningTo.remove(i);
-                } else {
+                if (chunk == null) {
                     //Chunk not loaded, cannot listen to all sections.
                     return;
                 }
+                notListeningTo.remove(i);
                 LevelChunkSection section = chunk.getSections()[Pos.SectionYIndex.fromSectionCoord(world, chunkSectionPos.getY())];
                 BlockListeningSection blockListeningSection = (BlockListeningSection) section;
                 blockListeningSection.lithium$addToCallback(this, chunkSectionPos.asLong(), world);

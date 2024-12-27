@@ -33,7 +33,7 @@ public abstract class EntityMixin implements VicinityCacheProvider {
         }
         //noinspection ConstantConditions
         if (!((Object) this instanceof ServerPlayer)) {
-            VicinityCache bc = this.getUpdatedVicinityCache((Entity) (Object) this);
+            VicinityCache bc = this.getUpdatedVicinityCacheForBlocks((Entity) (Object) this);
             if (bc.canSkipBlockTouching()) {
                 ci.cancel();
                 //TODO This could lead to mod compat issues with other mods, if they implement something similar to
@@ -52,7 +52,7 @@ public abstract class EntityMixin implements VicinityCacheProvider {
     )
     private void assumeNoTouchableBlock(CallbackInfo ci) {
         VicinityCache bc = this.lithium$getVicinityCache();
-        if (bc.isTracking()) {
+        if (bc.isTrackingBlocks()) {
             bc.setCanSkipBlockTouching(true);
         }
     }
