@@ -3,11 +3,12 @@ package net.caffeinemc.mods.lithium.mixin.util.world_border_listener;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.caffeinemc.mods.lithium.common.world.listeners.WorldBorderListenerOnce;
-import net.caffeinemc.mods.lithium.common.world.listeners.WorldBorderListenerOnceMulti;
+import net.caffeinemc.mods.lithium.common.world.listeners.WorldBorderPositionListenerMulti;
 import net.minecraft.world.level.border.BorderChangeListener;
 import net.minecraft.world.level.border.WorldBorder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,14 +21,15 @@ public abstract class WorldBorderMixin {
     @Shadow
     public abstract void addListener(BorderChangeListener listener);
 
-    private final WorldBorderListenerOnceMulti worldBorderListenerOnceMulti = new WorldBorderListenerOnceMulti();
+    @Unique
+    private final WorldBorderPositionListenerMulti worldBorderPositionListenerMulti = new WorldBorderPositionListenerMulti();
 
     @Inject(
             method = "<init>",
             at = @At("RETURN")
     )
     private void registerSimpleWorldBorderListenerMulti(CallbackInfo ci) {
-        this.addListener(this.worldBorderListenerOnceMulti);
+        this.addListener(this.worldBorderPositionListenerMulti);
     }
 
 
@@ -39,7 +41,7 @@ public abstract class WorldBorderMixin {
     private void addSimpleListenerOnce(BorderChangeListener listener, CallbackInfo ci) {
         if (listener instanceof WorldBorderListenerOnce simpleListener) {
             ci.cancel();
-            this.worldBorderListenerOnceMulti.add(simpleListener);
+            this.worldBorderPositionListenerMulti.add(simpleListener);
         }
     }
 
@@ -55,7 +57,7 @@ public abstract class WorldBorderMixin {
         WorldBorder.BorderExtent prevExtent = this.extent;
         WorldBorder.BorderExtent newExtent = original.call(instance);
         if (newExtent != prevExtent) {
-            this.worldBorderListenerOnceMulti.onAreaReplaced((WorldBorder) (Object) this);
+            this.worldBorderPositionListenerMulti.onAreaReplaced((WorldBorder) (Object) this);
         }
         return newExtent;
     }
