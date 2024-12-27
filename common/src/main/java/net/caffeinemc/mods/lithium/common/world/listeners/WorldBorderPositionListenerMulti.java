@@ -1,14 +1,15 @@
 package net.caffeinemc.mods.lithium.common.world.listeners;
 
-import java.util.WeakHashMap;
 import net.minecraft.world.level.border.BorderChangeListener;
 import net.minecraft.world.level.border.WorldBorder;
 
-public class WorldBorderListenerOnceMulti implements BorderChangeListener {
+import java.util.WeakHashMap;
+
+public class WorldBorderPositionListenerMulti implements BorderChangeListener {
 
     private final WeakHashMap<WorldBorderListenerOnce, Object> delegate;
 
-    public WorldBorderListenerOnceMulti() {
+    public WorldBorderPositionListenerMulti() {
         this.delegate = new WeakHashMap<>();
     }
 
@@ -49,33 +50,17 @@ public class WorldBorderListenerOnceMulti implements BorderChangeListener {
 
     @Override
     public void onBorderSetWarningTime(WorldBorder border, int warningTime) {
-        for (WorldBorderListenerOnce listener : this.delegate.keySet()) {
-            listener.onBorderSetWarningTime(border, warningTime);
-        }
-        this.delegate.clear();
     }
 
     @Override
     public void onBorderSetWarningBlocks(WorldBorder border, int warningBlockDistance) {
-        for (WorldBorderListenerOnce listener : this.delegate.keySet()) {
-            listener.onBorderSetWarningBlocks(border, warningBlockDistance);
-        }
-        this.delegate.clear();
     }
 
     @Override
     public void onBorderSetDamagePerBlock(WorldBorder border, double damagePerBlock) {
-        for (WorldBorderListenerOnce listener : this.delegate.keySet()) {
-            listener.onBorderSetDamagePerBlock(border, damagePerBlock);
-        }
-        this.delegate.clear();
     }
 
     @Override
     public void onBorderSetDamageSafeZOne(WorldBorder border, double safeZoneRadius) {
-        for (WorldBorderListenerOnce listener : this.delegate.keySet()) {
-            listener.onBorderSetDamageSafeZOne(border, safeZoneRadius);
-        }
-        this.delegate.clear();
     }
 }
