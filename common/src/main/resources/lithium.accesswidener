@@ -20,3 +20,5 @@ accessible method net/minecraft/world/level/chunk/PalettedContainer$Strategy cal
 accessible method net/minecraft/world/level/material/Fluid isEmpty ()Z
 accessible method net/minecraft/world/level/pathfinder/WalkNodeEvaluator getPathTypeFromState (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/pathfinder/PathType;
 accessible method net/minecraft/world/phys/shapes/Shapes findBits (DD)I
+accessible method net/minecraft/world/ticks/SavedTick saveTick (Ljava/lang/String;Lnet/minecraft/core/BlockPos;ILnet/minecraft/world/ticks/TickPriority;)Lnet/minecraft/nbt/CompoundTag;
+accessible field net/minecraft/server/level/ChunkMap level Lnet/minecraft/server/level/ServerLevel;

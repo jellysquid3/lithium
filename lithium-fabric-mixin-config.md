@@ -100,7 +100,6 @@ Patches that reduce memory allocations
 Random block ticking uses fewer block position allocations, thereby reducing the object allocation rate.  
 
 ### `mixin.alloc.chunk_ticking`
-
 (default: `true`)  
 Reuse large chunk lists
 
@@ -244,7 +243,6 @@ Use ReferenceArraySet instead of HashSet to store the fluids the entity is curre
 Uses fastutil hashmaps for gamerules  
 
 ### `mixin.collections.goals`
-
 (default: `true`)  
 Uses fastutil hashsets for goals in the AI goal selector
 
@@ -255,6 +253,7 @@ Uses custom hashset/list combination for faster mob spawn checks
 ### `mixin.collections.poi_types`
 (default: `true`)  
 Uses fastutil hashmap for POI Types
+
   
 ### `mixin.compat.transfer_api`
 (default: `false`)  
@@ -453,7 +452,6 @@ Requirements:
 Only check positions with expiring tickets during ticket expiration. Can cause reordering of chunks unloading. The chunk unloading order in vanilla is predictable, but depends on the hash of the chunk position of the tickets and the hashes of the other chunk tickets, and the order of creation of the chunk tickets when hash collisions occur. No known contraptions depend on the unload order.  
 
 ### `mixin.profiler`
-
 (default: `true`)  
 Avoid indirection when accessing the profiler
 
@@ -620,7 +618,6 @@ Various improvements to explosions.
 Various improvements to explosion block damage, e.g. not accessing blocks along an explosion ray multiple times  
 
 ### `mixin.world.explosions.cache_exposure`
-
 (default: `true`)  
 Caches entity explosion exposure to avoid duplicate calculations.
 
