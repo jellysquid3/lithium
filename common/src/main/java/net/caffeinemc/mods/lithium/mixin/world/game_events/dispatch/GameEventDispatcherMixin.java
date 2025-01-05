@@ -59,7 +59,7 @@ public class GameEventDispatcherMixin {
     )
     private boolean handleNullDispatcher(@Nullable GameEventListenerRegistry dispatcher, Holder<GameEvent> gameEventRegistryEntry, Vec3 vec3d, GameEvent.Context emitter, GameEventListenerRegistry.ListenerVisitor dispatchCallback, @Local(ordinal = 7) int chunkX, @Local(ordinal = 8) int chunkZ, @Local(ordinal = 9) int ySectionCoord) {
         if (dispatcher == null) {
-            Int2ObjectMap<GameEventListenerRegistry> yToDispatcherMap = ((LithiumData) this.level).lithium$getData().gameEventDispatchersByChunk().get(ChunkPos.asLong(chunkX, chunkZ));
+            Int2ObjectMap<GameEventListenerRegistry> yToDispatcherMap = ((LithiumData) this.level).lithium$getData().gameEventDispatchers().get(ChunkPos.asLong(chunkX, chunkZ));
             dispatcher = yToDispatcherMap == null ? null : yToDispatcherMap.get(ySectionCoord);
         }
         return dispatcher != null && dispatcher.visitInRangeListeners(gameEventRegistryEntry, vec3d, emitter, dispatchCallback);
