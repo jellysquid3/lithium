@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public final class ChunkSectionChangeCallback {
     private ArrayList<SectionedBlockChangeTracker> trackers;
 
-    static {
+    public static void init() {
         if (BlockListeningSection.class.isAssignableFrom(LevelChunkSection.class)) {
             ChunkStatusTracker.registerUnloadCallback((serverWorld, chunkPos) -> {
                 Long2ReferenceOpenHashMap<ChunkSectionChangeCallback> changeCallbacks = ((LithiumData) serverWorld).lithium$getData().chunkSectionChangeCallbacks();
