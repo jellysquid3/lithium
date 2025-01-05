@@ -25,7 +25,7 @@ public class ChunkStatusTracker {
 
     /**
      * Callback will be invoked a bit before the chunk is set to be accessible via the chunk map.
-     *
+     * NOTE: There might be duplicate invocations
      * @param callback Callback that receives the level and the chunk as argument.
      */
     public static void registerLoadCallback(BiConsumer<ServerLevel, LevelChunk> callback) {
