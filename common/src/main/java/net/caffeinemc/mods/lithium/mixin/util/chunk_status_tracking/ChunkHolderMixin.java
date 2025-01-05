@@ -7,13 +7,11 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 @Mixin(ChunkHolder.class)
@@ -22,9 +20,6 @@ public abstract class ChunkHolderMixin extends GenerationChunkHolder {
     public ChunkHolderMixin(ChunkPos chunkPos) {
         super(chunkPos);
     }
-
-    @Shadow
-    public abstract CompletableFuture<ChunkResult<LevelChunk>> getFullChunkFuture();
 
     @Inject(
             method = "updateFutures(Lnet/minecraft/server/level/ChunkMap;Ljava/util/concurrent/Executor;)V", locals = LocalCapture.CAPTURE_FAILHARD,
