@@ -771,17 +771,17 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
                 }
                 if (listenToInsertEntities) {
                     if (this.insertInventoryEntityTracker == null) {
-                        this.initInsertInventoryTracker(this.level);
+                        return;
                     }
                     this.insertInventoryEntityTracker.listenToEntityMovementOnce(this);
                 }
                 if (listenToExtractEntities) {
                     if (this.extractInventoryEntityTracker == null) {
-                        this.initExtractInventoryTracker(this.level);
+                        return;
                     }
                     this.extractInventoryEntityTracker.listenToEntityMovementOnce(this);
                     if (this.collectItemEntityTracker == null) {
-                        this.initCollectItemEntityTracker();
+                        return;
                     }
                     this.collectItemEntityTracker.listenToEntityMovementOnce(this);
                 }
