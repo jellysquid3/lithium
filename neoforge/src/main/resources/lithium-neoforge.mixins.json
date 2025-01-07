@@ -10,6 +10,7 @@
     "conformVisibility" : true
   },
   "mixins" : [
+    "block.hopper.HopperBlockEntityMixin",
     "block.hopper.LevelMixin",
     "util.inventory_change_listening.ChestBlockEntityMixin"
   ],

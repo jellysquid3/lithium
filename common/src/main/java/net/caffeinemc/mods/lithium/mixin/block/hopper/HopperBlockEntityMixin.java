@@ -32,12 +32,12 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collections;
 import java.util.List;
@@ -91,44 +91,21 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
 
     private boolean shouldCheckSleep;
 
-    @Redirect(method = "suckInItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;"))
+    @Redirect(
+            method = "suckInItems",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;"),
+            require = 0, expect = 0 // Neoforge injection does not work, has custom implementation in neoforge source set
+    )
     private static Container getExtractInventory(Level world, Hopper hopper, BlockPos extractBlockPos, BlockState extractBlockState) {
         if (!(hopper instanceof HopperBlockEntityMixin hopperBlockEntity)) {
             return getSourceContainer(world, hopper, extractBlockPos, extractBlockState); //Hopper Minecarts do not cache Inventories
         }
 
-        Container blockInventory = hopperBlockEntity.getExtractBlockInventory(world, extractBlockPos, extractBlockState);
+        Container blockInventory = hopperBlockEntity.lithium$getExtractBlockInventory(world, extractBlockPos, extractBlockState);
         if (blockInventory != null) {
             return blockInventory;
         }
-
-        if (hopperBlockEntity.extractInventoryEntityTracker == null) {
-            hopperBlockEntity.initExtractInventoryTracker(world);
-        }
-        if (hopperBlockEntity.extractInventoryEntityTracker.isUnchangedSince(hopperBlockEntity.extractInventoryEntityFailedSearchTime)) {
-            hopperBlockEntity.extractInventoryEntityFailedSearchTime = hopperBlockEntity.tickedGameTime;
-            return null;
-        }
-        hopperBlockEntity.extractInventoryEntityFailedSearchTime = Long.MIN_VALUE;
-        hopperBlockEntity.shouldCheckSleep = false;
-
-        List<Container> inventoryEntities = hopperBlockEntity.extractInventoryEntityTracker.getEntities(hopperBlockEntity.extractInventoryEntityBox);
-        if (inventoryEntities.isEmpty()) {
-            hopperBlockEntity.extractInventoryEntityFailedSearchTime = hopperBlockEntity.tickedGameTime;
-            //only set unchanged when no entity present. this allows shortcutting this case
-            //shortcutting the entity present case requires checking its change counter
-            return null;
-        }
-        Container inventory = inventoryEntities.get(world.random.nextInt(inventoryEntities.size()));
-        if (inventory instanceof LithiumInventory optimizedInventory) {
-            LithiumStackList extractInventoryStackList = InventoryHelper.getLithiumStackList(optimizedInventory);
-            if (inventory != hopperBlockEntity.extractInventory || hopperBlockEntity.extractStackList != extractInventoryStackList) {
-                //not caching the inventory (NO_BLOCK_INVENTORY prevents it)
-                //make change counting on the entity inventory possible, without caching it as block inventory
-                hopperBlockEntity.cacheExtractLithiumInventory(optimizedInventory);
-            }
-        }
-        return inventory;
+        return hopperBlockEntity.lithium$getExtractEntityInventory(world);
     }
 
     /**
@@ -142,11 +119,11 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
             cancellable = true,
             method = "ejectItems(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Z",
             at = @At(
-                    value = "INVOKE", shift = At.Shift.BEFORE,
+                    value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;isFullContainer(Lnet/minecraft/world/Container;Lnet/minecraft/core/Direction;)Z"
-            ), locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
-    private static void lithiumInsert(Level world, BlockPos pos, HopperBlockEntity blockEntity, CallbackInfoReturnable<Boolean> cir, Container insertInventory, Direction direction) {
+    private static void lithiumInsert(Level world, BlockPos pos, HopperBlockEntity blockEntity, CallbackInfoReturnable<Boolean> cir, @Local Container insertInventory) {
         if (insertInventory == null || !(blockEntity instanceof HopperBlockEntity) || blockEntity instanceof WorldlyContainer) {
             //call the vanilla code to allow other mods inject features
             //e.g. carpet mod allows hoppers to insert items into wool blocks
@@ -207,6 +184,17 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
             hopperBlockEntity.insertStackListModCount = hopperBlockEntity.insertStackList.getModCount();
         }
         cir.setReturnValue(false);
+    }
+
+    @Redirect(method = "ejectItems",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;"
+            ), require = 0, expect = 0 // Neoforge injection does not work, has custom implementation in neoforge source set
+    )
+    private static Container getLithiumOutputInventory(Level world, BlockPos pos, HopperBlockEntity blockEntity) {
+        HopperBlockEntityMixin hopperBlockEntity = (HopperBlockEntityMixin) (Object) blockEntity;
+        return hopperBlockEntity.getInsertInventory(world);
     }
 
     /**
@@ -351,10 +339,35 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
         }
     }
 
-    @Redirect(method = "ejectItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;"))
-    private static Container getLithiumOutputInventory(Level world, BlockPos pos, HopperBlockEntity blockEntity) {
-        HopperBlockEntityMixin hopperBlockEntity = (HopperBlockEntityMixin) (Object) blockEntity;
-        return hopperBlockEntity.getInsertInventory(world);
+    @Unique
+    private @Nullable Container lithium$getExtractEntityInventory(Level world) {
+        if (this.extractInventoryEntityTracker == null) {
+            this.initExtractInventoryTracker(world);
+        }
+        if (this.extractInventoryEntityTracker.isUnchangedSince(this.extractInventoryEntityFailedSearchTime)) {
+            this.extractInventoryEntityFailedSearchTime = this.tickedGameTime;
+            return null;
+        }
+        this.extractInventoryEntityFailedSearchTime = Long.MIN_VALUE;
+        this.shouldCheckSleep = false;
+
+        List<Container> inventoryEntities = this.extractInventoryEntityTracker.getEntities(this.extractInventoryEntityBox);
+        if (inventoryEntities.isEmpty()) {
+            this.extractInventoryEntityFailedSearchTime = this.tickedGameTime;
+            //only set unchanged when no entity present. this allows shortcutting this case
+            //shortcutting the entity present case requires checking its change counter
+            return null;
+        }
+        Container inventory = inventoryEntities.get(world.random.nextInt(inventoryEntities.size()));
+        if (inventory instanceof LithiumInventory optimizedInventory) {
+            LithiumStackList extractInventoryStackList = InventoryHelper.getLithiumStackList(optimizedInventory);
+            if (inventory != this.extractInventory || this.extractStackList != extractInventoryStackList) {
+                //not caching the inventory (NO_BLOCK_INVENTORY prevents it)
+                //make change counting on the entity inventory possible, without caching it as block inventory
+                this.cacheExtractLithiumInventory(optimizedInventory);
+            }
+        }
+        return inventory;
     }
 
     @Redirect(method = "suckInItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getItemsAtAndAbove(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;)Ljava/util/List;"))
@@ -465,7 +478,7 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
         }
     }
 
-    public Container getExtractBlockInventory(Level world, BlockPos extractBlockPos, BlockState extractBlockState) {
+    public Container lithium$getExtractBlockInventory(Level world, BlockPos extractBlockPos, BlockState extractBlockState) {
         Container blockInventory = this.extractBlockInventory;
         if (this.extractionMode == HopperCachingState.BlockInventory.NO_BLOCK_INVENTORY) {
             return null;
@@ -500,7 +513,7 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
         return blockInventory;
     }
 
-    public Container getInsertBlockInventory(Level world) {
+    public Container lithium$getInsertBlockInventory(Level world) {
         Container blockInventory = this.insertBlockInventory;
         if (this.insertionMode == HopperCachingState.BlockInventory.NO_BLOCK_INVENTORY) {
             return null;
@@ -543,7 +556,7 @@ public abstract class HopperBlockEntityMixin extends BlockEntity implements Hopp
 
 
     public Container getInsertInventory(Level world) {
-        Container blockInventory = this.getInsertBlockInventory(world);
+        Container blockInventory = this.lithium$getInsertBlockInventory(world);
         if (blockInventory != null) {
             return blockInventory;
         }
