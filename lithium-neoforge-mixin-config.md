@@ -21,7 +21,6 @@ mixin.gen.biome_noise_cache=false
 Mob AI optimizations
   
 ### `mixin.ai.pathing`
-
 (default: `true`)  
 A faster code path is used for determining what kind of path-finding node type is associated with a
 given block. Additionally, a faster chunk cache will be used for accessing blocks while evaluating
@@ -459,7 +458,6 @@ Allow accessing certain fields and functions that are normally inaccessible
 Allows access to existing BlockEntities without creating new ones
   
 ### `mixin.util.block_tracking`
-
 (default: `true`)  
 Chunk sections count certain blocks inside them and provide a method to quickly check whether a chunk contains any of these blocks. Furthermore, chunk sections can notify registered listeners about certain blocks being placed or broken.
 Requirements:
@@ -589,7 +587,6 @@ Various improvements to game events (vibrations) that are detected by allays, wa
 (default: `true`)  
 Create game event dispatchers for chunk sections only when needed, i.e. when a listener is added to a section. This reduces memory usage for chunks that do not have any listeners. The dispatchers are accessed more directly instead of indirectly through chunks. In total this speeds up attempting to dispatch events especially when there are no nearby listeners.
 Requirements:
-
 - `mixin.util.data_storage=true`
 - `mixin.util.chunk_status_tracking=true`
 
