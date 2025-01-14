@@ -36,7 +36,15 @@ public abstract class LevelChunkMixin {
             )
     )
     private BlockEntity createBlockEntityWithCachedStateFix(EntityBlock blockEntityProvider, BlockPos pos, BlockState state) {
-        return blockEntityProvider.newBlockEntity(pos, this.getBlockState(pos));
+        // Modded EntityBlock objects are not always the same as state.getBlock(), use their object if it is valid.
+        BlockState blockState = this.getBlockState(pos);
+        if (state == blockState) {
+            return blockEntityProvider.newBlockEntity(pos, state);
+        } else if (blockState.hasBlockEntity()) { // Create our block entity of correct type if applicable
+            return ((EntityBlock) blockState.getBlock()).newBlockEntity(pos, blockState);
+        } else {
+            return null;
+        }
     }
 
     @Inject(
