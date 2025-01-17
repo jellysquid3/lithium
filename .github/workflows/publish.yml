@@ -23,7 +23,7 @@ jobs:
         env:
           BUILD_RELEASE: ${{ github.event.prerelease == false }}
       - name: Upload assets to GitHub
-        uses: AButler/upload-release-assets@v2.0
+        uses: AButler/upload-release-assets@v3.0
         with:
           files: 'build/libs/*.jar;!build/libs/*-dev.jar;LICENSE'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
