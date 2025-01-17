@@ -648,8 +648,7 @@ indirectly through chunks. In total this speeds up attempting to dispatch events
 listeners.
 Requirements:
 - `mixin.util.data_storage=true`
-- `mixin.util.chunk_status_tracking=true`
-
+- `mixin.util.chunk_status_tracking=true`  
   
 ### `mixin.world.inline_block_access`
 (default: `true`)  

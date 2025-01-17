@@ -186,23 +186,25 @@ tasks.named("processResources") {
 }
 
 publishMods {
-    displayName = "Lithium $MOD_VERSION for Neoforge"
-    version = "mc$MINECRAFT_VERSION-$MOD_VERSION-neoforge"
+    val mcVersionLithiumVersion = "mc$MINECRAFT_VERSION-$MOD_VERSION"
+    version = "$mcVersionLithiumVersion-neoforge"
     file = tasks.jar.get().archiveFile
     changelog = rootProject.file("CHANGELOG.md").readText().split("----------")[1].trim()
     type = getReleaseType()
     modLoaders.add("neoforge")
 
-    modrinth {
+    curseforge {
         accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
         projectId = "360438"
         minecraftVersions.add(MINECRAFT_VERSION)
+        displayName = "Lithium $mcVersionLithiumVersion for Neoforge"
     }
 
     modrinth {
         accessToken = providers.environmentVariable("MODRINTH_API_KEY")
         projectId = "gvQqBUqZ"
         minecraftVersions.add(MINECRAFT_VERSION)
+        displayName = "Lithium $MOD_VERSION for Neoforge"
     }
 }
 
