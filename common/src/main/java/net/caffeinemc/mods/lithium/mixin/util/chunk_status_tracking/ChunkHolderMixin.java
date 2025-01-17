@@ -23,7 +23,10 @@ public abstract class ChunkHolderMixin extends GenerationChunkHolder {
 
     @Inject(
             method = "updateFutures(Lnet/minecraft/server/level/ChunkMap;Ljava/util/concurrent/Executor;)V", locals = LocalCapture.CAPTURE_FAILHARD,
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/FullChunkStatus;isOrAfter(Lnet/minecraft/server/level/FullChunkStatus;)Z", ordinal = 6)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/FullChunkStatus;isOrAfter(Lnet/minecraft/server/level/FullChunkStatus;)Z", ordinal = 6),
+            // See ca.spottledleaf.moonrise.compat.lithium.LithiumHooks and https://github.com/Tuinity/Moonrise/blob/c2cf9858998d9245cb2f548a4618b8772d054125/src/main/java/ca/spottedleaf/moonrise/mixin/chunk_system/ChunkHolderMixin.java#L401
+            // Moonrise will call Lithium's ChunkStatusTracker methods directly, in turn we set require = 0, avoiding a conflict with their overwrite.
+            require = 0
     )
     private void trackUpdate(ChunkMap chunkMap, Executor executor, CallbackInfo ci, FullChunkStatus prevStatus, FullChunkStatus status) {
         ServerLevel serverLevel = chunkMap.level;
