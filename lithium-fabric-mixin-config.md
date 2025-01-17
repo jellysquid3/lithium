@@ -612,7 +612,6 @@ Create game event dispatchers for chunk sections only when needed, i.e. when a l
 Requirements:
 - `mixin.util.data_storage=true`
 - `mixin.util.chunk_status_tracking=true`
-
   
 ### `mixin.world.inline_block_access`
 (default: `true`)  
