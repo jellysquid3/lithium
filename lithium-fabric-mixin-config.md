@@ -190,8 +190,8 @@ Remove debug checks in block access code
 Skip bounds validation when accessing blocks
   
 ### `mixin.chunk.palette`
-(default: `true`)  
-Replaces the vanilla hash palette with an optimized variant
+(default: `false`)  
+Replaces the vanilla hash palette with an optimized variant. Disabled by default as many users report crashes regarding or caused by this setting.
   
 ### `mixin.chunk.serialization`
 (default: `true`)  
