@@ -107,3 +107,15 @@ tasks.create("lithiumPublish") {
         }
     }
 }
+
+tasks.register("printMinecraftVersion") {
+    doLast {
+        println(MINECRAFT_VERSION)
+    }
+}
+
+tasks.register("printModVersion") {
+    doLast {
+        println(MOD_VERSION)
+    }
+}

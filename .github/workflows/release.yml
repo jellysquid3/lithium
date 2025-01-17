@@ -1,4 +1,4 @@
-name: Publish Release
+name: Release GH+MR+CF
 
 on:
   workflow_dispatch:
@@ -46,11 +46,39 @@ jobs:
       - name: Gradle Release Build
         run: RELEASE_WORKFLOW=true ./gradlew build
 
+      - name: Set environment variables for the script below
+        run: |
+          echo "MINECRAFT_VERSION=$(./gradlew -q printMinecraftVersion)" >> $GITHUB_ENV
+          echo "MOD_VERSION=$(./gradlew -q printModVersion)" >> $GITHUB_ENV
+
+      - name: Set Release Name
+        id: set_release_name
+        run: |
+          if [ "${{ inputs.platform }}" == "both" ]; then
+            echo "RELEASE_NAME=Lithium $MOD_VERSION for Minecraft $MINECRAFT_VERSION Fabric and Neoforge" >> $GITHUB_ENV
+          elif [ "${{ inputs.platform }}" == "fabric" ]; then
+            echo "RELEASE_NAME=Lithium $MOD_VERSION for Minecraft $MINECRAFT_VERSION Fabric" >> $GITHUB_ENV
+          elif [ "${{ inputs.platform }}" == "neoforge" ]; then
+            echo "RELEASE_NAME=Lithium $MOD_VERSION for Minecraft $MINECRAFT_VERSION Neoforge" >> $GITHUB_ENV
+          fi
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: mc${{ env.MINECRAFT_VERSION }}-${{ env.MOD_VERSION }}
+          release_name: ${{ env.RELEASE_NAME }}
+          draft: false
+          prerelease: ${{ inputs.releaseType != 'stable' }}
+
       - name: Upload assets to GitHub
         uses: AButler/upload-release-assets@v3.0
         with:
           files: 'build/libs/*.jar;!build/libs/*-dev.jar;LICENSE'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-id: ${{ steps.create_release.outputs.id }}
 
       - name: Publish to Modrinth and Curseforge
         env:
