@@ -28,9 +28,15 @@ jobs:
             - name: Run Test Servers
               timeout-minutes: 5
               run: |
-                ./gradlew fabric:runGametestServer &
-                ./gradlew neoforge:runGametestServer &
-                wait
+                ./gradlew fabric:runGametestServer & FABRIC_PID=$!
+                ./gradlew neoforge:runGametestServer & NEOFORGE_PID=$!
+                wait $FABRIC_PID
+                FABRIC_EXIT_CODE=$?
+                wait $NEOFORGE_PID
+                NEOFORGE_EXIT_CODE=$?
+                if [ $FABRIC_EXIT_CODE -ne 0 ] || [ $NEOFORGE_EXIT_CODE -ne 0 ]; then
+                  exit 1
+                fi
 
             - name: Upload Build Artifacts
               uses: actions/upload-artifact@v4
