@@ -189,7 +189,7 @@ publishMods {
     val mcVersionLithiumVersion = "mc$MINECRAFT_VERSION-$MOD_VERSION"
     version = "$mcVersionLithiumVersion-neoforge"
     file = tasks.jar.get().archiveFile
-    changelog = rootProject.file("CHANGELOG.md").readText().split("----------")[1].trim()
+    changelog = rootProject.file("CHANGELOG.md").readText().trim()
     type = getReleaseType()
     modLoaders.add("neoforge")
 

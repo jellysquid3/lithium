@@ -69,7 +69,12 @@ jobs:
         run: |
           sed -i 's/_ReleaseTag_/mc${{ env.MINECRAFT_VERSION }}-${{ env.MOD_VERSION }}/g' CHANGELOG.md
           sed -i 's/_MCVersion_/${{ env.MINECRAFT_VERSION }}/g' CHANGELOG.md
-          sed -i 's/_LithiumVersion_/${{ env.MOD_VERSION }}/g' CHANGELOG.md
+          sed -i 's/_LithiumVersion_/${{ env.MOD_VERSION }}/g' CHANGELOG.md     
+
+      - name: Trim CHANGELOG.md
+        run: |
+          trimmed_changelog=$(awk '/----------/{flag=1;next}flag' CHANGELOG.md)
+          echo "$trimmed_changelog" > CHANGELOG.md
 
       - name: Create GitHub Release
         id: create_release

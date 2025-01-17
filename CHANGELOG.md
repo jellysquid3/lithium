@@ -6,10 +6,7 @@ changelog on GitHub, Modrinth and CurseForge.
 ----------
 Lithium _LithiumVersion_ for Minecraft _MCVersion_ adds many new features.
 
-Make sure to take a backup of your world before using the mod and please report any bugs and mod compatibility issues at
-the [issue tracker](https://github.com/CaffeineMC/lithium-fabric/issues). You can check
-the[description of each optimization](https://github.com/CaffeineMC/lithium/blob/_ReleaseTag_/lithium-mixin-config.md)
-and how to disable it when encountering a problem.
+Make sure to take a backup of your world before using the mod and please report any bugs and mod compatibility issues at the [issue tracker](https://github.com/CaffeineMC/lithium-fabric/issues). You can check the[description of each optimization](https://github.com/CaffeineMC/lithium/blob/_ReleaseTag_/lithium-mixin-config.md) and how to disable it when encountering a problem.
 
 ## Additions
 - Some new stuff

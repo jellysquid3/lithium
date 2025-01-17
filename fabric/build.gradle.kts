@@ -201,7 +201,7 @@ publishMods {
     val mcVersionLithiumVersion = "mc$MINECRAFT_VERSION-$MOD_VERSION"
     version = "$mcVersionLithiumVersion-fabric"
     file = tasks.remapJar.get().archiveFile
-    changelog = rootProject.file("CHANGELOG.md").readText().split("----------")[1].trim()
+    changelog = rootProject.file("CHANGELOG.md").readText().trim()
     type = getReleaseType()
     modLoaders.add("fabric")
     modLoaders.add("quilt")
