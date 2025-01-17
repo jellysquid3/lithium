@@ -44,7 +44,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle Release Build
-        run: RELEASE_WORKFLOW=true ./gradlew build
+        env:
+          RELEASE_WORKFLOW: true
+        run: ./gradlew build
 
       - name: Set environment variables for the script below
         run: |
