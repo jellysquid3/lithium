@@ -615,11 +615,11 @@ Various improvements to explosion block damage, e.g. not accessing blocks along 
 Various improvements to game events (vibrations) that are detected by allays, wardens and several sculk blocks.
   
 ### `mixin.world.game_events.dispatch`
-
 (default: `true`)  
 Create game event dispatchers for chunk sections only when needed, i.e. when a listener is added to a section. This reduces memory usage for chunks that do not have any listeners. The dispatchers are accessed more directly instead of indirectly through chunks. In total this speeds up attempting to dispatch events especially when there are no nearby listeners.  
 Requirements:
-- `mixin.util.data_storage=true`  
+- `mixin.util.data_storage=true`
+- `mixin.util.chunk_status_tracking=true`  
   
 ### `mixin.world.inline_block_access`
 (default: `true`)  
