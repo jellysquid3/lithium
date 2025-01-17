@@ -1,5 +1,5 @@
 {
-    DataVersion: 3953,
+    DataVersion: 4189,
     size: [5, 5, 5],
     data: [
         {pos: [0, 0, 0], state: "minecraft:bedrock"},
@@ -12,7 +12,7 @@
         {pos: [1, 0, 2], state: "minecraft:red_terracotta"},
         {pos: [1, 0, 3], state: "minecraft:bedrock"},
         {pos: [1, 0, 4], state: "minecraft:bedrock"},
-        {pos: [2, 0, 0], state: "minecraft:command_block{conditional:false,facing:up}", nbt: {Command: "summon witch ~ ~.5 ~", SuccessCount: 0, TrackOutput: 1b, UpdateLastExecution: 1b, auto: 0b, conditionMet: 0b, id: "minecraft:command_block", powered: 0b}},
+        {pos: [2, 0, 0], state: "minecraft:command_block{conditional:false,facing:up}", nbt: {Command: "summon witch ~ ~.5 ~ {PersistenceRequired:1b}", SuccessCount: 0, TrackOutput: 1b, UpdateLastExecution: 1b, auto: 0b, conditionMet: 0b, id: "minecraft:command_block", powered: 0b}},
         {pos: [2, 0, 1], state: "minecraft:bedrock"},
         {pos: [2, 0, 2], state: "minecraft:command_block{conditional:false,facing:up}", nbt: {Command: "summon tnt ~ ~.5 ~", SuccessCount: 0, TrackOutput: 1b, UpdateLastExecution: 1b, auto: 0b, conditionMet: 0b, id: "minecraft:command_block", powered: 0b}},
         {pos: [2, 0, 3], state: "minecraft:bedrock"},
