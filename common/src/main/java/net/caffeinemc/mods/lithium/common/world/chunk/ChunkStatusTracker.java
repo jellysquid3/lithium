@@ -50,7 +50,7 @@ public class ChunkStatusTracker {
             throw new IllegalStateException("ChunkStatusTracker.onChunkAccessible called on wrong thread!");
         }
 
-        for (int i = 0; i < LOAD_CALLBACKS.size(); i++) { //TODO confirm this is only called on the server thread...
+        for (int i = 0; i < LOAD_CALLBACKS.size(); i++) {
             LOAD_CALLBACKS.get(i).accept(serverLevel, levelChunk);
         }
     }

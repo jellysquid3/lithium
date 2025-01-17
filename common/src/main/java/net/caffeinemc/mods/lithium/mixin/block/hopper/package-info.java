@@ -4,7 +4,7 @@
  * and modification counter comparisons make sure that no outdated cached information is used while avoiding quadratic
  * runtime.
  * <p>
- * TODO: This section can be expended to include a lot more details. The README.md in this package includes a detailed description.
+ * TODO: This section can be expended to include a lot more details. The README.md in this package includes a detailed description. Needs updating as some stuff doesn't work on neoforge (inventory entity tracking)
  */
 @MixinConfigOption(
         description = "Reduces hopper lag using caching, notification systems and BlockEntity sleeping",

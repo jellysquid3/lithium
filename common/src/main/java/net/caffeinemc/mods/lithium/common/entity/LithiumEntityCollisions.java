@@ -212,7 +212,8 @@ public class LithiumEntityCollisions {
             //Technically, the supporting block that vanilla calculates and caches is not always the one
             // that cancels the downwards motion, but usually it is, and this is only for a quick, additional test.
             //TODO: This may lead to the movement attempt not creating any chunk load tickets.
-            // Entities and pistons **probably** create these tickets elsewhere anyways.
+            // Entities and pistons **probably** create these tickets elsewhere anyways. This probably also applies
+            // to usages of ChunkAwareBlockCollisionSweeper and others
             VoxelShape voxelShape = supportingBlockCollisionShapeProvider.lithium$getCollisionShapeBelow();
             if (voxelShape != null) {
                 return voxelShape;
