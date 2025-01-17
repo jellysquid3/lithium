@@ -46,6 +46,7 @@ jobs:
       - name: Gradle Release Build
         env:
           RELEASE_WORKFLOW: true
+          PLATFORM: ${{ inputs.platform }}
         run: ./gradlew build
 
       - name: Set environment variables for the script below
