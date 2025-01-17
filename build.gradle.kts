@@ -44,7 +44,7 @@ subprojects {
     fun createVersionString(): String {
         val builder = StringBuilder()
 
-        val isReleaseBuild = project.hasProperty("build.release")
+        val isReleaseBuild = providers.environmentVariable("RELEASE_WORKFLOW").isPresent
         val buildId = System.getenv("GITHUB_RUN_NUMBER")
 
         if (isReleaseBuild) {
