@@ -62,6 +62,12 @@ jobs:
             echo "RELEASE_NAME=Lithium $MOD_VERSION for Minecraft $MINECRAFT_VERSION Neoforge" >> $GITHUB_ENV
           fi
 
+      - name: Replace placeholders in CHANGELOG.md
+        run: |
+          sed -i 's/_ReleaseTag_/mc${{ env.MINECRAFT_VERSION }}-${{ env.MOD_VERSION }}/g' CHANGELOG.md
+          sed -i 's/_MCVersion_/${{ env.MINECRAFT_VERSION }}/g' CHANGELOG.md
+          sed -i 's/_LithiumVersion_/${{ env.MOD_VERSION }}/g' CHANGELOG.md
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -70,6 +76,7 @@ jobs:
         with:
           tag_name: mc${{ env.MINECRAFT_VERSION }}-${{ env.MOD_VERSION }}
           release_name: ${{ env.RELEASE_NAME }}
+          body_path: CHANGELOG.md
           draft: false
           prerelease: ${{ inputs.releaseType != 'stable' }}
 
