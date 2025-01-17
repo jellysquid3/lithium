@@ -24,8 +24,8 @@ jobs:
             - name: Grant execute permission for gradlew
               run: chmod +x gradlew
 
-            - name: Upload assets to CurseForge
-              run: ./gradlew build -Pbuild.release=true
+            - name: Gradle Release Build
+              run: RELEASE_WORKFLOW=true ./gradlew build
 
             - name: Upload assets to GitHub
               uses: AButler/upload-release-assets@v3.0
