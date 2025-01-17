@@ -3,7 +3,6 @@ package net.caffeinemc.mods.lithium.mixin.util.block_tracking;
 import net.caffeinemc.mods.lithium.common.block.*;
 import net.caffeinemc.mods.lithium.common.tracking.block.ChunkSectionChangeCallback;
 import net.caffeinemc.mods.lithium.common.tracking.block.SectionedBlockChangeTracker;
-import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -162,12 +161,4 @@ public abstract class LevelChunkSectionMixin implements BlockCountingSection, Bl
         }
     }
 
-    @Override
-    @Unique
-    public void lithium$invalidateListeningSection(SectionPos sectionPos) {
-        if (this.listeningMask != 0) {
-            this.changeListener.onChunkSectionInvalidated(sectionPos);
-            this.listeningMask = 0;
-        }
-    }
 }
