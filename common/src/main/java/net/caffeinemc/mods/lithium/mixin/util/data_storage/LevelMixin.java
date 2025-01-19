@@ -22,7 +22,7 @@ public class LevelMixin implements LithiumData {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void initLithiumData(WritableLevelData properties, ResourceKey<?> registryRef, RegistryAccess registryManager, Holder<?> dimensionEntry, Supplier<?> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates, CallbackInfo ci) {
-        this.storage = new Data((Level) (Object) this);
+        this.storage = new Data(registryManager);
     }
 
     @Override
