@@ -6,6 +6,7 @@ import net.caffeinemc.mods.lithium.common.tracking.block.ChunkSectionChangeCallb
 import net.caffeinemc.mods.lithium.common.tracking.block.SectionedBlockChangeTracker;
 import net.caffeinemc.mods.lithium.common.tracking.entity.SectionedEntityMovementTracker;
 import net.caffeinemc.mods.lithium.common.util.deduplication.LithiumInterner;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -35,10 +36,10 @@ public interface LithiumData {
             // Block ChunkSection listeners
             Long2ReferenceOpenHashMap<ChunkSectionChangeCallback> chunkSectionChangeCallbacks
     ) {
-        public Data(Level world) {
+        public Data(HolderLookup.Provider registries) {
             this(
                     new GameEventDispatcherStorage(),
-                    Objects.requireNonNullElse(world.registryAccess(), RegistryAccess.EMPTY).lookup(Registries.BANNER_PATTERN).map(Raid::getLeaderBannerInstance).orElse(null),
+                    Objects.requireNonNullElse(registries, RegistryAccess.EMPTY).lookup(Registries.BANNER_PATTERN).map(Raid::getLeaderBannerInstance).orElse(null),
                     new ReferenceOpenHashSet<>(),
                     new LithiumInterner<>(),
                     new LithiumInterner<>(),
