@@ -4,12 +4,10 @@ _LithiumVersion_ is automatically replaced with the lithium version, e.g. 0.14.5
 Everything above the line is ignored and not included in the changelog. Everything below will be in the
 changelog on GitHub, Modrinth and CurseForge.
 ----------
-Lithium _LithiumVersion_ for Minecraft _MCVersion_ disables the LithiumHashPalette optimization by default due to many users reporting issues.
+Lithium _LithiumVersion_ for Minecraft _MCVersion_ fixes a few mod compatibility issues.
 
 Make sure to take a backup of your world before using the mod and please report any bugs and mod compatibility issues at the [issue tracker](https://github.com/CaffeineMC/lithium-fabric/issues). You can check the [description of each optimization](https://github.com/CaffeineMC/lithium/blob/_ReleaseTag_/lithium-mixin-config.md) and how to disable it when encountering a problem.
 
-## Additions
-- Automatic release publishing workflow
-
-## Changes
-- Disable `mixin.chunk.palette` (LithiumHashPalette) by default.
+## Fixes
+- Fix crash with level wrappers from various mods
+- Fix crash with moonrise: Set require=0 for ChunkStatusTracker Inject
