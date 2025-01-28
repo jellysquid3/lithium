@@ -77,23 +77,16 @@ jobs:
           echo "$trimmed_changelog" > CHANGELOG.md
 
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: mc${{ env.MINECRAFT_VERSION }}-${{ env.MOD_VERSION }}
-          release_name: ${{ env.RELEASE_NAME }}
-          body_path: CHANGELOG.md
-          draft: false
-          prerelease: ${{ inputs.releaseType != 'stable' }}
-
-      - name: Upload assets to GitHub
-        uses: AButler/upload-release-assets@v3.0
-        with:
-          files: 'build/libs/*.jar;!build/libs/*-dev.jar;LICENSE'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-id: ${{ steps.create_release.outputs.id }}
+        run: |
+          gh release create mc${{ env.MINECRAFT_VERSION }}-${{ env.MOD_VERSION }} \
+            --title="${{ env.RELEASE_NAME }}" \
+            --notes-file=CHANGELOG.md \
+            --target=${{ github.ref_name }} \
+            --draft=false \
+            --prerelease=${{ inputs.releaseType != 'stable' }} \
+            build/libs/*.jar LICENSE
 
       - name: Publish to Modrinth and Curseforge
         env:
