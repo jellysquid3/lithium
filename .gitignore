@@ -20,12 +20,14 @@ bin/
 .classpath
 .project
 
-# fabric
+# fabric + neoforge
 
 /run/
 /common/run/
 /fabric/run/
 /neoforge/run/
+/neoforge/runs/
+
 # macOS
 
 .DS_Store
@@ -35,3 +37,5 @@ bin/
 # lithium
 
 fabric/testserver/*
+/src/main/resources/assets/lithium/lithium-mixin-config-default.properties
+/src/main/resources/assets/lithium/lithium-mixin-config-dependencies.properties
