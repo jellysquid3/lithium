@@ -173,6 +173,7 @@
     "util.accessors.EntitySectionAccessor",
     "util.accessors.ItemEntityAccessor",
     "util.accessors.ItemStackAccessor",
+    "util.accessors.LevelAccessor",
     "util.accessors.PersistentEntitySectionManagerAccessor",
     "util.accessors.ServerLevelAccessor",
     "util.block_entity_retrieval.LevelMixin",

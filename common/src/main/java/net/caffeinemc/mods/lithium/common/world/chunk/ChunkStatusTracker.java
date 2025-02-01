@@ -1,6 +1,7 @@
 package net.caffeinemc.mods.lithium.common.world.chunk;
 
 import net.caffeinemc.mods.lithium.common.tracking.block.ChunkSectionChangeCallback;
+import net.caffeinemc.mods.lithium.mixin.util.accessors.LevelAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -45,7 +46,7 @@ public class ChunkStatusTracker {
     }
 
     public static void onChunkAccessible(ServerLevel serverLevel, LevelChunk levelChunk) {
-        if (!serverLevel.getServer().isSameThread()) {
+        if (((LevelAccessor) serverLevel).getThread() != Thread.currentThread()) {
             throw new IllegalStateException("ChunkStatusTracker.onChunkAccessible called on wrong thread!");
         }
 
@@ -55,7 +56,7 @@ public class ChunkStatusTracker {
     }
 
     public static void onChunkInaccessible(ServerLevel serverLevel, ChunkPos pos) {
-        if (!serverLevel.getServer().isSameThread()) {
+        if (((LevelAccessor) serverLevel).getThread() != Thread.currentThread()) {
             throw new IllegalStateException("ChunkStatusTracker.onChunkInaccessible called on wrong thread!");
         }
 
