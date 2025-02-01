@@ -175,6 +175,10 @@ Moving blocks and retracting pistons avoid calculating their VoxelShapes by reus
 (default: `true`)  
 Redstone wire power calculations avoid duplicate block accesses
   
+### `mixin.block_pattern_matching`
+(default: `true`)  
+Fast-path exit end portal search by counting nearby bedrock blocks. Reduces lag when placing the last end crystal when respawning the ender dragon.
+  
 ### `mixin.cached_hashcode`
 (default: `true`)  
 BlockNeighborGroups used in fluid code cache their hashcode

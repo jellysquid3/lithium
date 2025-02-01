@@ -81,6 +81,8 @@
     "block.redstone_wire.DefaultRedstoneWireEvaluatorMixin",
     "block.redstone_wire.RedStoneWireBlockMixin",
     "block.redstone_wire.RedstoneWireEvaluatorMixin",
+    "block_pattern_matching.BlockPatternMixin",
+    "block_pattern_matching.EndDragonFightMixin",
     "cached_hashcode.FlowingFluid$BlockStatePairKeyMixin",
     "chunk.entity_class_groups.ClassInstanceMultiMapMixin",
     "chunk.no_locking.LevelChunkSectionMixin",

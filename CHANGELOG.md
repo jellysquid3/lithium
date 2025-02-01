@@ -9,7 +9,7 @@ Lithium _LithiumVersion_ for Minecraft _MCVersion_ adds many new features.
 Make sure to take a backup of your world before using the mod and please report any bugs and mod compatibility issues at the [issue tracker](https://github.com/CaffeineMC/lithium-fabric/issues). You can check the [description of each optimization](https://github.com/CaffeineMC/lithium/blob/_ReleaseTag_/lithium-mixin-config.md) and how to disable it when encountering a problem.
 
 ## Additions
-- Some new stuff
+- Fast-path exit end portal search by counting nearby bedrock blocks. Reduces lag when placing the last end crystal when respawning the ender dragon.
 
 ## Changes
 - Many changes
