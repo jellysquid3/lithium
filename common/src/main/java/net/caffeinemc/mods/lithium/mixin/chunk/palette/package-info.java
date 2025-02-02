@@ -1,7 +1,4 @@
-@MixinConfigOption(
-        description = "Replaces the vanilla hash palette with an optimized variant. Disabled by default as many users report crashes regarding or caused by this setting.",
-        enabled = false
-)
+@MixinConfigOption(description = "Replaces the vanilla hash palette with an optimized variant")
 package net.caffeinemc.mods.lithium.mixin.chunk.palette;
 
 import net.caffeinemc.gradle.MixinConfigOption;
