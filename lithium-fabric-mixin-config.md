@@ -114,6 +114,10 @@ Composters will reuse the available slot arrays that are requested by hoppers
 (default: `true`)  
 Reduce stream code usage when getting the passengers of an entity
   
+### `mixin.alloc.entity_iteration`
+(default: `true`)  
+Avoid unnecessary indirection when iterating entities of an entity section.
+  
 ### `mixin.alloc.entity_tracker`
 (default: `true`)  
 Entity trackers use a fastutil set for storing players instead of an IdentityHashSet

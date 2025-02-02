@@ -42,6 +42,8 @@
     "alloc.composter.ComposterMixin$ComposterBlockDummyInventoryMixin",
     "alloc.composter.ComposterMixin$ComposterBlockFullComposterInventoryMixin",
     "alloc.deep_passengers.EntityMixin",
+    "alloc.entity_iteration.ClassInstanceMultiMapAccessor",
+    "alloc.entity_iteration.EntitySectionMixin",
     "alloc.entity_tracker.ChunkMap$TrackedEntityMixin",
     "alloc.enum_values.piston_block.PistonBaseBlockMixin",
     "alloc.enum_values.piston_handler.PistonStructureResolverMixin",
