@@ -242,6 +242,9 @@
   ],
   "client" : [
     "chunk.entity_class_groups.ClientLevelMixin",
+    "debug.palette.ClientBoundLevelChunkPacketDataAccessor",
+    "debug.palette.ClientPacketListenerMixin",
+    "debug.palette.PalettedContainerMixin",
     "util.accessors.TransientEntitySectionManagerAccessor"
   ]
 }
