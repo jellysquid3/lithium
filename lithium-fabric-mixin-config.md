@@ -562,6 +562,10 @@ Various world related optimizations
 (default: `true`)  
 Various BlockEntity ticking optimizations
   
+### `mixin.world.block_entity_ticking.chunk_tickable`
+(default: `true`)  
+Speed up checking whether a chunk ticks block entities during block entity ticking.
+  
 ### `mixin.world.block_entity_ticking.sleeping`
 (default: `true`)  
 Allows BlockEntities to sleep, meaning they are no longer ticked until woken up, e.g. by updates to their inventory or block state
