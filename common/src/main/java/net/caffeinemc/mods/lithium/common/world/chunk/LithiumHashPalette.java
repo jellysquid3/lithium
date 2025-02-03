@@ -1,7 +1,6 @@
 package net.caffeinemc.mods.lithium.common.world.chunk;
 
 import it.unimi.dsi.fastutil.HashCommon;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -31,11 +30,11 @@ public class LithiumHashPalette<T> implements Palette<T> {
     private final PaletteResize<T> resizeHandler;
     private final int indexBits;
 
-    private final Reference2IntMap<T> table;
+    private final Reference2IntOpenHashMap<T> table;
     private T[] entries;
     private int size = 0;
 
-    private LithiumHashPalette(IdMap<T> idList, PaletteResize<T> resizeHandler, int indexBits, T[] entries, Reference2IntMap<T> table, int size) {
+    private LithiumHashPalette(IdMap<T> idList, PaletteResize<T> resizeHandler, int indexBits, T[] entries, Reference2IntOpenHashMap<T> table, int size) {
         this.idList = idList;
         this.resizeHandler = resizeHandler;
         this.indexBits = indexBits;
@@ -188,9 +187,7 @@ public class LithiumHashPalette<T> implements Palette<T> {
 
     @Override
     public @NotNull Palette<T> copy(@NotNull PaletteResize<T> resizeHandler) {
-        Reference2IntOpenHashMap<T> newTable = new Reference2IntOpenHashMap<>(this.table);
-        newTable.defaultReturnValue(this.table.defaultReturnValue());
-        return new LithiumHashPalette<>(this.idList, resizeHandler, this.indexBits, this.entries.clone(), newTable, this.size);
+        return new LithiumHashPalette<>(this.idList, resizeHandler, this.indexBits, this.entries.clone(), this.table.clone(), this.size);
     }
 
     private void clear() {
