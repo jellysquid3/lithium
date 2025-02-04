@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.concurrent.Executor;
 
-@Mixin(ChunkHolder.class)
+@Mixin(value = ChunkHolder.class, priority = 990) //Lower priority for moonrise compatibility
 public abstract class ChunkHolderMixin extends GenerationChunkHolder {
 
     public ChunkHolderMixin(ChunkPos chunkPos) {
