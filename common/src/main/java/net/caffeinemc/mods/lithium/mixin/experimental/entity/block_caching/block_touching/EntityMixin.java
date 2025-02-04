@@ -62,6 +62,9 @@ public abstract class EntityMixin implements VicinityCacheProvider {
             at = @At(value = "RETURN")
     )
     private void checkTouchableBlock(CallbackInfo ci, @Local(argsOnly = true) Set<BlockState> set) {
+        if (set.isEmpty()) {
+            return;
+        }
         VicinityCache bc = this.lithium$getVicinityCache();
         if (bc.canSkipBlockTouching()) {
             for (BlockState blockState : set) {
